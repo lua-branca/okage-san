@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/base';
+
+const tokushoItems = [
+  { label: '販売事業者名', value: 'マインドフリー神道学アカデミア' },
+  { label: '運営統括責任者', value: '岡 慶行' },
+  { label: '所在地', value: '〒223-0058 神奈川県横浜市港北区新吉田東4-8-20' },
+  {
+    label: '電話番号',
+    value:
+      '080-5694-7058\n※神遊び中・セッション中はお電話に出られないことがございます。お問い合わせはメールまたはお問い合わせフォームをご利用ください。',
+  },
+  { label: 'メールアドレス', value: 'contact@okage-san.com' },
+  { label: 'ホームページ', value: 'https://okage-san.com/' },
+  { label: '販売価格', value: '各サービスページ・各商品ページに税込価格で表示しています。' },
+  {
+    label: '商品代金以外の必要費用',
+    value:
+      '・消費税（表示価格に含まれます）\n・送料：全国一律1,000円（商品代金10,000円以上で無料）\n・銀行振込の場合の振込手数料（お客様ご負担）',
+  },
+  { label: 'お支払い方法', value: '・クレジットカード\n・銀行振込' },
+  {
+    label: 'お支払い時期',
+    value: '・クレジットカード：ご注文時・お申し込み時\n・銀行振込：お申し込みから7日以内',
+  },
+  {
+    label: '役務・商品の提供時期',
+    value:
+      '〈神遊び（神社参拝プログラム）〉\nお申し込み・ご入金確認後、開催日にご提供いたします。（ご入金確認後、3営業日以内にメールでご案内します）\n\n〈天然石商品〉\nご注文・ご入金確認後、7〜14日以内に発送いたします。',
+  },
+  {
+    label: '返品・キャンセルについて',
+    value:
+      '〈天然石商品（物販）の返品特約〉\nすべて一点物のため、お客様のご都合による返品・交換・キャンセルはお受けできません。\n商品に破損・初期不良があった場合は、商品到着後7日以内にメールにてご連絡ください。送料弊社負担にて交換または返金対応いたします。\n※天然石の色味・模様・インクルージョン（内包物）等の個体差は初期不良には該当いたしません。\n\n〈神遊び（神社参拝プログラム）〉\n・開催日の7日前まで：全額返金\n・開催日の6日前〜前日：50%返金\n・開催日当日：返金不可\n※返金手続きは7営業日以内に行います。振込手数料はお客様のご負担となります。',
+  },
+  { label: '中途解約', value: '現在、月額継続課金サービスは提供しておりません。' },
+];
+---
+
+<Base
+  title="特定商取引法に基づく表記"
+  description="マインドフリー神道学アカデミアの特定商取引法に基づく表記です。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    <header class="stack" data-reveal>
+      <p class="kicker">Legal</p>
+      <h1>特定商取引法に基づく表記</h1>
+      <p class="lede">
+        特定商取引に関する法律第11条（通信販売についての表示）に基づき、以下のとおり表示いたします。
+      </p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    <section class="stack tokusho-sec" data-reveal>
+      <div class="tablewrap">
+        <table class="tokusho-table">
+          <tbody>
+            {tokushoItems.map((item) => (
+              <tr>
+                <th scope="row">{item.label}</th>
+                <td class="whitespace-pre">{item.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .tokusho-sec {
+    margin-block: 1rem 3rem;
+  }
+
+  .tokusho-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-2);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+
+  .tokusho-table tr {
+    border-bottom: 1px solid var(--rule);
+  }
+  .tokusho-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .tokusho-table th {
+    width: 13rem;
+    padding: 1.25rem 1.5rem;
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
+    color: var(--accent);
+    font-weight: 500;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.95rem;
+    border-right: 1px solid var(--rule);
+  }
+
+  .tokusho-table td {
+    padding: 1.25rem 1.5rem;
+    color: var(--fg);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    vertical-align: top;
+  }
+
+  .whitespace-pre {
+    white-space: pre-line;
+  }
+
+  @media (max-width: 640px) {
+    .tokusho-table,
+    .tokusho-table tbody,
+    .tokusho-table tr,
+    .tokusho-table th,
+    .tokusho-table td {
+      display: block;
+      width: 100%;
+    }
+    .tokusho-table th {
+      border-right: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      padding: 0.85rem 1.25rem;
+    }
+    .tokusho-table td {
+      padding: 1rem 1.25rem;
+    }
+  }
+</style>

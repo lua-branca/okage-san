@@ -1,0 +1,192 @@
+---
+/** プライベートプラン（オーダーメイド）。
+ *
+ *  ★なぜ「経営者向け」にしなかったか（福田判断 2026-07-30）
+ *    「経営者向け」と名乗ると、経営者しか入れません。
+ *    プライベートプランなら、経営者も／日程が合わない個人も／会社としての依頼も
+ *    ぜんぶ同じ入口で拾えます。単価も上げられます。
+ *    → STRATEGY 第6章の「柱Bを表の入口に並べると弱くなる」問題も回避できます。
+ *
+ *  🔴 ナビには入れていません。/kamiasobi/ と /session/ の末尾からリンクします。
+ *     「日程が合わない」と思った瞬間に目に入る位置に置くのが効くため。
+ *
+ *  🔴 旅行業法：ここがいちばん危ない商品です。
+ *     行き先と日程を主催が決めて手配すると「受注型企画旅行」に近づきます。
+ *     必ず「ご希望をうかがって提案する。手配と支払いはご本人」の形を保つこと。
+ *     → 10_Strategy/TRAVEL_LAW_MEMO.md
+ *
+ *  ⚠️ 価格は未定です。「内容によって変わります」で通しています。
+ *     決まっていないものを決まったように書かないこと。 */
+import Base from '../layouts/Base.astro';
+import NoticeBox from '../components/NoticeBox.astro';
+import Steps from '../components/Steps.astro';
+import Faq from '../components/Faq.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+const steps = [
+  { t: 'ご相談', d: 'まずはお話を聞かせてください。何を整えたいのか、どんな状態なのか。' },
+  { t: 'ご提案', d: '合いそうな行き先と、組み立てをお伝えします。この時点では費用はかかりません。' },
+  { t: 'お見積り', d: '内容が決まったら、費用をお出しします。' },
+  { t: '当日', d: 'ご希望の日に。おひとりでも、ご家族でも、会社のチームでも。' },
+];
+
+const faq = [
+  {
+    q: '費用はどれくらいですか。',
+    a: '内容によって変わるため、決まった金額をお出ししていません。\nお話を聞いたうえでお見積りします。ご相談の段階では費用はかかりません。',
+  },
+  {
+    q: '行きたい神社を指定できますか。',
+    a: 'ご希望をうかがって、ご一緒できるかお答えします。\n岡から「その願いなら、こちらのほうが合うかもしれません」とお伝えすることもあります。',
+  },
+  {
+    q: '会社として依頼できますか。',
+    a: '承っています。経営者の方おひとりでも、チームでのご参加でも。',
+  },
+  {
+    q: 'ひとりでも大丈夫ですか。',
+    a: 'はい。おひとりでのご依頼がいちばん多いです。',
+  },
+];
+---
+
+<Base
+  title="プライベートプラン"
+  description="日程が合わない方、行きたい神社がある方、会社として依頼したい方へ。ご希望をうかがって組み立てる、おひとり（または少人数）のためのプランです。"
+  surface="dark"
+  reading
+>
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">プライベートプラン</p>
+      <h1>あなたのために、<br />組み立てます</h1>
+      <p class="lede">
+        決まった日程の参拝とは別に、<br />
+        <strong>ご希望をうかがってから組み立てる</strong>プランをご用意しています。
+      </p>
+    </div>
+  </section>
+
+  {/* ── どういうときに ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">こんなご相談をいただきます</p>
+      <h2>たとえば、こういうとき</h2>
+
+      <ul class="cases">
+        <li>
+          <span class="cases__t mj">日程が合わない</span>
+          <span class="note">行きたい回があったけれど、その日は動けない</span>
+        </li>
+        <li>
+          <span class="cases__t mj">行きたい神社がある</span>
+          <span class="note">気になっている社がある。でもどう向き合えばいいか分からない</span>
+        </li>
+        <li>
+          <span class="cases__t mj">人のいるところは苦手</span>
+          <span class="note">グループだと気を使ってしまう。ひとりで聞きたいことがある</span>
+        </li>
+        <li>
+          <span class="cases__t mj">会社として、チームとして</span>
+          <span class="note">経営の節目に。あるいは社内の空気を変えたいときに</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  {/* ── 何を一緒に決めるか ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">組み立て方</p>
+      <h2>一緒に決めていくこと</h2>
+      <div class="tablewrap">
+        <table>
+          <tbody>
+            <tr><th>いつ</th><td>ご都合のいい日に。平日でも</td></tr>
+            <tr><th>どこへ</th><td>ご希望をうかがって、岡から提案します</td></tr>
+            <tr><th>どなたと</th><td>おひとりでも、ご家族でも、会社のチームでも</td></tr>
+            <tr><th>どのくらい</th><td>半日から。一日かけることも、宿を取って続けることもあります</td></tr>
+            <tr><th>何を</th><td>神社参拝だけでなく、個人セッションと組み合わせることもできます</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">
+        <a href={withBase('/session/')}>個人セッション</a>との組み合わせについても、ご相談ください。
+      </p>
+    </div>
+  </section>
+
+  {/* ── 流れ ── */}
+  <section class="section">
+    <div class="wrap stack">
+      <div data-reveal>
+        <p class="kicker">流れ</p>
+        <h2>ご相談から当日まで</h2>
+      </div>
+      <Steps items={steps} />
+    </div>
+  </section>
+
+  {/* ── 費用 ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">費用</p>
+      <h2>内容によって変わります</h2>
+      <p class="note">
+        行き先と日数、人数によって変わるため、決まった金額をお出ししていません。<br />
+        お話を聞いたうえでお見積りします。<strong>ご相談の段階では費用はかかりません。</strong>
+      </p>
+
+      {/* 🔴 旅行業法：主催が手配・集金する形にしないこと。
+             ご希望をうかがって提案する／手配と支払いはご本人、を必ず明記する */}
+      <NoticeBox title="お申し込みの形について" tone="law">
+        <p>
+          ご希望をうかがい、行き先や組み立ての<strong>ご提案をする</strong>プランです。
+          交通・宿泊のお手配とお支払いは、お客様ご自身でお願いしています。
+        </p>
+        <p>
+          その場を感じ、自分を整えることを学ぶ講習・ガイドプログラムです。
+          祈祷や医療行為ではなく、特定の効果や結果を保証するものではありません。
+        </p>
+      </NoticeBox>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="wrap stack">
+      <div data-reveal><h2>よくあるご質問</h2></div>
+      <Faq items={faq} openFirst />
+    </div>
+  </section>
+
+  {/* ── 相談 ── */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <h2>まず、お話を聞かせてください</h2>
+      <p class="note">
+        決まっていなくて大丈夫です。「なんとなく気になっている」から始まることが多いです。
+      </p>
+      <p><a href={withBase('/contact/')} class="btn">相談してみる</a></p>
+      <p class="note">
+        <a href={withBase('/line/')}>LINE</a>からでもお気軽に。
+      </p>
+    </div>
+  </section>
+
+  <LineCta />
+</Base>
+
+<style>
+  h1 { line-height: 1.45; }
+  h2 { line-height: 1.5; }
+  th { white-space: nowrap; width: 6.5rem; }
+
+  .cases { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .cases li {
+    display: flex; flex-direction: column; gap: .2rem;
+    padding-left: 1rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .cases__t { font-size: 1.0625rem; color: var(--fg); }
+</style>

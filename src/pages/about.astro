@@ -1,0 +1,367 @@
+---
+import Base from '../layouts/Base.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+const approaches = [
+  {
+    title: '神社参拝（神遊び）',
+    desc: '神社という清浄な場を借りて、自分のエネルギーと意識を整える実地プログラム。観光でも修行でもなく、場と調和する作法と対話を学びます。',
+    href: '/kamiasobi/',
+    icon: '⛩️',
+  },
+  {
+    title: '心を整える（瞑想と本物のパワーストーン）',
+    desc: '心を整え神とつながる手助けとなる1点ものの本物のパワーストーン。瞑想時の手元の道具としてお見立てしお届けしています。',
+    href: '/mind/',
+    icon: '💎',
+  },
+  {
+    title: '個人セッション（前世療法・ヒプノセラピー）',
+    desc: '顕在意識（思考）では動かない深層の悩みへ。潜在意識にアクセスし、前世や記憶の感情を解きほぐす90分間の個別ワーク。',
+    href: '/session/',
+    icon: '🧘',
+  },
+  {
+    title: '読み物・言葉の配信（ブログ / 公式LINE）',
+    desc: '著書『願わず叶う神社参拝入門』や公式LINEでの14日間ステップ講座・週1回配信を通じ、日常で心を整える知恵を共有しています。',
+    href: '/blog/',
+    icon: '📖',
+  },
+];
+
+const overview = [
+  ['正式名称', 'マインドフリー神道学アカデミア'],
+  ['代表・運営責任者', '岡 慶行（おか よしゆき）'],
+  ['肩書き', '神道家 ／ ヒプノセラピスト ／ 造園家'],
+  ['所在地', '〒223-0058 神奈川県横浜市港北区新吉田東4-8-20'],
+  ['メールアドレス', 'contact@okage-san.com'],
+  ['公式ホームページ', 'https://okage-san.com/'],
+  ['公式LINEアカウント', 'https://lin.ee/XAxux9k'],
+  [
+    '提供サービス概要',
+    '・神社参拝プログラム（作法と対話を学ぶ現地講習ガイド）\n・本物のパワーストーンのお見立て・販売（瞑想用1点もの天然石）\n・個人セッション（ヒプノセラピー／前世療法・エネルギー調整 90分）\n・公式LINE・オンライン講座および書籍出版活動',
+  ],
+  ['主要著書', '『願わず叶う神社参拝入門 ─ 心の動きが運命を変える ─』（2025年8月刊行・Kindle / 単行本）'],
+];
+---
+
+<Base
+  title="岡慶行について"
+  description="植木屋歴40年、神道歴40年あまり。庭も神社も、やっていることは同じでした。エネルギーを読んで、整える。岡慶行のパーソナリティとマインドフリー神道学アカデミアについて。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ── ページタイトル ── */}
+    <header class="about-hero stack" data-reveal>
+      <p class="kicker">Profile & Concept</p>
+      <h1 class="mj">岡 慶行について</h1>
+      <p class="lede">
+        庭も、神社も、やっていることは同じでした。<br />
+        エネルギーを読んで、整える。40年、それだけをやってきました。
+      </p>
+    </header>
+
+    {/* ── 横長メイン写真（16:9で目立たせる） ── */}
+    <figure class="hero-landscape wrap" data-reveal>
+      <img
+        src={withBase('/assets/oka-portrait.jpg')}
+        alt="杉並木の参道を歩く岡慶行"
+        width="1200"
+        height="675"
+        class="hero-landscape-img"
+      />
+    </figure>
+
+    {/* ── ① 岡慶行のパーソナリティ・歩み（最初に配置） ── */}
+    <section class="stack personality-sec" data-reveal>
+      <p class="kicker">Story</p>
+      <h2>岡 慶行の歩み</h2>
+
+      <div class="prose-card stack">
+        <h3 class="mj">「土をさわる仕事と、神様と話す仕事。同じなんです。」</h3>
+
+        <div class="prose">
+          <p>
+            神道家、と名乗っています。でも長いこと、現場で泥にまみれて働く植木屋（造園家）でした。<br />
+            どちらも十代の頃から師事し、40年以上にわたって土と木、そして神々の気配と向き合い続けてきました。
+          </p>
+          <p>
+            まったく別のことをしていると、よく言われます。<br />
+            でも、同じなんです。
+          </p>
+          <p>
+            庭を見れば、その家や住む人の気の滞りが分かります。<br />
+            木がどちらに伸ばしたがっているか、どこで流れが止まっているか。<br />
+            神社でやっていることも同じです。場の空気や巡りを読んで、整える。
+          </p>
+          <p>
+            十代の時、神道の師匠から<strong>「生き方は晩年に出る」</strong>と教わりました。<br />
+            たくさんの人の人生やお庭を見つめてきて、今ははっきり言えます。師匠は正しかった。<br />
+            歳を重ねたとき、その人がどんな思いで心を整えてきたかが、顔つきや佇まいにすべて表れます。<br />
+            だからこそ、今この瞬間から自分の心を整えて生きる価値があるのです。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── ② マインドフリー神道学アカデミアについて（そのあとに配置） ── */}
+    <section class="stack academy-sec" data-reveal>
+      <p class="kicker">Vision & Concept</p>
+      <h2>マインドフリー神道学アカデミアとは</h2>
+
+      <div class="vision-card stack">
+        <h3 class="mj">心を整え、自分自身が『神性』として生きる世界をひらく。</h3>
+
+        <div class="prose">
+          <p>
+            「マインドフリー神道学アカデミア」が伝える「マインドフリー（Mind Free）」とは、心の恐れや執着、過去の縛りから解き放たれ、自分自身の本来の力で自由に生きていく状態のことです。
+          </p>
+          <p>
+            神社は、何かを願い請う場所ではありません。<br />
+            自分の心を澄ませ、内側にある本来の光（神性）を思い出し、整える場所です。
+          </p>
+          <p>
+            世の中には「これを持てば開運する」「ここに頼れば救われる」といった、誰かに依存させるようなスピリチュアルが溢れています。<br />
+            しかし、本当の開運とは、誰かに与えてもらうものではありません。
+          </p>
+          <p>
+            岡慶行がこのアカデミアを通して実現したいのは、<strong>他者や特別な力に依存せず、一人ひとりが自分の内側にある神性に目覚め、日常の中で自らの心を整えて運命をひらいていける「自立した仲間」を増やすこと</strong>です。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── ③ 4つの柱（提供サービス） ── */}
+    <section class="stack approach-sec" data-reveal>
+      <p class="kicker">Our Approaches</p>
+      <h2>心を整えるための4つのアプローチ</h2>
+
+      <div class="approach-grid">
+        {approaches.map((app) => (
+          <div class="approach-box stack">
+            <div class="approach-box__head">
+              <span class="approach-box__icon">{app.icon}</span>
+              <h3 class="approach-box__title mj">{app.title}</h3>
+            </div>
+            <p class="approach-box__desc">{app.desc}</p>
+            <a href={withBase(app.href)} class="approach-box__link">
+              詳細を見る →
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── ④ マインドフリー神道学アカデミア概要（組織・事業情報） ── */}
+    <section class="stack overview-sec" data-reveal>
+      <p class="kicker">Organization</p>
+      <h2>マインドフリー神道学アカデミア概要</h2>
+
+      <div class="tablewrap">
+        <table class="overview-table">
+          <tbody>
+            {overview.map(([label, val]) => (
+              <tr>
+                <th scope="row">{label}</th>
+                <td class="whitespace-pre">
+                  {val.startsWith('http') ? (
+                    <a href={val} target="_blank" rel="noopener">{val}</a>
+                  ) : (
+                    val
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {/* LINE CTA */}
+    <LineCta variant="section" />
+  </div>
+</Base>
+
+<style>
+  /* ヒーロー */
+  .about-hero h1 {
+    font-size: clamp(1.8rem, 4.2vw, 2.6rem);
+    line-height: 1.35;
+  }
+
+  /* メイン写真（トリミングなし・オリジナルの比率） */
+  .hero-landscape {
+    max-width: 48rem;
+    margin: 1rem auto 2.5rem;
+  }
+  .hero-landscape-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--rule);
+    display: block;
+  }
+
+  /* ① プロフィール・文章カード */
+  .prose-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  .prose-card h3 {
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin: 0;
+    line-height: 1.45;
+  }
+  .prose-card p {
+    font-size: 1.025rem;
+    line-height: 1.85;
+    color: var(--fg);
+    margin-block: 1rem 0;
+  }
+
+  /* ② ビジョンカード */
+  .vision-card {
+    background: var(--bg-2);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 2rem 2.25rem;
+    border-top: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+  .vision-card h3 {
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin: 0;
+    line-height: 1.45;
+  }
+  .vision-card p {
+    font-size: 1.025rem;
+    line-height: 1.85;
+    color: var(--fg);
+    margin-block: 1rem 0;
+  }
+
+  /* アプローチ4つの柱 */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .approach-box {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.75rem;
+    justify-content: space-between;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .approach-box:hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .approach-box__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .approach-box__icon {
+    font-size: 1.6rem;
+  }
+  .approach-box__title {
+    font-size: 1.15rem;
+    color: var(--fg);
+    margin: 0;
+    line-height: 1.35;
+  }
+  .approach-box__desc {
+    font-size: 0.925rem;
+    color: var(--fg-2);
+    line-height: 1.75;
+    margin: 0;
+  }
+  .approach-box__link {
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .approach-box__link:hover {
+    text-decoration: underline;
+  }
+
+  /* 概要テーブル */
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-2);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .overview-table tr {
+    border-bottom: 1px solid var(--rule);
+  }
+  .overview-table tr:last-child {
+    border-bottom: none;
+  }
+  .overview-table th {
+    width: 13rem;
+    padding: 1.1rem 1.5rem;
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
+    color: var(--accent);
+    font-weight: 500;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.95rem;
+    border-right: 1px solid var(--rule);
+  }
+  .overview-table td {
+    padding: 1.1rem 1.5rem;
+    color: var(--fg);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    vertical-align: top;
+  }
+  .overview-table a {
+    color: var(--accent);
+    word-break: break-all;
+  }
+  .whitespace-pre {
+    white-space: pre-line;
+  }
+
+  @media (max-width: 640px) {
+    .overview-table,
+    .overview-table tbody,
+    .overview-table tr,
+    .overview-table th,
+    .overview-table td {
+      display: block;
+      width: 100%;
+    }
+    .overview-table th {
+      border-right: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      padding: 0.75rem 1.25rem;
+    }
+    .overview-table td {
+      padding: 0.85rem 1.25rem;
+    }
+  }
+</style>

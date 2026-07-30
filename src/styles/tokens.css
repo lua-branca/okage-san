@@ -1,0 +1,121 @@
+/* ============================================================
+   配色・タイポグラフィのトークン
+   正本: 50_Rebuild_2026/20_Site/SITE_CONCEPT.md 第6章
+   ★色を変えたいときは、このファイルだけ書き換えれば全体に反映されます
+   ============================================================ */
+
+:root {
+  /* ── 紫のスケール ── */
+  --p900: #241C2E;   /* 暗い面の地 */
+  --p700: #3A2F4A;   /* 明るい面の見出し・リンク */
+  --p500: #5A4A6E;
+  --p300: #9A8CAA;
+  --p200: #BCAECC;   /* 暗い面の補助テキスト */
+  --p100: #E4DEEA;   /* 罫線 */
+  --p050: #F2EFF4;   /* ブロックの地 */
+
+  /* ── ロゴから拾った2色（暗い面専用） ── */
+  --gold:  #D0A040;  /* ロゴの縁と山 / 深紫上 6.86 */
+  --asagi: #90D0D0;  /* ロゴの水の縞 / 深紫上 9.46 */
+  --gold-dark: #8A6620; /* 明るい面で金を使う場合 4.82 */
+
+  /* ── 中性色 ── */
+  --cream: #F7F5F0;  /* 生成り */
+  --ink:   #2B2926;  /* 墨 */
+  --ink-2: #544F47;  /* 補助 7.45 */
+  --white: #FFFFFF;
+
+  /* ── 状態色（明暗2種を持つ） ── */
+  --moss:       #4A5A44;  /* 明るい面 6.79 */
+  --moss-light: #8FA085;  /* 暗い面 5.88 */
+  --verm:       #9E3B24;  /* 明るい面 6.21 */
+  --verm-light: #D9705A;  /* 暗い面 5.01 */
+
+  /* ── フォント ──
+     🔴 明朝は 400 と 500 のみ。600以上を指定しない（合成太字になる） */
+  --mincho: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", YuMincho, serif;
+  --gothic: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* 別名。--font-serif / --font-sans と書いても壊れないように
+     （2026-07-29：未定義のまま参照され、記事の見出しがゴシックに落ちる不具合があった） */
+  --font-serif: var(--mincho);
+  --font-sans:  var(--gothic);
+
+  /* ── サイズ ──
+     🔴 日本語の最小は 14px。ラベルのみ 13px + トラッキング */
+  --fs-body: 1rem;        /* 16px */
+  --fs-note: 0.875rem;    /* 14px */
+  --fs-label: 0.8125rem;  /* 13px */
+  --fs-h1: clamp(1.5rem, 1.15rem + 1.6vw, 2.05rem);
+  --fs-h2: clamp(1.2rem, 1.05rem + .6vw, 1.35rem);
+  --fs-h3: 1.02rem;
+
+  --lh-body: 1.9;
+  --lh-head: 1.55;
+
+  /* ── レイアウト ── */
+  --col: 41rem;      /* 本文の最大幅（680px相当） */
+  --gap-section: 3rem;
+  --radius: 2px;
+}
+
+/* ============================================================
+   面（surface）
+   見る場所 = 暗い面（深紫） / 読む場所 = 明るい面（生成り）
+   → SITE_CONCEPT 6-2
+   ============================================================ */
+
+/* 🔴 2026-07-29 変更：サイト全体を深紫に統一しました。
+   理由：ブランドの一貫性を優先。明→暗を行き来すると別サイトに見える。
+   読みやすさは「色」ではなく「タイポグラフィ」で作ります（.reading）。
+   明るい面は当面使いません（将来ホワイトペーパー等が要るとき用に残置）。 */
+
+/* 明るい面（現在は未使用） */
+.surface-light {
+  --bg: var(--cream);
+  --bg-2: var(--p050);
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --head: var(--p700);
+  --link: var(--p700);
+  --rule: var(--p100);
+  --accent: var(--gold-dark);
+  --cat: var(--moss);
+  --state: var(--verm);
+
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* 暗い面：見る場所（トップのヒーロー / /mind/ / レポート） */
+.surface-dark {
+  --bg: var(--p900);
+  --bg-2: #2E2539;
+  --fg: var(--white);
+  --fg-2: var(--p200);
+  --head: var(--white);
+  --link: var(--asagi);
+  --rule: #3E3550;
+  --accent: var(--gold);
+  --cat: var(--moss-light);
+  --state: var(--verm-light);
+
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* ============================================================
+   読み物モード（長文を暗い面で読ませるための調整）
+   純白は目が疲れる（ハレーション）ので、わずかに落とした白を使う
+   ============================================================ */
+.reading {
+  --fg: #EDEAE4;          /* 純白より少し落とす */
+  color: var(--fg);
+}
+.reading .prose p,
+.reading .body p {
+  font-size: 1.0625rem;
+  line-height: 2.05;      /* 通常1.9より広く */
+  letter-spacing: .015em; /* わずかに字間を開ける */
+}

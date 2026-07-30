@@ -1,0 +1,80 @@
+---
+/** 金額と「含まれるもの／含まれないもの」。
+ *  🔴 各自手配型の要：交通・宿泊・昼食が「含まれない」ことを、
+ *     申込前に必ず読める位置に置く → TRAVEL_LAW_MEMO */
+interface Props {
+  price: number;
+  /** 「日帰り1名さま」「1点」など、金額が何に対するものか */
+  unit?: string;
+  includes?: string[];
+  excludes?: string[];
+  /** 支払い方法。例：「銀行振込／クレジットカード」 */
+  payment?: string;
+  /** 補足（キャンセル規定など） */
+  note?: string;
+}
+const { price, unit, includes = [], excludes = [], payment, note } = Astro.props;
+---
+
+<div class="price">
+  <p class="price__v">
+    <span class="tabnum">¥{price.toLocaleString('ja-JP')}</span>
+    {unit && <span class="price__u note">／{unit}</span>}
+  </p>
+
+  {(includes.length > 0 || excludes.length > 0) && (
+    <div class="price__g">
+      {includes.length > 0 && (
+        <div>
+          <p class="kicker">含まれるもの</p>
+          <ul class="list-accent note">{includes.map((s) => <li>{s}</li>)}</ul>
+        </div>
+      )}
+      {excludes.length > 0 && (
+        <div>
+          <p class="kicker price__x">含まれないもの</p>
+          <ul class="note price__xl">{excludes.map((s) => <li>{s}</li>)}</ul>
+        </div>
+      )}
+    </div>
+  )}
+
+  {payment && <p class="note price__pay">お支払い：{payment}</p>}
+  {note && <p class="note">{note}</p>}
+</div>
+
+<style>
+  .price {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.5rem;
+    background: var(--bg-2);
+    border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  }
+
+  .price__v {
+    font-family: var(--mincho);
+    font-size: 1.7rem;
+    color: var(--fg);
+    line-height: 1.3;
+  }
+  .price__u { font-family: var(--gothic); color: var(--fg-2); }
+
+  .price__g {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .price__g ul { margin-top: .5rem; line-height: 1.9; }
+
+  /* 「含まれないもの」は朱寄りにして見落とさせない */
+  .price__x { color: var(--state); }
+  .price__xl li::marker { color: var(--state); }
+
+  .price__pay { padding-top: .9rem; border-top: 1px solid var(--rule); }
+
+  @media (max-width: 560px) {
+    .price__g { grid-template-columns: 1fr; }
+  }
+</style>

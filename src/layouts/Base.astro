@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { withBase } from '../utils/base';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 🔴 2026-07-29：サイト全体を深紫に統一。'light' は当面使いません */
+  surface?: 'light' | 'dark';
+  /** 長文ページ（/about/ /blog/{slug}/）は読み物モードで文字を調整 */
+  reading?: boolean;
+  /** 検索避け。/styleguide/ など社内用ページに使う */
+  noindex?: boolean;
+}
+
+const { title, description, surface = 'dark', reading = false, noindex = false } = Astro.props;
+const site = 'マインドフリー神道学アカデミア';
+// 🔴 各ページが渡す title にサイト名が含まれていても二重にしない
+//    （2026-07-29：全ページで「〜｜サイト名｜サイト名」になっていた）
+const fullTitle = title === site || title.endsWith(`｜${site}`) ? title : `${title}｜${site}`;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="theme-color" content="#241C2E" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(withBase('/assets/oka-hero.jpg'), Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href={withBase('/assets/logo.png')} />
+
+    <!-- フォント：Noto Serif JP 400/500 ＋ Noto Sans JP 400/500/600 -->
+    <!-- 🔴 明朝の600以上を読み込まない（合成太字になる） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@400;500&display=swap"
+    />
+
+    <!-- ③ ページ遷移をなめらかに（全ページが同じ紫なので、1つの世界に見える） -->
+    <ClientRouter />
+
+    <!-- JSが動くときだけ reveal を有効化（描画前に付けてチラつきを防ぐ） -->
+    <script is:inline>
+      document.documentElement.classList.add('js-reveal');
+    </script>
+
+    <!-- TODO: GA4 の測定IDを入れる（localhost・自宅IPは内部トラフィックで除外） -->
+  </head>
+
+  <body class={`surface-${surface}${reading ? ' reading' : ''}`}>
+    <Header surface={surface} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // ① スクロール登場：一度だけ発火して監視を外す
+      const setupReveal = () => {
+        const els = document.querySelectorAll('[data-reveal]:not(.is-in)');
+        if (!els.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-in'));
+          return;
+        }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.05 }
+        );
+        els.forEach((el) => io.observe(el));
+      };
+
+      setupReveal();
+      // View Transitions でページが差し替わったら再セットアップ
+      document.addEventListener('astro:page-load', setupReveal);
+    </script>
+  </body>
+</html>

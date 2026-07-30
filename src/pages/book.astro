@@ -1,0 +1,212 @@
+---
+import Base from '../layouts/Base.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+const chapters = [
+  ['はじめに', '心の動きが、運命を変える'],
+  ['第一章', '神様とつながるということ'],
+  ['第二章', '神社参拝の本質 ─ 心を整える境内での在り方'],
+  ['第三章', '神様を見方につける強運の法則'],
+  ['第四章', '金運を高める神様の教え'],
+  ['第五章', '恋愛運 ─ 居場所を与える愛で良縁を引き寄せる'],
+  ['第六章', '健康運 ─ 身体からのメッセージを受け取る'],
+  ['第七章', '仕事運 ─ すべての運と繋がっている'],
+  ['第八章', '言霊の力 ─ 言葉に宿る神のエネルギー'],
+  ['第九章', '神道から見たスピリチュアルな現象'],
+  ['第十章', '日常で活かす神道の知恵'],
+  ['おわりに', 'あなたの中の神性が目覚める時'],
+  ['巻末案内', '岡 慶行のプロフィールとマインドフリー神道学アカデミアのご案内'],
+];
+---
+
+<Base
+  title="著書『願わず叶う神社参拝入門』"
+  description="植木屋40年・神道40余年の岡慶行が贈る、神社参拝の本質と心の整え方の一冊。2025年8月刊行。"
+  surface="dark"
+  reading
+>
+  <div class="wrap section stack">
+    {/* ── ヒーローセクション ── */}
+    <header class="book-hero" data-reveal>
+      <div class="book-hero__cover">
+        <img
+          src={withBase('/assets/book-cover.jpg')}
+          alt="願わず叶う神社参拝入門 書籍表紙"
+          width="320"
+          height="455"
+          class="book-cover-img"
+        />
+      </div>
+      <div class="book-hero__info stack">
+        <p class="kicker">Book</p>
+        <h1 class="mj book-title">
+          願わず叶う神社参拝入門<br />
+          <span class="sub">─ 心の動きが運命を変える ─</span>
+        </h1>
+        <p class="lede">
+          植木屋40年、神道40余年。<br />
+          現場で見てきたこと、考えてきたことを1冊にまとめました。
+        </p>
+        <div class="book-meta">
+          <p class="note">
+            著者：岡 慶行 ／ 2025年8月刊行<br />
+            仕様：Kindle版 ＆ 単行本 ／ Kindle Unlimited対象
+          </p>
+        </div>
+        <div class="book-btns">
+          <a href="https://amzn.to/40UznBY" class="btn btn--lg" target="_blank" rel="noopener">
+            Amazonで見る（Kindle / 単行本）
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ── 本書について ── */}
+    <section class="stack" data-reveal>
+      <p class="kicker">About</p>
+      <h2>考え抜いた本質を、全章に込めました</h2>
+      <div class="prose">
+        <p>
+          参拝の作法から、金運・恋愛運・健康運・仕事運の整え方まで。<br />
+          神社はお願いごとをする場所ではなく、自分自身の心を整え、神様と調和する場所です。
+        </p>
+        <p>
+          本を読んでから神遊び（神社ツアー）や個別セッションに来られる方が、いちばん深く受け取られます。<br />
+          神社へ行く前に、ぜひ一度目を通していただけたらうれしいです。
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── 目次（最初のシンプルなテーブル形式） ── */}
+    <section class="stack" data-reveal>
+      <p class="kicker">Contents</p>
+      <h2>目次</h2>
+      <div class="tablewrap">
+        <table class="toc-table">
+          <tbody>
+            {chapters.map(([ch, t]) => (
+              <tr>
+                <th scope="row" class="tabnum">{ch}</th>
+                <td class="mj">{t}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── 購入案内 ── */}
+    <section class="stack text-center purchase-sec" data-reveal>
+      <h2>40年ぶんを、手に取る一冊に。</h2>
+      <p class="lede">売り上げよりも、必要としている方に届き、広まってくれたらうれしいです。</p>
+      <div class="closing-btns">
+        <a href="https://amzn.to/40UznBY" class="btn btn--lg" target="_blank" rel="noopener">Amazonで見る</a>
+        <a href={withBase('/about/')} class="btn btn--ghost">岡慶行について</a>
+      </div>
+    </section>
+
+    {/* LINE CTA */}
+    <LineCta variant="section" />
+  </div>
+</Base>
+
+<style>
+  .book-hero {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3.5rem;
+    align-items: center;
+    margin-block: 1rem 2rem;
+  }
+  @media (max-width: 768px) {
+    .book-hero {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 2rem;
+    }
+  }
+
+  .book-hero__cover {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .book-cover-img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--rule);
+    display: block;
+  }
+
+  .book-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    line-height: 1.35;
+    margin: 0;
+  }
+  .book-title .sub {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--fg-2);
+    display: block;
+    margin-top: 0.35rem;
+    font-weight: 400;
+  }
+
+  .book-meta {
+    padding: 1rem;
+    background: var(--bg-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 2px;
+  }
+
+  /* 目次テーブル */
+  .toc-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .toc-table tr {
+    border-bottom: 1px solid var(--rule);
+  }
+  .toc-table th {
+    padding: 1.1rem 1.5rem 1.1rem 0;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 1.05rem;
+    width: 6rem;
+  }
+  .toc-table td {
+    padding: 1.1rem 0;
+    color: var(--fg);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .btn--lg {
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+  }
+
+  .purchase-sec {
+    padding-block: 2.5rem 1.5rem;
+  }
+  .closing-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .text-center {
+    text-align: center;
+  }
+</style>

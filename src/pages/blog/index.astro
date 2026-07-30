@@ -1,0 +1,229 @@
+---
+import Base from '../../layouts/Base.astro';
+import LineCta from '../../components/LineCta.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../../utils/base';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+
+const cats = ['心とエネルギー', 'お金と仕事', '神社と参拝'];
+const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data.category === c).length]));
+---
+
+<Base
+  title="読み物"
+  description="心とエネルギー、お金と仕事、神社と参拝。岡慶行が書いてきた気づきのメッセージを読み物にまとめています。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ── ヘッダー ── */}
+    <header class="blog-header stack" data-reveal>
+      <p class="kicker">Articles</p>
+      <h1>読み物</h1>
+      <p class="lede">
+        Facebookに投稿してきたメッセージを、<br />
+        読みやすいテーマ別記事にまとめています。
+      </p>
+
+      {/* カテゴリフィルタータブ (リンク＋JSフォールバック対応) */}
+      <div class="filter-bar">
+        <a href={withBase('/blog/')} class="filter-tab active" data-cat="all">
+          すべて <span class="tabnum">({posts.length})</span>
+        </a>
+        {cats.map((c) => (
+          <a
+            href={withBase(`/blog/?category=${encodeURIComponent(c)}`)}
+            class="filter-tab"
+            data-cat={c}
+          >
+            {c} <span class="tabnum">({counts[c]})</span>
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ── 記事一覧 ── */}
+    <section class="stack" data-reveal>
+      {posts.length === 0 ? (
+        <p class="note">まだ記事がありません。</p>
+      ) : (
+        <>
+          <div class="post-list" id="postList">
+            {posts.map((p) => (
+              <div class="post-item" data-category={p.data.category}>
+                <PostCard
+                  slug={p.id}
+                  title={p.data.title}
+                  description={p.data.description}
+                  category={p.data.category}
+                  pubDate={p.data.pubDate}
+                  heroImage={p.data.heroImage}
+                  chars={p.body?.length ?? 0}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* 10件超えた場合の「もっと見る」ボタン */}
+          <div class="load-more-wrap" id="loadMoreWrap" style="display: none;">
+            <button type="button" class="btn btn--ghost" id="loadMoreBtn">
+              もっと見る
+            </button>
+          </div>
+        </>
+      )}
+    </section>
+
+    {/* LINE CTA */}
+    <LineCta variant="section" />
+  </div>
+</Base>
+
+<script is:inline>
+  (function () {
+    const PAGE_SIZE = 10;
+    let currentVisibleCount = PAGE_SIZE;
+
+    function initBlogFilter() {
+      const tabs = document.querySelectorAll('.filter-tab');
+      const items = document.querySelectorAll('.post-item');
+      const loadMoreWrap = document.getElementById('loadMoreWrap');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+      if (!tabs.length || !items.length) return;
+
+      function updateListDisplay() {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const targetCat = activeTab ? activeTab.getAttribute('data-cat') : 'all';
+
+        const matchingItems = [];
+        items.forEach(function (item) {
+          const cat = item.getAttribute('data-category');
+          if (targetCat === 'all' || cat === targetCat) {
+            matchingItems.push(item);
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        matchingItems.forEach(function (item, index) {
+          if (index < currentVisibleCount) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        if (loadMoreWrap && loadMoreBtn) {
+          if (matchingItems.length > currentVisibleCount) {
+            loadMoreWrap.style.display = 'flex';
+            const remaining = matchingItems.length - currentVisibleCount;
+            loadMoreBtn.textContent = 'さらに読み込む（残り ' + remaining + ' 件）';
+          } else {
+            loadMoreWrap.style.display = 'none';
+          }
+        }
+      }
+
+      function filterCategory(targetCat) {
+        currentVisibleCount = PAGE_SIZE;
+        tabs.forEach(function (tab) {
+          if (tab.getAttribute('data-cat') === targetCat) {
+            tab.classList.add('active');
+          } else {
+            tab.classList.remove('active');
+          }
+        });
+        updateListDisplay();
+      }
+
+      // クエリパラメータ `?category=...` 対応
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('category');
+      if (catParam) {
+        filterCategory(catParam);
+      } else {
+        updateListDisplay();
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function (e) {
+          e.preventDefault();
+          const cat = tab.getAttribute('data-cat') || 'all';
+          filterCategory(cat);
+
+          // URLクエリ更新
+          const newUrl = new URL(window.location.href);
+          if (cat === 'all') {
+            newUrl.searchParams.delete('category');
+          } else {
+            newUrl.searchParams.set('category', cat);
+          }
+          window.history.pushState({}, '', newUrl.toString());
+        });
+      });
+
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function () {
+          currentVisibleCount += PAGE_SIZE;
+          updateListDisplay();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBlogFilter);
+    } else {
+      initBlogFilter();
+    }
+  })();
+</script>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .filter-tab {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    color: var(--fg-2);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .filter-tab:hover {
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+  .filter-tab.active {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+
+  .load-more-wrap {
+    margin-top: 2rem;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,280 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/base';
+---
+
+<Base
+  title="お問い合わせ"
+  description="神遊び（神社参拝）、整える石、個別セッションについてのご質問・ご相談フォームです。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ── 冒頭 ── */}
+    <header class="contact-header stack" data-reveal>
+      <p class="kicker">Contact</p>
+      <h1>お問い合わせ</h1>
+      <p class="lede">
+        神遊びのこと、石のこと、個別セッションのこと。<br />
+        どんなことでも、下記のフォームよりお気軽にお尋ねください。
+      </p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ── お問い合わせフォーム UI ── */}
+    <section class="stack form-section" data-reveal>
+      <h2>お問い合わせフォーム</h2>
+
+      <form
+        class="contact-form stack"
+        onsubmit="event.preventDefault(); alert('お問い合わせフォームのフロントエンドUI確認です。バックエンド連携処理は今後接続します。');"
+      >
+        <div class="form-group">
+          <label for="name">
+            お名前（漢字） <span class="req">必須</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="例：山田 太郎"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="kana">
+            ふりがな <span class="opt">任意</span>
+          </label>
+          <input
+            type="text"
+            id="kana"
+            name="kana"
+            placeholder="例：やまだ たろう"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            メールアドレス <span class="req">必須</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="例：yamada@example.com"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="category">
+            お問い合わせの種類 <span class="req">必須</span>
+          </label>
+          <select id="category" name="category" required class="form-control">
+            <option value="" disabled selected>選択してください</option>
+            <option value="神遊びについて">神遊び（神社参拝ツアー）について</option>
+            <option value="整える石について">整える石（天然石ギャラリー）について</option>
+            <option value="個別セッション・前世療法">個別セッション・前世療法について</option>
+            <option value="取材・講演">取材・講演・メディア掲載について</option>
+            <option value="その他のお問い合わせ">その他のお問い合わせ</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">
+            お問い合わせ内容 <span class="req">必須</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            required
+            placeholder="ご質問やご相談内容を具体的にご記入ください。"
+            class="form-control"
+          ></textarea>
+        </div>
+
+        <div class="form-group form-group--checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="privacy" required />
+            <span>
+              <a href={withBase('/privacy-policy/')} target="_blank">プライバシーポリシー</a> に同意する
+            </span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--lg">
+            送信内容を確認する
+          </button>
+        </div>
+      </form>
+
+      {/* フォーム送信後のお返事に関するご案内 */}
+      <div class="form-notice-box">
+        <p class="form-notice-title">✉️ 送信後のお返事について</p>
+        <p class="form-notice-text">
+          通常 <strong>2〜3営業日以内</strong> に担当者よりメールでお返事いたします。<br />
+          数日たっても届かない場合は迷惑メールフォルダをご確認いただくか、お手数ですが再度ご連絡ください。
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── メールソフトから直接送信したい方向けの補助案内 ── */}
+    <section class="stack direct-email-section" data-reveal>
+      <div class="direct-email-box">
+        <h3>メールアプリから直接送信される場合</h3>
+        <p>
+          Webフォームがうまく動作しない場合や、添付資料を添えてお問い合わせされたい場合は、以下のメールアドレスまで直接お送りください。
+        </p>
+        <p class="email-address-highlight">contact@okage-san.com</p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  /* フォームスタイル */
+  .contact-form {
+    background: var(--bg-2);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    max-width: 48rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.95rem;
+    color: var(--fg);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .req {
+    font-size: 0.75rem;
+    background: color-mix(in srgb, var(--verm) 20%, transparent);
+    color: #ff7b70;
+    border: 1px solid color-mix(in srgb, var(--verm) 40%, transparent);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+  }
+  .opt {
+    font-size: 0.75rem;
+    background: var(--bg-2);
+    color: var(--fg-2);
+    border: 1px solid var(--rule);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--fg);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  .form-group--checkbox {
+    margin-top: 0.5rem;
+  }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  .checkbox-label input[type='checkbox'] {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .checkbox-label a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .btn--lg {
+    padding: 0.9rem 2.25rem;
+    font-size: 1rem;
+  }
+
+  /* フォーム直下の注意点ボックス */
+  .form-notice-box {
+    max-width: 48rem;
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    border-radius: 0 6px 6px 0;
+    margin-top: 1.5rem;
+  }
+  .form-notice-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 0.35rem 0;
+  }
+  .form-notice-text {
+    font-size: 0.9rem;
+    color: var(--fg-2);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* メールアプリ用補助ブロック */
+  .direct-email-box {
+    background: var(--bg-2);
+    border: 1px dashed var(--rule);
+    padding: 1.5rem 1.75rem;
+    border-radius: 6px;
+    max-width: 48rem;
+  }
+  .direct-email-box h3 {
+    font-size: 1rem;
+    color: var(--accent);
+    margin: 0 0 0.5rem 0;
+  }
+  .direct-email-box p {
+    font-size: 0.9rem;
+    color: var(--fg-2);
+    margin: 0 0 0.5rem 0;
+  }
+  .email-address-highlight {
+    font-size: 1.1rem !important;
+    font-weight: 600;
+    color: var(--fg) !important;
+    letter-spacing: 0.03em;
+    margin: 0.5rem 0 0 0 !important;
+  }
+</style>

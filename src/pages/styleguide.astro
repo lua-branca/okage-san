@@ -1,0 +1,480 @@
+---
+/** 部品カタログ（社内用）。
+ *  ここに全部品を並べて、見た目を1画面で確認できるようにする。
+ *  ・新しい部品を作ったら必ずここに1ブロック足す
+ *  ・仕様の説明は 20_Site/COMPONENTS.md（文章の正本）
+ *  🔴 公開時の扱い：noindex を付けてある。消したければこのファイルごと .trash へ */
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import IshiCard from '../components/IshiCard.astro';
+import TourCard from '../components/TourCard.astro';
+import Faq from '../components/Faq.astro';
+import PriceBox from '../components/PriceBox.astro';
+import Steps from '../components/Steps.astro';
+import NoticeBox from '../components/NoticeBox.astro';
+import Itinerary from '../components/Itinerary.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+/** 🔴 色見本はベタ書きのHEXではなく、実際のトークンから描きます。
+ *  （2026-07-29：SITE_SPECの表とtokens.cssがズレていた。
+ *    見本が嘘をつかないよう、v には var() を入れて実物を表示する） */
+const colors = [
+  { n: '--p900', m: 'ページの地。サイト全面これ' },
+  { n: '--bg-2', m: '箱の地（金額・LINE・補足）' },
+  { n: '--rule', m: '罫線' },
+  { n: '--accent', m: 'アクセント。ロゴの縁と山（--gold）／深紫上 6.86' },
+  { n: '--link', m: 'リンク・受付中。ロゴの水の縞（--asagi）／9.46' },
+  { n: '--fg', m: '見出し・本文' },
+  { n: '--fg-2', m: '補助テキスト' },
+  { n: '--cat', m: '分類ラベル（--moss-light）' },
+  { n: '--state', m: '朱。止まっている状態だけ＝満席・終了・SOLD' },
+  { n: '--cream', m: '石カードの地。サイトで唯一の明るい面' },
+];
+
+const sections = [
+  { id: 'color', t: '色' },
+  { id: 'type', t: '文字' },
+  { id: 'atoms', t: 'ボタン・ラベル・線' },
+  { id: 'cards', t: 'カード' },
+  { id: 'blocks', t: 'ブロック' },
+  { id: 'article', t: '記事本文の書式' },
+  { id: 'motion', t: '動き' },
+];
+---
+
+<Base
+  title="部品カタログ"
+  description="サイトで使う部品の一覧（社内用）"
+  surface="dark"
+  noindex
+>
+  <section class="section sg-wrap">
+    <div class="stack">
+      <p class="kicker">社内用</p>
+      <h1>部品カタログ</h1>
+      <p class="lede">
+        サイトで使う部品を全部ここに並べています。<br />
+        新しいページは、ここにあるものの組み合わせで作ります。
+      </p>
+      <p class="note">
+        仕様と使いどころの説明 → <code>20_Site/COMPONENTS.md</code><br />
+        色を変えるとき → <code>src/styles/tokens.css</code> だけ書き換え
+      </p>
+      <nav class="sg-nav">
+        {sections.map((s) => <a href={`#${s.id}`}>{s.t}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <!-- ══════════ 色 ══════════ -->
+  <section class="sg-sec sg-wrap" id="color">
+    <h2 class="sg-h">色</h2>
+    <p class="note sg-note">深紫の地に、ロゴから拾った金と浅葱。数字はコントラスト比（4.5以上が合格）。</p>
+    <ul class="sw">
+      {colors.map((c) => (
+        <li class="sw__i">
+          <span class="sw__c" style={`background:var(${c.n})`} data-token={c.n}></span>
+          <span class="sw__b">
+            <code class="sw__n">{c.n}</code>
+            <code class="sw__v note" data-token-value={c.n}>—</code>
+            <span class="note">{c.m}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ══════════ 文字 ══════════ -->
+  <section class="sg-sec sg-wrap" id="type">
+    <h2 class="sg-h">文字</h2>
+    <p class="note sg-note">見出し＝明朝（400/500のみ）／本文＝ゴシック。日本語の最小は14px。</p>
+
+    <div class="sg-demo stack">
+      <div>
+        <p class="sg-tag">h1</p>
+        <h1>神社は、自分を整える場所</h1>
+      </div>
+      <div>
+        <p class="sg-tag">h2</p>
+        <h2>観光でも、修行でもなく</h2>
+      </div>
+      <div>
+        <p class="sg-tag">h3</p>
+        <h3>当日の流れについて</h3>
+      </div>
+      <div>
+        <p class="sg-tag">.kicker（セクションの肩書き・金）</p>
+        <p class="kicker">神遊び</p>
+      </div>
+      <div>
+        <p class="sg-tag">本文</p>
+        <p>神社に行くと、なぜか気持ちが軽くなる。あれは気のせいではありません。場所には、その場所のエネルギーがあります。</p>
+      </div>
+      <div>
+        <p class="sg-tag">.lede（見出し直下のリード）</p>
+        <p class="lede">観光ではありません。修行でもありません。神社という場所を借りて、自分のエネルギーを整えに行く一日です。</p>
+      </div>
+      <div>
+        <p class="sg-tag">.note（補足・注意書き・キャプション）</p>
+        <p class="note">※ 交通費・昼食代は各自でご負担いただきます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ボタン・ラベル・線 ══════════ -->
+  <section class="sg-sec sg-wrap" id="atoms">
+    <h2 class="sg-h">ボタン・ラベル・線</h2>
+    <p class="note sg-note">主ボタンは1画面に1つまで。金地に深紫の文字（金地に白は読めません）。</p>
+
+    <div class="sg-demo stack">
+      <div>
+        <p class="sg-tag">.btn / .btn--ghost</p>
+        <p class="sg-row">
+          <a href="#atoms" class="btn">この回に申し込む</a>
+          <a href="#atoms" class="btn btn--ghost">くわしく見る</a>
+        </p>
+      </div>
+      <div>
+        <p class="sg-tag">.pill / .pill--cat</p>
+        <p class="sg-row">
+          <span class="pill pill--open">受付中</span>
+          <span class="pill">満席</span>
+          <span class="pill pill--cat">心とエネルギー</span>
+        </p>
+      </div>
+      <div>
+        <p class="sg-tag">.rule / .rule-accent</p>
+        <hr class="rule" />
+        <div style="height:.8rem"></div>
+        <hr class="rule-accent" />
+      </div>
+      <div>
+        <p class="sg-tag">表（.tablewrap で包むと横スクロールする）</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>項目</th><th>内容</th></tr></thead>
+            <tbody>
+              <tr><td>販売事業者</td><td>マインドフリー神道学アカデミア</td></tr>
+              <tr><td>お支払い方法</td><td>銀行振込／クレジットカード</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ カード ══════════ -->
+  <section class="sg-sec sg-wrap" id="cards">
+    <h2 class="sg-h">カード</h2>
+
+    <div class="sg-demo stack">
+      <div>
+        <p class="sg-tag">TourCard — 神遊び1件。<strong>残席は出しません</strong>（人数は個別調整のため）</p>
+        <TourCard
+          date="2026-08-09"
+          title="夏の大宮・氷川神社"
+          place="埼玉・大宮"
+          price={30000}
+          state="受付中"
+          note="永田町駅に集合。昼食と移動の実費は別途です。"
+          href="/form/tour.php"
+        />
+        <TourCard
+          date="2026-06-14"
+          title="初夏の三峯神社"
+          place="埼玉・秩父"
+          price={30000}
+          state="終了"
+          past
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">PostCard — 読み物</p>
+        <PostCard
+          slug="what-is-luck"
+          title="「運がいい」の正体"
+          description="運は外からやってくるものなのだろうか。「う」と「ん」という音をほどくと、運とは内側にある宇宙エネルギーだと分かってきます。"
+          category="心とエネルギー"
+          pubDate={new Date('2026-09-12')}
+          chars={2800}
+        />
+        <p class="sg-tag" style="margin-top:1rem">PostCard（compact）— 関連記事・サイドで使う</p>
+        <PostCard
+          slug="stone-stacking"
+          title="神社で石を積んではいけない理由"
+          description=""
+          category="神社と参拝"
+          pubDate={new Date('2026-07-20')}
+          compact
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">IshiCard — 石。ここだけ生成りの明るいカード（白布の写真を受け止めるため）</p>
+        <div class="sg-gal">
+          <IshiCard id="0012" name="ラピスラズリ" price={28000} photo={withBase("/assets/ishi-0012.jpg")} />
+          <IshiCard id="0013" name="水晶" price={18000} photo={withBase("/assets/ishi-0012.jpg")} soldout />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ブロック ══════════ -->
+  <section class="sg-sec sg-wrap" id="blocks">
+    <h2 class="sg-h">ブロック</h2>
+
+    <div class="sg-demo stack">
+      <div>
+        <p class="sg-tag">PriceBox — 金額と「含まれるもの／含まれないもの」</p>
+        <PriceBox
+          price={30000}
+          unit="日帰り・1名さま"
+          includes={['神社での案内とお話', '当日の資料', '終了後のフォロー（LINE）']}
+          excludes={['集合場所までの交通費', '昼食代', '宿泊が必要な場合の宿泊費']}
+          payment="銀行振込／クレジットカード"
+          note="キャンセルは開催7日前まで無料、以降は50%を申し受けます。"
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">NoticeBox（tone="law"）— 旅行業法の必須文言はこれ</p>
+        <NoticeBox title="旅行のお申し込みについて" tone="law">
+          <p>
+            本企画は<strong>講習・ガイドプログラム</strong>です。参加費に交通費・宿泊費は含まれません。
+            参加者ご自身でお手配のうえ、集合場所にお越しください。
+          </p>
+        </NoticeBox>
+      </div>
+
+      <div>
+        <p class="sg-tag">NoticeBox（tone="warn" / "info"）</p>
+        <NoticeBox title="お持ちいただくもの" tone="warn">
+          <p>歩きやすい靴、飲みもの、雨具。当日は屋外を1〜2時間ほど歩きます。</p>
+        </NoticeBox>
+        <div style="height:1rem"></div>
+        <NoticeBox tone="info">
+          <p>ご不明な点は、LINEかお問い合わせフォームからお気軽にどうぞ。</p>
+        </NoticeBox>
+      </div>
+
+      <div>
+        <p class="sg-tag">Steps — 申込から当日までの流れ</p>
+        <Steps
+          items={[
+            { t: 'お申し込み', d: 'フォームから送信していただきます。' },
+            { t: 'ご案内メール', d: '3日以内に、集合場所・時間・お振込先をお送りします。' },
+            { t: 'お支払い', d: '開催の7日前までにお願いしています。' },
+            { t: '当日', d: '集合場所でお会いしましょう。' },
+          ]}
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">Itinerary — 一日の行程。旅のしおりの形を部品化したもの</p>
+        <Itinerary
+          stops={[
+            {
+              time: '10:00',
+              name: '大宮駅 東口 集合',
+              desc: '今日どこへ向かうのか、はじめに置いてから歩き出します。',
+              address: '埼玉県さいたま市大宮区',
+              move: '参道を歩いて 20分',
+            },
+            {
+              time: '10:30',
+              name: '氷川神社',
+              kami: '水と、整えの神',
+              desc: '二礼二拍手一礼の意味から。願うのをやめて、宣言する練習をします。',
+              address: '埼玉県さいたま市大宮区高鼻町1-407',
+            },
+          ]}
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">Faq — 開閉式。JSなしでも開きます</p>
+        <Faq
+          openFirst
+          items={[
+            { q: '一人でも参加できますか。', a: 'はい。半分以上の方がおひとりでいらっしゃいます。\n道中で自然と話すこともありますが、無理に交わる必要はありません。' },
+            { q: '神道の知識がなくても大丈夫ですか。', a: '大丈夫です。知識より、その場で何を感じるかのほうを大切にしています。' },
+            { q: '雨の日はどうなりますか。', a: '小雨は決行します。荒天のときは前日までにLINEでご連絡します。' },
+          ]}
+        />
+      </div>
+
+      <div>
+        <p class="sg-tag">LineCta（variant="inline"）— 記事末に固定で入れる版</p>
+        <LineCta variant="inline" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 記事本文 ══════════ -->
+  <section class="sg-sec sg-wrap" id="article">
+    <h2 class="sg-h">記事本文の書式</h2>
+    <p class="note sg-note">
+      記事は Markdown で書きます。<strong>改行はそのまま改行になります</strong>（岡さんの1行13字の文体を保つため）。
+    </p>
+
+    <div class="sg-demo body">
+      <p>
+        私たちは「運」という言葉を、<br />
+        とても気軽に使っている。<br />
+        <br />
+        運がいい。<br />
+        運が悪い。
+      </p>
+
+      <h2>大見出し（## ）</h2>
+      <p>金の明朝＋上に区切り線。目次にも自動で入ります。</p>
+
+      <h3>小見出し（### ）</h3>
+      <p>白の明朝、控えめ。大見出しの中をさらに分けるとき。</p>
+
+      <blockquote><p>引用（&gt; ）。他の人の言葉や、神話を引くときに。</p></blockquote>
+
+      <dl class="terms">
+        <dt>う</dt><dd>内側に向かう力</dd>
+        <dt>け</dt><dd>水の女神、豊かさ</dd>
+      </dl>
+      <p class="note">↑ 用語リスト。〈語＋意味〉の対を並べる箱。石の見立てにも使えます。</p>
+
+      <ul><li>箇条書き</li><li>点は金になります</li></ul>
+
+      <figure>
+        <img src={withBase("/assets/oka-hero.jpg")} alt="" />
+        <figcaption>図版とキャプション。</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ══════════ 動き ══════════ -->
+  <section class="sg-sec sg-wrap" id="motion">
+    <h2 class="sg-h">動き</h2>
+    <p class="note sg-note">3つだけ。増やしません。「動きを減らす」設定の人には全部止まります。</p>
+
+    <div class="sg-demo stack">
+      <div class="sg-mo" data-reveal>
+        <p class="sg-tag">① data-reveal — スクロールで下から浮き上がる</p>
+        <p class="note">🔴 記事本文には付けません（JSが止まったとき文章が消えるため）。</p>
+      </div>
+      <div class="sg-mo" data-reveal data-reveal-delay="1">
+        <p class="sg-tag">② data-reveal-delay="1〜3" — 少しずらして順に出す</p>
+        <p class="note">カードを並べるときに。</p>
+      </div>
+      <div class="sg-mo">
+        <p class="sg-tag">③ .kenburns — 写真がゆっくり寄る（12秒）</p>
+        <figure class="kenburns"><img src={withBase("/assets/oka-hero.jpg")} alt="" /></figure>
+        <p class="note">1ページに1枚だけ。読み込み直すと動きます。</p>
+      </div>
+      <div class="sg-mo">
+        <p class="sg-tag">④ ページ遷移（View Transitions）</p>
+        <p class="note">全ページが同じ深紫なので、切り替わりが1つの世界に見えます。ヘッダのリンクで確認できます。</p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    // 実際に効いている値を読んで表示する。ドキュメントと実装がズレても、
+    // このページだけは必ず本当のことを言う。
+    const toHex = (v) => {
+      const m = v.match(/rgba?\(([^)]+)\)/);
+      if (!m) return v.trim();
+      const [r, g, b] = m[1].split(',').map((x) => parseInt(x, 10));
+      return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+    };
+    const cs = getComputedStyle(document.body);
+    document.querySelectorAll('[data-token-value]').forEach((el) => {
+      const name = el.getAttribute('data-token-value');
+      const raw = cs.getPropertyValue(name).trim();
+      const probe = document.createElement('span');
+      probe.style.color = raw || 'transparent';
+      document.body.appendChild(probe);
+      el.textContent = toHex(getComputedStyle(probe).color);
+      probe.remove();
+    });
+  </script>
+</Base>
+
+<style>
+  /* カタログは一覧性優先。本文幅（41rem）より広く取る */
+  .sg-wrap { max-width: 56rem; margin-inline: auto; padding-inline: 1.5rem; }
+
+  .sg-sec { padding-block: 3.5rem; border-top: 1px solid var(--rule); scroll-margin-top: 1.5rem; }
+  .sg-h { font-size: var(--fs-h1); color: var(--fg); margin-bottom: .5rem; }
+  .sg-note { margin-bottom: 2rem; }
+
+  .sg-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: .5rem; }
+  .sg-nav a { font-size: var(--fs-note); }
+
+  /* 部品の名札 */
+  .sg-tag {
+    font-family: var(--mono);
+    font-size: .75rem;
+    letter-spacing: .04em;
+    color: var(--accent);
+    margin-bottom: .75rem;
+  }
+  .sg-demo > div + div { margin-top: 2.75rem; }
+  .sg-demo .stack { gap: 2.75rem; }
+  .sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+
+  .sg-gal { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 26rem; }
+  .sg-mo { padding: 1.25rem; border: 1px dashed var(--rule); }
+
+  code {
+    font-family: var(--mono);
+    font-size: .8125rem;
+    color: var(--fg-2);
+  }
+
+  /* 色見本 */
+  .sw { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: .9rem; }
+  .sw__i { display: flex; gap: .85rem; align-items: flex-start; }
+  .sw__c {
+    flex-shrink: 0;
+    width: 3rem; height: 3rem;
+    border: 1px solid var(--rule);
+  }
+  .sw__b { display: flex; flex-direction: column; gap: .15rem; }
+  .sw__v { font-family: var(--mono); }
+  .sw__n { color: var(--fg); }
+
+  @media (max-width: 640px) {
+    .sw { grid-template-columns: 1fr; }
+  }
+
+  /* ── 記事本文サンプル：blog/[...slug].astro と同じ見た目を再現 ──
+     🔴 あちらのCSSを変えたら、ここも合わせること */
+  .body :global(p) { margin-block: 1.6rem; }
+  .body :global(h2) {
+    font-family: var(--mincho); font-weight: 400; font-size: var(--fs-h2);
+    color: var(--accent); margin-block: 3rem 1.4rem;
+    padding-top: 1.4rem; border-top: 1px solid var(--rule); line-height: 1.6;
+  }
+  .body :global(h3) {
+    font-family: var(--mincho); font-weight: 500; font-size: 1.0625rem;
+    color: var(--fg); margin-block: 2.5rem 1rem;
+  }
+  .body :global(ul) { margin-block: 1.6rem; }
+  .body :global(li) { line-height: 2; margin-bottom: .4rem; }
+  .body :global(li::marker) { color: var(--accent); }
+  .body :global(strong) { color: var(--white); }
+  .body :global(blockquote) {
+    margin-block: 2rem; padding-left: 1.25rem;
+    border-left: 2px solid var(--rule); color: var(--fg-2); font-family: var(--mincho);
+  }
+  .body :global(.terms) {
+    display: grid; grid-template-columns: auto 1fr; gap: .5rem 1.25rem;
+    margin-block: 2rem; padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--accent);
+    background: color-mix(in srgb, var(--white) 4%, transparent);
+  }
+  .body :global(.terms dt) { font-family: var(--mincho); color: var(--accent); font-size: 1.0625rem; line-height: 1.9; }
+  .body :global(.terms dd) { margin: 0; line-height: 1.9; }
+  .body :global(figure) { margin-block: 2.25rem; }
+  .body :global(figcaption) { margin-top: .6rem; font-size: var(--fs-note); color: var(--fg-2); }
+</style>

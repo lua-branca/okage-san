@@ -1,0 +1,291 @@
+---
+import Base from '../layouts/Base.astro';
+import NoticeBox from '../components/NoticeBox.astro';
+import Faq from '../components/Faq.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+const faqs = [
+  {
+    q: '初めてでも催眠（トランス状態）に入れますか？',
+    a: 'はい、大丈夫です。眠らされたり意識を失うわけではなく、リラックスして目を閉じ、心地よい深呼吸をしながら自分の内側に意識を向けていく状態です。意識は常にはっきりしており、途中で話すこともできます。',
+  },
+  {
+    q: '前世が見えるか不安です。',
+    a: '「見え方」には個人差があります。映像のように鮮明に見える方もいれば、感覚や感情、言葉、なんとなくのイメージとして受け取る方もいます。どのような受け取り方でも、必要なメッセージや気づきが得られるよう丁寧にガイドいたします。',
+  },
+  {
+    q: 'ヒプノセラピーとタントラはどちらを受ければいいですか？',
+    a: '事前のカウンセリング（セッション冒頭）でお悩みの内容やお身体の状態をお伺いし、最適なアプローチをご提案いたします。迷われている方もご安心ください。',
+  },
+  {
+    q: '医療行為や治療ですか？',
+    a: 'いいえ、医療行為や病気の治療を目的としたものではありません。ご自身の潜在意識にアクセスし、心を整え、内なる気づきを得るための個別ワークです。現在精神科等に通院・服薬中の方は事前にご相談ください。',
+  },
+];
+---
+
+<Base
+  title="個別セッション（前世療法・ヒプノセラピー）"
+  description="頭で考えても動かない悩みや、潜在意識の奥にある生きづらさへ。岡慶行による90分間の個別セッション（前世療法・ヒプノセラピー／レムリアン・タントラ）。"
+  surface="dark"
+  reading
+>
+  <div class="wrap section stack">
+    {/* ── ヒーロー ── */}
+    <header class="session-hero stack" data-reveal>
+      <p class="kicker">Individual Session</p>
+      <h1 class="mj">
+        頭で考えても、<br />
+        どうしても動かないものへ。
+      </h1>
+      <p class="lede">
+        神社へ行き、心を整えても、なお繰り返してしまう悩みや引っかかり。<br />
+        それは今の自分より、もっと深い「潜在意識」の場所にあります。
+      </p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ── 深いところへ降りる ── */}
+    <section class="stack prose-section" data-reveal>
+      <p class="kicker">Concept</p>
+      <h2>なぜ、個別セッションを行うのか</h2>
+      <div class="prose">
+        <p>
+          「なぜか同じような人間関係のトラブルを繰り返してしまう」<br />
+          「頑張っているのに、どうしても理由のない不安やブレーキがかかる」
+        </p>
+        <p>
+          日常の意識（顕在意識）だけで解決しようとしても、なかなか答えが出ないことがあります。<br />
+          記憶の奥底、あるいは前世から引き継いできた魂のテーマや感情が、現在のあなたに影響を与えているからです。
+        </p>
+        <p>
+          岡慶行の個別セッションでは、ヒプノセラピー（前世療法）やエネルギー調整を通して静かに潜在意識の深層へと降りていきます。<br />
+          あなた自身が内側にある「本当の理由」に気づき、心を解放するための90分間です。
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── セッション内容（2つのアプローチ） ── */}
+    <section class="stack approach-section" data-reveal>
+      <p class="kicker">Approaches</p>
+      <h2>2つのアプローチ</h2>
+
+      <div class="approach-grid">
+        <div class="approach-card stack">
+          <div class="approach-card__badge">ひとつめ</div>
+          <h3 class="mj">ヒプノセラピー（前世療法）</h3>
+          <p>
+            目を閉じ、深いリラックス状態（トランス状態）のなかで、潜在意識の記憶や前世のイメージをたどります。<br />
+            操られたり眠らされたりするのではなく、あなた自身の感覚で必要な記憶やメッセージを見つけに行きます。岡はその傍らで安全にガイドします。
+          </p>
+        </div>
+
+        <div class="approach-card stack">
+          <div class="approach-card__badge">ふたつめ</div>
+          <h3 class="mj">レムリアン・タントラ</h3>
+          <p>
+            からだに流れるエネルギーの滞りを静かに整えるアプローチです。<br />
+            ※性的なサービスや触傷行為は一切行いません。衣服を着たまま、自然な気配と呼吸のなかで自他と調和するエネルギーワークを行います。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── 料金・プラン（1種類に統一） ── */}
+    <section class="stack plan-section text-center" data-reveal>
+      <p class="kicker">Price Plan</p>
+      <h2>セッション料金</h2>
+
+      <div class="plan-card stack">
+        <span class="plan-tag">個別セッション（対面 / オンライン）</span>
+        <h3 class="plan-title mj">前世療法・ヒプノセラピー / レムリアン・タントラ</h3>
+        <div class="plan-price">
+          <span class="price-val">44,000</span>
+          <span class="price-unit">円（税込）</span>
+        </div>
+        <p class="plan-time">所要時間：約 90 分（カウンセリング含む）</p>
+
+        <div class="plan-details">
+          <p>
+            ※事前カウンセリングを行ったうえで、その日のあなたの状態に最も適したワークを組み立てます。<br />
+            ※対面（神奈川県内サロン・静かな個室）またはオンライン（Zoom）にて承ります。
+          </p>
+        </div>
+
+        <div class="plan-btn-wrap">
+          <a href={withBase('/contact/')} class="btn btn--lg">
+            個別セッションを申し込む・相談する
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── 法務・注意事項 ── */}
+    <section class="stack" data-reveal>
+      <NoticeBox title="セッションに関する大切なお知らせ" tone="law">
+        <p>
+          本セッションは<strong>医療行為ではありません。</strong>
+          病気の治療や特定の効果効能（願望成就・病状改善等）を保証するものではありません。
+        </p>
+        <p>
+          <strong>性的なサービスは一切行いません。</strong>
+          ワークはすべて衣服を着たまま、安全で静かな環境で行います。
+        </p>
+        <p>
+          現在、精神科・神経科等に通院中の方、抗不安薬・睡眠薬等を服薬中の方は、事前にお知らせください。お体の状態によってはセッションをお受けできない場合がございます。
+        </p>
+      </NoticeBox>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── FAQ ── */}
+    <section class="stack" data-reveal>
+      <h2>よくあるご質問</h2>
+      <Faq items={faqs} openFirst />
+    </section>
+
+    {/* LINE CTA */}
+    <LineCta variant="section" />
+  </div>
+</Base>
+
+<style>
+  .session-hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    line-height: 1.35;
+  }
+
+  .prose-section {
+    max-width: 48rem;
+  }
+  .prose p {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--fg);
+    margin-block: 1.25rem;
+  }
+
+  /* 2つのアプローチカード */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .approach-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .approach-card__badge {
+    font-size: var(--fs-note);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    align-self: flex-start;
+    font-weight: 500;
+  }
+
+  .approach-card h3 {
+    font-size: 1.3rem;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .approach-card p {
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* 料金カード */
+  .plan-card {
+    background: var(--bg-2);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    max-width: 38rem;
+    margin: 1.5rem auto 0 auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    align-items: center;
+  }
+
+  .plan-tag {
+    font-size: var(--fs-note);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .plan-title {
+    font-size: 1.35rem;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.4rem;
+    color: var(--accent);
+    margin-block: 0.5rem;
+  }
+
+  .price-val {
+    font-size: 3rem;
+    font-weight: 700;
+    font-family: var(--mincho);
+    line-height: 1;
+  }
+
+  .price-unit {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .plan-time {
+    font-size: 1.05rem;
+    color: var(--fg);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .plan-details {
+    font-size: 0.9rem;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--rule);
+    padding-top: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .plan-btn-wrap {
+    margin-top: 1rem;
+  }
+
+  .btn--lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+</style>

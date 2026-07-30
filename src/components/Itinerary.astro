@@ -1,0 +1,157 @@
+---
+/** 行程（1日の流れ）。
+ *  元ネタ：福田が作った旅のしおり Travel/Shared_Docs/shrine_tour_2026/index.html
+ *  時刻・社名・その社の見立て・住所・次までの移動、を1つの縦線でつなぐ。
+ *
+ *  🔴 募集ページに出すのは「予定」。当日の実際とズレることを必ず添えること。
+ *  🔴 住所リンクはGoogleマップ検索へ飛ばすだけ（＝主催が移動を手配しているように見せない）。 */
+interface Stop {
+  time: string;
+  name: string;
+  kami?: string;
+  desc?: string;
+  address?: string;
+  move?: string;
+  moveTalk?: string;
+}
+interface Props {
+  stops: Stop[];
+  /** 住所からマップリンクを出すか。参加者向けしおりでは true */
+  maps?: boolean;
+  /** 🔴 簡易モード：社名と見立てだけ出し、時刻・住所・移動は伏せる。
+   *  募集ページはこちらを使います。分刻みの行程を公開すると
+   *  ①企画旅行に見える（旅行業法）②そのまま真似される
+   *  ため、詳細はお申し込み後のしおりに回します → 03b_ツアーページ_テンプレ */
+  compact?: boolean;
+}
+const { stops, maps = true, compact = false } = Astro.props;
+---
+
+<ol class={`it${compact ? ' it--compact' : ''}`}>
+  {stops.map((s) => (
+    <li class="it__i">
+      {!compact && <span class="it__t tabnum">{s.time}</span>}
+      <div class="it__b">
+        <p class="it__n mj">{s.name}</p>
+        {s.kami && <p class="it__k">{s.kami}</p>}
+        {s.desc && <p class="note">{s.desc}</p>}
+        {!compact && s.address && (
+          <p class="note it__a">
+            {maps ? (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address)}`}
+                target="_blank"
+                rel="noopener"
+              >{s.address}</a>
+            ) : (
+              s.address
+            )}
+          </p>
+        )}
+        {!compact && s.move && (
+          <div class={`it__m${s.moveTalk ? ' it__m--talk' : ''}`}>
+            <p class="it__mt note">
+              {s.moveTalk ? '道中' : '移動'}<span aria-hidden="true">｜</span>{s.move}
+            </p>
+            {/* 🔴 車中は講義の時間。ここが埋まっていると「移動＝コスト」に見えなくなる */}
+            {s.moveTalk && <p class="it__mk">{s.moveTalk}</p>}
+          </div>
+        )}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .it { list-style: none; margin: 0; padding: 0; }
+
+  .it__i {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.75rem 1fr;
+    gap: 1.1rem;
+    padding-bottom: 1.75rem;
+  }
+  /* 時刻の丸を縦線でつなぐ＝1日が続いていることを形で示す */
+  .it__i::before {
+    content: '';
+    position: absolute;
+    left: 4.35rem;
+    top: 1.1rem;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .it__i:last-child { padding-bottom: 0; }
+  .it__i:last-child::before { display: none; }
+
+  .it__t {
+    font-family: var(--mincho);
+    font-size: .95rem;
+    color: var(--accent);
+    padding-top: .1rem;
+  }
+
+  .it__b {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding-left: 1.1rem;
+  }
+  /* 時刻の位置に置く点 */
+  .it__b::before {
+    content: '';
+    position: absolute;
+    left: -.31rem;
+    top: .55rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .it__n { font-size: 1.0625rem; color: var(--fg); }
+  /* その社の見立て（【金運・産業創始の神】など） */
+  .it__k { font-size: var(--fs-label); letter-spacing: .1em; color: var(--cat); }
+  .it__a a { color: var(--fg-2); }
+  .it__a a:hover { color: var(--link); }
+
+  /* 移動：次の地点との「間」。
+     🔴 話す内容（moveTalk）があるときは薄くしない。
+        車の中は「余った時間」ではなく、この一日でいちばん長い講義の時間なので。 */
+  .it__m {
+    margin-top: .55rem;
+    padding-top: .55rem;
+    border-top: 1px dashed var(--rule);
+  }
+  .it__mt { color: var(--fg-2); }
+  .it__mt span { padding-inline: .35rem; opacity: .6; }
+  .it__m:not(.it__m--talk) { opacity: .8; }
+
+  .it__m--talk {
+    margin-top: .8rem;
+    padding: .8rem 0 .2rem 1rem;
+    border-top: 0;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .it__mk {
+    margin-top: .25rem;
+    font-family: var(--mincho);
+    font-size: .9375rem;
+    line-height: 1.8;
+    color: var(--fg);
+  }
+
+  /* 簡易モード：時刻の列そのものをなくす。
+     🔴 時刻の要素は描画していないので、1カラムにしないと本文が潰れます */
+  .it--compact .it__i { grid-template-columns: 1fr; gap: 0; padding-bottom: 1.25rem; }
+  .it--compact .it__i::before { left: .3rem; top: .9rem; }
+
+  @media (max-width: 560px) {
+    .it__i { grid-template-columns: 3.25rem 1fr; gap: .75rem; }
+    .it__i::before { left: 3.6rem; }
+    .it--compact .it__i { grid-template-columns: 1fr; gap: 0; }
+    .it--compact .it__i::before { left: .3rem; }
+  }
+</style>

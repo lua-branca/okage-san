@@ -1,0 +1,78 @@
+---
+/** よくある質問。<details> なのでJSなしで開閉できる（＝JSが落ちても中身が読める）。
+ *  答えは1〜3文で。長くなるなら記事にしてリンクする。 */
+interface Item {
+  q: string;
+  /** 改行したいときは \n で区切る */
+  a: string;
+}
+interface Props {
+  items: Item[];
+  /** 最初の1つを開いた状態にする（ページに1箇所だけ推奨） */
+  openFirst?: boolean;
+}
+const { items, openFirst = false } = Astro.props;
+---
+
+<div class="faq">
+  {items.map((it, i) => (
+    <details class="faq__i" open={openFirst && i === 0}>
+      <summary class="faq__q">
+        <span class="faq__qt">{it.q}</span>
+        <span class="faq__ic" aria-hidden="true"></span>
+      </summary>
+      <div class="faq__a">
+        {it.a.split('\n').filter((l) => l.trim()).map((line) => <p class="note">{line}</p>)}
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq { border-top: 1px solid var(--rule); }
+  .faq__i { border-bottom: 1px solid var(--rule); }
+
+  .faq__q {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.1rem;
+    cursor: pointer;
+    list-style: none;
+    color: var(--fg);
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q:hover .faq__qt { color: var(--accent); }
+  .faq__q:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  .faq__qt {
+    font-family: var(--mincho);
+    font-size: 1rem;
+    line-height: 1.7;
+    transition: color .2s ease;
+  }
+
+  /* ＋ / − を線2本で描く（フォントに依存させない） */
+  .faq__ic {
+    position: relative;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    margin-top: .45rem;
+  }
+  .faq__ic::before,
+  .faq__ic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: var(--accent);
+  }
+  .faq__ic::before { width: 14px; height: 1px; }
+  .faq__ic::after  { width: 1px; height: 14px; transition: transform .25s ease; }
+  .faq__i[open] .faq__ic::after { transform: scaleY(0); }
+
+  .faq__a { padding-bottom: 1.2rem; }
+  .faq__a p + p { margin-top: .6rem; }
+</style>

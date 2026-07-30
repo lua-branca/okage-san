@@ -1,0 +1,62 @@
+---
+import { withBase } from '../utils/base';
+
+/** 石のギャラリーカード。
+ *  ⚠️ 一覧に購入ボタンは置かない（ここは見る場所）→ SITE_CONCEPT / 04_石のページ.md
+ *  生成りの台に載せて、写真の背景（屋外・木・緑）を受け止める。
+ *  カード用の写真は cardPhoto（4:3で中央を切り出したもの）を使う。 */
+interface Props {
+  id: string;
+  name: string;
+  price?: number;
+  photo: string;
+  soldout?: boolean;
+}
+const { id, name, price, photo, soldout = false } = Astro.props;
+---
+
+<a href={withBase(`/mind/${id}/`)} class={`card${soldout ? ' card--sold' : ''}`}>
+  <img src={withBase(photo)} alt={name} loading="lazy" />
+  <span class="card__n mj">{name}</span>
+  <span class="card__m tabnum">No.{id} ／ 一点もの</span>
+  {soldout ? (
+    <span class="card__p card__p--sold">お迎えいただきました</span>
+  ) : (
+    <span class="card__p tabnum">¥{price?.toLocaleString('ja-JP')}</span>
+  )}
+</a>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    /* 白いクロスの写真を受け止める生成りの台 */
+    background: var(--cream);
+    padding: .7rem .7rem 1rem;
+    border-bottom: 0;
+    color: var(--ink);
+  }
+  .card:hover { outline: 1px solid var(--accent); outline-offset: 0; }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card img { width: 100%; }
+
+  .card__n { font-size: .95rem; color: var(--p700); line-height: 1.5; }
+  .card__m { font-family: var(--mono); font-size: .75rem; color: var(--ink-2); }
+  .card__p { font-size: var(--fs-note); color: var(--ink); }
+  .card__p--sold { color: var(--ink-2); }
+
+  .card--sold::after {
+    content: 'SOLD';
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    font-family: var(--mono);
+    font-size: .6875rem;
+    letter-spacing: .12em;
+    color: var(--cream);
+    background: var(--verm);
+    padding: .1rem .4rem;
+  }
+</style>

@@ -1,0 +1,472 @@
+---
+/** 神社参拝（神遊び）の入口。
+ *
+ *  ★このページの役割（2026-07-29 福田整理）
+ *    ・参加すると何が変わるのか、何をするのかの「概要」
+ *    ・声は /voice/ へリンク（ここには置かない）
+ *    ・参加の前に本を読んでもらう → /book/
+ *    ・参加時の注意
+ *
+ *  🔴 分刻みの行程・めぐる神社の羅列は書きません。
+ *     ①企画旅行に見える（旅行業法）②そのまま真似される、の2つが理由。
+ *     詳細はお申し込み後のしおりへ → 03b_ツアーページ_テンプレ
+ *  🔴 価格は「募集中の回」にだけ出します。終了した回には出しません。
+ *  🔴 これからの回を常に3本先まで埋めること。空だとリピートが起きない → STRATEGY 4-b */
+import Base from '../../layouts/Base.astro';
+import TourCard from '../../components/TourCard.astro';
+import NoticeBox from '../../components/NoticeBox.astro';
+import LineCta from '../../components/LineCta.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../../utils/base';
+
+const all = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+  .sort((a, b) => +a.data.date - +b.data.date);
+
+const upcoming = all.filter((t) => t.data.state !== '終了');
+const past = all.filter((t) => t.data.state === '終了').reverse();
+
+/** 🔴 テーマ（願い）× 行き先の対応。
+ *  過去回を日付順に並べても、読み手は「自分の願いに合うのはどれ？」が分かりません。
+ *  だから日付ではなく**ニーズ別**に見せます（福田判断 2026-07-30）。
+ *  ⚠️ 3件は福田さん確認済み。それ以外は岡さんに確認してから足すこと。 */
+const themes = [
+  { need: '恋愛・ご縁', area: '日光', note: '男体山・女峰山と、二社一寺。結びの神さまが並ぶ土地です' },
+  { need: '仕事・決断', area: '香取・鹿島', note: '始まりの神と、道を開く神。区切りをつけたいときに' },
+  { need: '金運', area: '山梨・富士吉田', note: '富士の北麓。土地そのものが持つ豊かさに触れます' },
+  // 🔴 以下は要確認（岡さんに聞いてから公開）
+  // { need: '心を整える', area: '寒川・箱根', note: '' },
+  // { need: '原点に還る', area: '伊勢・三輪山', note: '' },
+];
+---
+
+<Base
+  title="神社参拝プログラム"
+  description="観光でも修行でもありません。神社という場所を借りて、自分のエネルギーを整えに行く一日。神道歴40年の岡慶行が案内する少人数の参拝プログラム。"
+  surface="dark"
+>
+  {/* ── ① 冒頭 ──
+      🔴 「神社参拝」だけだと「誰でも行けるよね」と思われて価値が伝わりません（福田指摘 2026-07-30）。
+         そこに正面から答えるところから始めます。
+         位置づけ＝神社参拝を通じて自分を整えるプログラム。参拝は目的ではなく手段。 */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">神社参拝プログラム</p>
+      <h1>神社は、<br />誰でも行けます</h1>
+      <p class="lede">
+        でも、行っただけでは変わりません。<br />
+        何を感じ、どう整えるか。<br />
+        そこを案内する人がいるかどうかで、<strong>同じ一日の意味が変わります</strong>。
+      </p>
+      <p class="lede">
+        神社という場を借りて、自分を整えるためのプログラムです。<br />
+        岡はこれを「神遊び（かみあそび）」と呼んでいます。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ② ひとりで行くのと何が違うのか ＝ 価値の核 ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">ひとりで行くのと、何が違うか</p>
+      <h2>自分では組めない一日です</h2>
+
+      <ul class="diff">
+        <li>
+          <span class="diff__t mj">どの神社へ行くか</span>
+          <span class="note">
+            その時期と、その日集まった方の状態に合う社を選びます。<br />
+            観光地として有名かどうかでは選びません
+          </span>
+        </li>
+        <li>
+          <span class="diff__t mj">一日の組み立て</span>
+          <span class="note">
+            皇居で祈願してから出発し、めぐって、感謝を伝えて終わる。<br />
+            この順番に意味があります
+          </span>
+        </li>
+        <li>
+          <span class="diff__t mj">道中の時間</span>
+          <span class="note">
+            車での移動が、この一日の半分です。<br />
+            ここでの話がいちばん濃かった、とよく言われます
+          </span>
+        </li>
+        <li>
+          <span class="diff__t mj">感じたことを、その場で確かめられる</span>
+          <span class="note">
+            「いま何か感じた気がする」を、その場で聞ける。<br />
+            あとで調べても、その感覚はもう戻ってきません
+          </span>
+        </li>
+        <li>
+          <span class="diff__t mj">定員6名</span>
+          <span class="note">
+            岡の車に同乗して回る人数です。<br />
+            一日を通して、ひとりずつに向き合えます
+          </span>
+        </li>
+      </ul>
+
+      <p class="note">
+        神道歴40年あまり。岡が「この人にはいま、これが必要だ」と見て、その日の話をします。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ① 何が変わるのか ──
+      🔴 効果の保証にならない書き方にすること（「〜と言われます」「〜が多いです」）。
+         内容はアンケートの実際の回答に基づいています → /voice/ */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">参加された方に起きたこと</p>
+      <h2>何が変わるのか</h2>
+      <p class="note">アンケートに寄せられた声を、大きく4つに分けるとこうなりました。</p>
+
+      <ul class="chg">
+        <li>
+          <span class="chg__t mj">気持ちが整った</span>
+          <span class="note">小さなことに感謝の種を見つけられるようになった、という声がいちばん多いです</span>
+        </li>
+        <li>
+          <span class="chg__t mj">日常が変わった</span>
+          <span class="note">参拝の仕方が変わった。毎日の口ぐせが変わった</span>
+        </li>
+        <li>
+          <span class="chg__t mj">仕事が動いた</span>
+          <span class="note">申し込みが増えた、区切りがついた、という報告をいただきます</span>
+        </li>
+        <li>
+          <span class="chg__t mj">身体で感じた</span>
+          <span class="note">終わったあと身体が軽い。木に手をかざしたら温かかった</span>
+        </li>
+      </ul>
+
+      <p><a href={withBase('/voice/')} class="btn btn--ghost">参加した方の声を読む</a></p>
+      <p class="note">
+        ※ 感じ方には個人差があります。特定の効果や結果をお約束するものではありません。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ② 何をするのか（概要まで） ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">一日のこと</p>
+      <h2>何をするのか</h2>
+      <div class="tablewrap">
+        <table>
+          <tbody>
+            {/* 🔴 永田町なのは「皇居で旅の祈願をしてから出発する」ため。
+                   どの回も同じ。ただの集合場所ではなく一日の始まりの儀式です（福田確認 2026-07-30） */}
+            <tr><th>集合</th><td>永田町駅。朝、都内で集まります</td></tr>
+            <tr>
+              <th>はじめに</th>
+              <td>皇居へ。この一日の祈願をしてから出発します。<br />
+                  <strong>どの回も、ここから始まります</strong></td>
+            </tr>
+            <tr>
+              <th>行きの道中</th>
+              {/* 🔴 「神様と通じている岡さんが必要なことを伝える」をぼかした表現。
+                     事実（回ごとに話が変わる）だけを言い、霊能寄りの説明はしない */}
+              <td>車のなかで、その日の考え方をひととおり。<br />
+                  その回の顔ぶれによって、話すことが変わります</td>
+            </tr>
+            <tr>
+              <th>参拝</th>
+              {/* 🔴 作法の指導が主ではありません。本の内容と揃えること（福田指摘 2026-07-30） */}
+              <td>作法をなぞるのではなく、その場を感じることから。<br />
+                  神域に入って、自分を整えていきます</td>
+            </tr>
+            <tr><th>次の社へ</th><td>岡の車に同乗して。感じたことを話しながら移動します</td></tr>
+            <tr><th>昼食</th><td>途中でご一緒します。お支払いは各自でお願いしています</td></tr>
+            <tr><th>おわりに</th><td>皇居へもどって、感謝を伝えます</td></tr>
+            <tr><th>解散</th><td>永田町駅で解散します</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">
+        めぐる神社とその日のテーマは、回ごとに変わります。<br />
+        くわしい時刻と道のりは、お申し込みのあとにしおりでお送りします。
+      </p>
+      {/* 🔴 実費は「定額」ではなく「当日の実額を割る」と書くこと。
+             定額にすると実費なのか対価なのか区別がつかなくなります → TRAVEL_LAW_MEMO 4d章 */}
+      <p class="note">
+        定員は<strong>6名</strong>です。岡の車に同乗して回ります。<br />
+        ガソリン代・高速代・駐車場代を、その日の実費として人数で分け、当日精算しています。<br />
+        宿泊が必要な回は、ご予約とお支払いをご自身でお願いしています（おすすめの宿はご案内します）。<br />
+        昼食代・初穂料なども各自でご負担いただきます。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ③ 願わない ──
+      🔴 「差し出す」はある神社での個別のエピソードで、全体に共通する話ではありません
+         （福田指摘 2026-07-30）。ここでは使わないこと。
+      🔴 軸は「感じる」と「整える」。作法の指導が主ではありません（本の内容と揃える） */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <h2>願わずに、感じる</h2>
+      <p>
+        多くの人が、神社でお願いごとをします。<br />
+        でも「欲しい」と願うのは、<br />
+        「足りない」と宇宙に宣言している状態です。
+      </p>
+      <p>
+        だから、願うのをやめます。<br />
+        代わりに、その場を<strong>感じる</strong>。
+      </p>
+      <p>
+        空気の温度。木の気配。<br />
+        自分の身体がどう反応しているか。<br />
+        そこに気づけると、<strong>自然に整っていきます</strong>。
+      </p>
+      <p>
+        作法を覚えることが目的ではありません。<br />
+        そういう順番で、一日を過ごします。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ④ 参加の前に、本を読んでほしい ── */}
+  <section class="section--tight">
+    <div class="wrap" data-reveal>
+      <div class="book">
+        <p class="kicker">参加の前に</p>
+        <h2>本を一冊、読んできてください</h2>
+        <p class="note">
+          『願わず叶う神社参拝入門 ── 心の動きが運命を変える ──』<br />
+          当日お話しすることの土台が、ここに書いてあります。
+        </p>
+        <p class="note">
+          読んでから来られた方のほうが、<strong>その場で受け取れるものが深くなります</strong>。
+          当日は、本に書いたことの先を実地でやっていきます。
+        </p>
+        <p><a href={withBase('/book/')} class="btn btn--ghost">本について見る</a></p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── ⑤ 参加されるときのお願い ── */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">お願い</p>
+      <h2>参加されるときに</h2>
+
+      <NoticeBox title="持ちものと服装" tone="warn">
+        <ul class="list-accent">
+          <li>歩きやすい靴。屋外を1〜2時間ほど歩きます</li>
+          <li>両手があくバッグ（リュックなど）</li>
+          <li>雨具・防寒具。季節に合わせて</li>
+          <li>参拝にふさわしい、清潔感のある服装</li>
+        </ul>
+      </NoticeBox>
+
+      <NoticeBox title="神域でのこと" tone="info">
+        <p>
+          撮影や立ち入りの可否は、その神社の規定と宮司様のご指示に従います。
+          岡が「ここでは撮らないでください」とお伝えすることがあります。
+        </p>
+        <p>ほかの参拝者の方がいらっしゃいます。大きな声での私語はお控えください。</p>
+      </NoticeBox>
+
+      <NoticeBox title="お身体のこと" tone="info">
+        <p>
+          心身にご不安のある方、服薬・通院中の方は、事前にご相談ください。
+          当日の体調管理はご自身でお願いしています。
+        </p>
+        <p>宗教・政治・商材などの勧誘はお断りしています。</p>
+      </NoticeBox>
+    </div>
+  </section>
+
+  {/* ── ⑥ これからの回。★価格を出すのはここだけ ── */}
+  <section class="section">
+    <div class="wrap stack">
+      <div data-reveal>
+        <p class="kicker">日程</p>
+        <h2>これからの参拝</h2>
+      </div>
+
+      {upcoming.length > 0 ? (
+        <div>
+          {upcoming.map((t) => (
+            <TourCard
+              date={t.data.date}
+              title={t.data.title}
+              place={t.data.area}
+              price={t.data.prices?.[0]?.amount}
+              state={t.data.state === '準備中' ? undefined : t.data.state}
+              note={t.data.lead}
+              href={withBase(`/kamiasobi/${t.id}/`)}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="note" data-reveal>
+          次の日程を調整しています。決まりしだいLINEでお知らせします。
+        </p>
+      )}
+
+      {/* 🔴 2026-07-30：参加費の注記はすべて削除（福田指示）。
+          金額は回・区分によって変えない方針のため。
+          ⚠️ 各回のデータ（prices）はまだ3段階のままです。一律にするなら
+             src/content/tours/*.md の prices を1件にしてください。 */}
+
+      {/* ★「日程が合わない」と思ったその位置にプライベートの導線を置く */}
+      <div data-reveal>
+        <NoticeBox title="日程が合わないときは" tone="info">
+          <p>
+            ご希望の日と行き先で組み立てる<strong>プライベートプラン</strong>もあります。
+            おひとりでも、会社のチームでも。
+          </p>
+          <p><a href={withBase('/private/')}>プライベートプランについて →</a></p>
+        </NoticeBox>
+      </div>
+    </div>
+  </section>
+
+  {/* ── ⑦ 願いから選ぶ ──
+      日付順ではなくニーズ別。読み手は「自分の願いに合うのはどれ？」で探すため */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">これまでの参拝</p>
+      <h2>願いによって、行き先が変わります</h2>
+      <p class="note">
+        その時期と、その方の状態に合う神社を選んでご案内しています。<br />
+        これまでにめぐった土地を、願いごとに分けるとこうなります。
+      </p>
+
+      <ul class="th">
+        {themes.map((t) => (
+          <li class="th__i">
+            <span class="th__n mj">{t.need}</span>
+            <span class="th__a">{t.area}</span>
+            <span class="note">{t.note}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p class="note">
+        このほか、寒川・箱根・三輪山・伊勢・戸隠・熱田神宮・瀧原宮・皇居・室生龍穴神社
+        などをめぐってきました。<br />
+        次にどこへ行くかは、その回のテーマによって決まります。
+      </p>
+    </div>
+  </section>
+
+  {/* ── ⑧ 過去回の記録。🔴 価格は出しません ── */}
+  {past.length > 0 && (
+    <section class="section--tight">
+      <div class="wrap stack">
+        <div data-reveal>
+          <p class="kicker">記録</p>
+          <h2>その日のこと</h2>
+          <p class="note">どんな一日なのか、過去の回の記録と写真からご覧いただけます。</p>
+        </div>
+        <div>
+          {past.map((t) => (
+            <TourCard
+              date={t.data.date}
+              title={t.data.title}
+              place={t.data.area}
+              state="終了"
+              past
+              href={withBase(`/kamiasobi/${t.id}/`)}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* ── ⑧ 法務 ── */}
+  <section class="section--tight">
+    <div class="wrap" data-reveal>
+      {/* 🔴 2026-07-30：仕組みの説明（誰が手配し誰が集金するか）はここから外しました。
+          説明するほど「旅行商品」に見えるためです → 03b_ツアーページ_テンプレ 2d章。
+          「参加費に含まれないもの」は各回ページの excludes に必ず残すこと（特商法）。 */}
+      <NoticeBox title="この企画について" tone="law">
+        <p>
+          その場を感じ、自分を整えることを学ぶ<strong>講習・ガイドプログラム</strong>です。
+          祈祷や医療行為ではなく、特定の効果や結果を保証するものではありません。
+        </p>
+        <p>
+          参加費・お支払い・キャンセルについては、各回のページをご覧ください。
+        </p>
+      </NoticeBox>
+    </div>
+  </section>
+
+  <LineCta />
+</Base>
+
+<style>
+  h1 { line-height: 1.45; }
+  h2 { line-height: 1.5; }
+  th { white-space: nowrap; width: 6.5rem; }
+
+  /* ひとりで行くのと何が違うか */
+  .diff { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+  .diff li { display: flex; flex-direction: column; gap: .25rem; }
+  .diff__t {
+    font-size: 1.0625rem;
+    color: var(--accent);
+    padding-bottom: .1rem;
+  }
+
+  /* 何が変わるのか */
+  .chg { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .chg li {
+    display: flex; flex-direction: column; gap: .2rem;
+    padding-left: 1rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .chg__t { font-size: 1.0625rem; color: var(--fg); }
+
+  /* 願い × 行き先 */
+  .th { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.1rem; }
+  .th__i {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    grid-template-areas: 'need area' 'need note';
+    gap: .15rem .9rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .th__i:last-child { border-bottom: 0; padding-bottom: 0; }
+  .th__n {
+    grid-area: need;
+    align-self: start;
+    font-size: 1.0625rem;
+    color: var(--accent);
+    line-height: 1.6;
+  }
+  .th__a { grid-area: area; color: var(--fg); font-size: 1.0625rem; }
+  .th__i .note { grid-area: note; }
+
+  @media (max-width: 560px) {
+    .th__i { grid-template-columns: 1fr; grid-template-areas: 'need' 'area' 'note'; }
+  }
+
+  /* 岡さんの言葉の引用 */
+  .q {
+    margin: .5rem 0;
+    padding: 1.25rem 0 .5rem 1.25rem;
+    border-left: 2px solid var(--accent);
+    font-family: var(--mincho);
+  }
+  .q p { line-height: 1.95; color: var(--fg); }
+  .q p + p { margin-top: 1rem; }
+  .q footer { font-family: var(--gothic); margin-top: .9rem; }
+
+  /* 本 */
+  .book {
+    display: flex; flex-direction: column; gap: .8rem;
+    padding: 1.75rem;
+    background: var(--bg-2);
+    border-left: 2px solid var(--accent);
+  }
+  .book h2 { font-size: var(--fs-h2); }
+  .book strong { color: var(--white); }
+</style>

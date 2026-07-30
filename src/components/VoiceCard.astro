@@ -1,0 +1,42 @@
+---
+/** 参加した方の声。
+ *  🔴 出していいのは「イニシャル・年代・性別・都道府県」まで。
+ *     顔写真・フルネーム・具体的な事情は載せません（許諾の粒度が確認できていないため）
+ *     → CUSTOMER_DATA_SPEC / 05_voice.md */
+interface Props {
+  text: string;
+  /** 例：K.さん／50代・女性・東京都 */
+  who: string;
+  /** どの回の声か。過去回ページでは不要 */
+  tour?: string;
+}
+const { text, who, tour } = Astro.props;
+---
+
+<figure class="vc">
+  <blockquote class="vc__t">
+    {text.split('\n').filter((l) => l.trim()).map((line) => <p>{line}</p>)}
+  </blockquote>
+  <figcaption class="vc__w note">
+    {who}{tour && <><br />{tour}</>}
+  </figcaption>
+</figure>
+
+<style>
+  .vc {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    padding: 1.4rem 1.5rem;
+    background: color-mix(in srgb, var(--white) 4%, transparent);
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .vc__t {
+    font-family: var(--mincho);
+    font-size: 1rem;
+    line-height: 1.95;
+    color: var(--fg);
+  }
+  .vc__t p + p { margin-top: .8rem; }
+  .vc__w { color: var(--fg-2); }
+</style>

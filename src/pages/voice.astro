@@ -1,0 +1,248 @@
+---
+import Base from '../layouts/Base.astro';
+import LineCta from '../components/LineCta.astro';
+import { withBase } from '../utils/base';
+
+interface VoiceItem {
+  before?: string;
+  impression: string;
+  after: string;
+  recommended?: string;
+  author: string;
+}
+
+interface VoiceCategory {
+  title: string;
+  items: VoiceItem[];
+}
+
+const voiceCategories: VoiceCategory[] = [
+  {
+    title: '気持ちが整った',
+    items: [
+      {
+        before: 'パートナーを探していたのに、なかなか恋愛が長続きしなくて、悩んでいました。',
+        impression: '感謝することの大切さを改めて感じました。',
+        after: '小さなことに感謝の種を見つけられるようになって、心が穏やかになり、気持ちが整いました。',
+        author: 'H.さん／50代・女性・東京都',
+      },
+      {
+        before: '気持ちが疲れて何事にもやる気が起きない状況でした。',
+        impression: 'エネルギーが強い？と岡さんが言った場所で、なんだか空気の温度を温かく感じたこと。',
+        after: '少し元気を取り戻して、すこし普段の行動にやる気が出てきたような気がします。',
+        author: 'Y.さん／40代・女性・東京都',
+      },
+    ],
+  },
+  {
+    title: '日常が変わった',
+    items: [
+      {
+        impression: '登山したら、お肌がなんかパールみたいにキラキラしてた事。皇居のエネルギーのある木に手をかざしたら暖かかった事。岡さんとツアー以外の話で沢山質問できた事も楽しかった。',
+        after: '毎日「ツいてる」って言うようになった。頑張った見返りがほしくなったら、チャリンと神様からもらうようにした。二礼二拍手以外の参拝方法でのお参りをするようになった。',
+        author: 'M.さん／20代・女性・神奈川県',
+      },
+      {
+        before: '当時は毎日、苦しい気持ちで過ごしていて、そこから抜け出す術を探していました。',
+        impression: '岡さんがおすすめする神社の素晴らしさ、その日のメンバーで決まる順番や、神社で起こる奇跡、行く先々での神様のメッセージに気づきがある事。移動の車内での岡さんとのお話。',
+        after: '少しずつ、心が晴れていく出来事や経験、出会い、学びを引き寄せる事ができ、結婚や出産を経験した。',
+        author: 'Y.さん／30代・女性・千葉県',
+      },
+    ],
+  },
+  {
+    title: '仕事が動いた',
+    items: [
+      {
+        before: '仕事の面で後押しがありました。',
+        impression: '神様からの声が聞こえるなど不思議な現象がありました。',
+        after: '直感力が冴えてきます。',
+        recommended: '何か行き詰まっている人にオススメです。',
+        author: 'H.さん／50代・男性・神奈川県',
+      },
+      {
+        impression: '自然の中で、ステキな方々と、美味しいご飯が食べられる！地球生活楽しんでるな、って感じました。',
+        after: 'ツアー後は、円満なお別れがあったり、個人でしてる仕事に、お申込が多く入りました。以前より、客観的に自分の状態に気づいたり、今を楽しむ時間が増えたかもしれません。',
+        author: 'E.さん／50代・女性・東京都',
+      },
+    ],
+  },
+  {
+    title: '身体で感じた',
+    items: [
+      {
+        impression: '普段からほとんど運動をしていないので、三輪山登拝は大丈夫かしら…と心配もありましたが（子供時代の遠足も苦手だったので）、やはり神様に護られての登拝は全然違うものだと感じるくらいカラダが動きました。簡単ではないけれど辛くない。不思議と心も穏やかに黙々と歩みを進められました。',
+        after: '劇的な変化は特にありませんが、安心して日々を過ごすことができていることが何より。そして、けっこうツイてます。ありがとうございます。',
+        author: 'K.さん／50代・女性・神奈川県',
+      },
+      {
+        before: '基本、大きな悩みはなく、より開運したい気持ちです。',
+        impression: '神社、エネルギーが強いところでピリピリ感じることができるようになったこと。',
+        recommended: 'どんな方にでもおすすめですが、岡さんのツアーは本格的なので神社好きな方向けかとは思います。',
+        author: 'N.さん／50代・女性・神奈川県',
+      },
+    ],
+  },
+];
+
+const demographics = [
+  { label: '性別', value: '女性 約8割' },
+  { label: '年代', value: '40代・50代が中心' },
+  { label: 'お住まい', value: '首都圏が9割（東京・神奈川・埼玉・千葉）' },
+  { label: 'ご職業', value: '会社員・自営業・カウンセラー・医師・主婦 など' },
+];
+---
+
+<Base
+  title="参加した方の声"
+  description="神遊び（神社ツアー）に参加された方から届いた声を掲載しています。アンケートに書いてくださったものをそのまま掲載しています。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ① 冒頭 */}
+    <header class="stack" data-reveal>
+      <p class="kicker">Voice</p>
+      <h1>参加した方から<br />届いた声です。</h1>
+      <p class="lede">アンケートに書いてくださったものを、そのまま載せています。</p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ② 声（8件・4カテゴリ） */}
+    {voiceCategories.map((cat) => (
+      <section class="stack v-cat" data-reveal>
+        <h2 class="v-cat__title">{cat.title}</h2>
+        <div class="v-grid">
+          {cat.items.map((item) => (
+            <article class="v-card stack">
+              {item.before && (
+                <div class="v-card__sec">
+                  <span class="v-card__label">参加前</span>
+                  <p>{item.before}</p>
+                </div>
+              )}
+              <div class="v-card__sec">
+                <span class="v-card__label">印象に残ったこと</span>
+                <p>{item.impression}</p>
+              </div>
+              <div class="v-card__sec">
+                <span class="v-card__label">変化</span>
+                <p>{item.after}</p>
+              </div>
+              {item.recommended && (
+                <div class="v-card__sec">
+                  <span class="v-card__label">すすめたい人</span>
+                  <p>{item.recommended}</p>
+                </div>
+              )}
+              <div class="v-card__author">
+                <span>── {item.author}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <hr class="rule-accent" />
+
+    {/* ③ どんな人が来ているか */}
+    <section class="stack demo-sec" data-reveal>
+      <p class="kicker">Demographics</p>
+      <h2>どんな人が来ているか</h2>
+      <div class="demo-grid">
+        {demographics.map((d) => (
+          <div class="demo-card">
+            <span class="demo-card__label">{d.label}</span>
+            <strong class="demo-card__val">{d.value}</strong>
+          </div>
+        ))}
+      </div>
+      <p class="note text-center">ひとりで参加される方がほとんどです。</p>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ④ 締め */}
+    <section class="stack text-center closing-sec" data-reveal>
+      <h2>次は、あなたの番かもしれません。</h2>
+      <div class="closing-btns">
+        <a href={withBase('/kamiasobi/')} class="btn">神社参拝の日程を見る</a>
+        <a href="#line" class="btn btn--ghost">LINEで受け取る</a>
+      </div>
+    </section>
+
+    {/* LINE CTA */}
+    <div id="line">
+      <LineCta variant="section" />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .v-cat { margin-block: 1.5rem; }
+  .v-cat__title {
+    font-size: var(--fs-h2);
+    color: var(--accent);
+    letter-spacing: .04em;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .v-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .v-card {
+    background: var(--bg-2);
+    padding: 1.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .v-card__sec { display: flex; flex-direction: column; gap: .35rem; }
+  .v-card__label {
+    font-size: var(--fs-note);
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: .05em;
+  }
+  .v-card__sec p { font-size: 0.95rem; line-height: 1.75; color: var(--fg); margin: 0; }
+
+  .v-card__author {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed color-mix(in srgb, var(--accent) 25%, transparent);
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    text-align: right;
+  }
+
+  .demo-sec { margin-block: 2rem; }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+  .demo-card {
+    background: var(--bg-2);
+    padding: 1.25rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+  }
+  .demo-card__label { font-size: var(--fs-note); color: var(--fg-2); }
+  .demo-card__val { font-size: 1.05rem; color: var(--accent); font-weight: 500; }
+
+  .closing-sec { padding-block: 2.5rem 1.5rem; }
+  .closing-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+  .text-center { text-align: center; }
+</style>

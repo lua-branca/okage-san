@@ -1,0 +1,276 @@
+---
+/** 石1点のページ。
+ *
+ *  構成の考え方（→ 20_Site/CONTENT_DRAFT/04b_石の詳細ページ設計.md）
+ *    見る（写真・動画）→ 大きさを掴む → 岡の見立て → 事実 → 買い方
+ *  ここは「ショップ」ではなく「ギャラリー」。見て楽しんで、気に入ったら買う場所です。
+ *  だから購入ボタンは上に置かず、ひととおり見たあとに1つだけ置きます。
+ *
+ *  🔴 「岡の見立て」と「鉱物としての事実」を混ぜないこと。
+ *     見立て＝岡さんの言葉。事実＝検証できることだけ。効能は書かない。 */
+import Base from '../../layouts/Base.astro';
+import LineCta from '../../components/LineCta.astro';
+import Faq from '../../components/Faq.astro';
+import NoticeBox from '../../components/NoticeBox.astro';
+import { getCollection, render } from 'astro:content';
+import { withBase } from '../../utils/base';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+  return all.map((entry, i) => ({
+    params: { id: entry.data.id },
+    props: { entry, prev: all[i - 1], next: all[i + 1] },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const b = d.basics;
+const basicRows = (b
+  ? [
+      ['和名', b.jpName],
+      ['鉱物', b.mineral],
+      ['化学組成', b.formula],
+      ['硬度', b.hardness],
+      ['主な産地', b.origin],
+      ['特徴', b.feature],
+    ]
+  : []
+).filter(([, v]) => v) as [string, string][];
+
+const specRows = ([
+  ['サイズ', d.size],
+  ['重さ', d.weight],
+  ['素材', d.material],
+] as [string, string | undefined][]).filter(([, v]) => v) as [string, string][];
+
+const faq = [
+  {
+    q: '写真と同じ石が届きますか。',
+    a: 'はい。すべて一点ものです。掲載している写真と動画が、そのままお届けする石そのものです。',
+  },
+  {
+    q: '天然石なので、傷や欠けはありますか。',
+    a: '原石のままお渡ししているので、欠けや凹凸、内包物があります。\nそれも含めてその石です。気になる箇所があれば、お申し込み前にお問い合わせください。',
+  },
+  {
+    q: '贈りものにできますか。',
+    a: 'できます。ご注文のときにお申し付けください。',
+  },
+];
+---
+
+<Base
+  title={`${d.name}｜心を整える`}
+  description={`${d.name}（一点もの・No.${d.id}）。${b?.jpName ? b.jpName + '。' : ''}岡慶行が選んだ、瞑想のときに手に持つ石。`}
+  surface="dark"
+>
+  <article class="section">
+    <div class="wrap stack">
+      <nav class="crumb" aria-label="パンくずリスト">
+        <ol class="crumb-list">
+          <li><a href={withBase('/')}>トップ</a></li>
+          <li aria-hidden="true">／</li>
+          <li><a href={withBase('/mind/')}>心を整える</a></li>
+          <li aria-hidden="true">／</li>
+          <li aria-current="page">{d.name}</li>
+        </ol>
+      </nav>
+
+      {/* ── ① まず見せる ── */}
+      <figure class="main">
+        <img src={withBase(d.photos[0])} alt={`${d.name}の原石`} width="1600" height="1200" />
+      </figure>
+
+      <div class="stack" style="gap:.35rem">
+        <h1 class="mj">{d.name}</h1>
+        {b?.jpName && <p class="note">{b.jpName}</p>}
+        <p class="note tabnum">No.{d.id} ／ 一点もの</p>
+        <p class="price tabnum">¥{d.price.toLocaleString('ja-JP')}<span class="note">（税込）</span></p>
+      </div>
+
+      {/* ── ② 動く光。写真では出せないもの ── */}
+      {d.video && (
+        <figure class="vid">
+          {/* preload="none"：再生ボタンを押すまで通信ゼロ。ページを重くしない */}
+          <video
+            src={withBase(d.video)}
+            poster={d.videoPoster ? withBase(d.videoPoster) : undefined}
+            controls
+            muted
+            loop
+            playsinline
+            preload="none"
+            width="720"
+            height="1280"
+          ></video>
+          {d.videoNote && <figcaption class="note">{d.videoNote}</figcaption>}
+        </figure>
+      )}
+
+      {/* ── ③ 大きさを掴む ── */}
+      {d.photos.length > 1 && (
+        <div class="subs">
+          {d.photos.slice(1).map((p) => (
+            <figure><img src={withBase(p)} alt={`${d.name}を手に持ったところ`} loading="lazy" /></figure>
+          ))}
+        </div>
+      )}
+
+      {/* ── ④ 岡の見立て・この石のこと・使い方（本文） ── */}
+      <div class="body"><Content /></div>
+
+      {/* ── ⑤ 事実：この石そのもの ── */}
+      {specRows.length > 0 && (
+        <section class="stack" style="gap:.75rem">
+          <h2 class="mj sec">この石のかたち</h2>
+          <div class="tablewrap">
+            <table><tbody>{specRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
+          </div>
+        </section>
+      )}
+
+      {/* ── ⑥ 事実：石の種類そのもの ── */}
+      {basicRows.length > 0 && (
+        <section class="stack" style="gap:.75rem">
+          <h2 class="mj sec">{d.name}という石について</h2>
+          <div class="tablewrap">
+            <table><tbody>{basicRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
+          </div>
+          <p class="note">鉱物としての一般的な情報です。効果・効能を示すものではありません。</p>
+        </section>
+      )}
+
+      {/* ── ⑦ 買い方 ── */}
+      <section class="stack" style="gap:.75rem">
+        <h2 class="mj sec">お迎えについて</h2>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              <tr><th>価格</th><td class="tabnum">¥{d.price.toLocaleString('ja-JP')}（税込）</td></tr>
+              <tr><th>送料</th><td>一律1,000円（1万円以上のお買い上げで無料）</td></tr>
+              <tr><th>お届け</th><td>ご注文から7〜14日</td></tr>
+              <tr><th>同梱</th><td>瞑想での使い方を書いたカード</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <NoticeBox tone="law">
+        <p>
+          天然石の工芸品です。<strong>医療的・霊的な効果を保証するものではありません。</strong>
+        </p>
+        <p>
+          一点ものにつき、返品・交換はお受けできません（不良・破損の場合を除きます）。
+          くわしくは<a href={withBase('/commerce-law/')}>特定商取引法に基づく表記</a>をご覧ください。
+        </p>
+      </NoticeBox>
+
+      {d.soldout ? (
+        <div class="stack">
+          <p><span class="pill">SOLD</span></p>
+          <p>この石は、お迎えいただきました。</p>
+          <p class="note">
+            新しい石は、<a href={withBase('/line/')}>LINE公式</a>でいちばん先にお知らせしています。
+          </p>
+        </div>
+      ) : (
+        <div class="stack">
+          <p><a href={d.stripeLink ?? withBase('/contact/')} class="btn">この石をお迎えする</a></p>
+          <p class="note">
+            {d.stripeLink
+              ? 'カード決済に進みます。'
+              : '※ 決済リンクは準備中です。お問い合わせからご連絡ください。'}
+          </p>
+        </div>
+      )}
+
+      <section class="stack" style="gap:.75rem">
+        <h2 class="mj sec">よくあるご質問</h2>
+        <Faq items={faq} />
+      </section>
+
+      <nav class="pager">
+        {prev ? <a href={withBase(`/mind/${prev.data.id}/`)}>← {prev.data.name}</a> : <span></span>}
+        {next ? <a href={withBase(`/mind/${next.data.id}/`)}>{next.data.name} →</a> : <span></span>}
+      </nav>
+
+      <p class="back"><a href={withBase('/mind/')}>石の一覧へもどる</a></p>
+    </div>
+  </article>
+
+  <LineCta />
+</Base>
+
+<style>
+  .crumb { font-size: .85rem; color: var(--fg-2); }
+  .crumb-list {
+    display: flex; flex-wrap: wrap; align-items: center; gap: .4rem;
+    list-style: none; padding: 0; margin: 0;
+  }
+  .crumb-list a { color: var(--fg-2); text-decoration: none; }
+  .crumb-list a:hover { color: var(--accent); }
+
+  .main { background: #0d0b10; overflow: hidden; }
+  .main img { width: 100%; }
+
+  .price {
+    font-family: var(--mincho);
+    font-size: 1.5rem;
+    color: var(--fg);
+    margin-top: .4rem;
+  }
+  .price .note { font-family: var(--gothic); margin-left: .3rem; }
+
+  /* 動画：縦なので幅を抑えて中央に。横いっぱいにすると間延びする */
+  .vid { display: flex; flex-direction: column; gap: .6rem; align-items: center; }
+  .vid video {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    background: #0d0b10;
+    display: block;
+  }
+  .vid figcaption { text-align: center; }
+
+  .subs { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+  .subs img { width: 100%; }
+
+  .sec {
+    font-size: var(--fs-h2);
+    color: var(--accent);
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .body :global(h2) {
+    font-family: var(--mincho);
+    font-weight: 400;
+    font-size: var(--fs-h2);
+    color: var(--accent);
+    margin-block: 2.5rem 1rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+  }
+  .body :global(p) { margin-block: 1.2rem; line-height: 1.95; }
+  .body :global(ul) { margin-block: 1.2rem; }
+  .body :global(li) { line-height: 2; margin-bottom: .4rem; }
+  .body :global(li::marker) { color: var(--accent); }
+  .body :global(strong) { color: var(--white); }
+
+  th { white-space: nowrap; width: 6.5rem; }
+
+  .pager {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding-top: 2rem; border-top: 1px solid var(--rule);
+    font-size: var(--fs-note);
+  }
+  .pager a { color: var(--accent); border-bottom: 0; }
+  .back { font-size: var(--fs-note); }
+
+  @media (max-width: 560px) {
+    .subs { grid-template-columns: 1fr; }
+  }
+</style>

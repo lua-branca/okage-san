@@ -1,0 +1,309 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/base';
+
+const LINE_URL = 'https://lin.ee/XAxux9k';
+
+const benefits = [
+  {
+    tag: '登録特典 ①',
+    title: '石を使った瞑想についての導入動画',
+    desc: '瞑想の際に手に持つ石の見立てや、心を深く静めるための基本的な意識の持ち方を解説した特別導入動画をお渡ししています。',
+    icon: '🧘',
+  },
+  {
+    tag: '登録特典 ②',
+    title: '初心者向け 14日間のステップ学び配信',
+    desc: '「神社参拝の本当の意味」や「日常で心を整える技術」を、1日ひとつずつ無理なく学べる14日間の特別ステップ講座をお届けします。',
+    icon: '✨',
+  },
+];
+
+const contents = [
+  {
+    title: '週1回の気づき配信',
+    desc: '岡慶行のFacebook発信から厳選した、今困っている人・迷っている人への「心を整えるメッセージ」を毎週お届けします。',
+    badge: '毎週配信',
+  },
+  {
+    title: '神遊び（神社参拝）の優先案内',
+    desc: '少人数で開催される神遊びの最新日程や募集告知を、一般公開よりも優先してLINE読者様へお届けします。',
+    badge: '優先告知',
+  },
+  {
+    title: '整える石（1点もの）のお披露目',
+    desc: 'ひとつひとつ表情が異なる1点ものの石。新しい石のご案内は、いつもLINE公式がいちばん早いです。',
+    badge: '先行案内',
+  },
+  {
+    title: '月1回「整える会」のご案内',
+    desc: '月に一度、オンラインで一緒にお話・瞑想し、マインドを持ち帰っていただく60分間の会のご案内。',
+    badge: '月1回開催',
+  },
+];
+---
+
+<Base
+  title="LINE公式のご案内"
+  description="神社参拝の本質と心の整え方を週に一度お届け。登録特典として「石を使った瞑想の導入動画」と「14日間のステップ学び講座」をプレゼント中。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ── ヒーロー ── */}
+    <header class="line-hero" data-reveal>
+      <div class="line-hero__info stack">
+        <p class="kicker">LINE Official</p>
+        <h1 class="mj">
+          神社と、心の整え方の話を<br />
+          週に一度お届けします。
+        </h1>
+        <p class="lede">
+          売るのはLINEです。サイトは「信じてもらう場所」。<br />
+          最新の募集や一点ものの石、週1回のメッセージはすべてLINEでお届けしています。
+        </p>
+
+        <div class="line-hero__action">
+          <a href={LINE_URL} class="btn btn--line btn--lg" target="_blank" rel="noopener">
+            LINEで友だち追加する
+          </a>
+          <span class="note">※ いつでもワンタップで解除できます。費用は一切かかりません。</span>
+        </div>
+      </div>
+
+      {/* QRコード（スマホでもPCでも確認しやすい） */}
+      <div class="line-hero__qr-box stack">
+        <div class="qr-frame">
+          <img
+            src={withBase('/assets/line-qr-green.png')}
+            alt="LINE公式 友だち追加 QRコード"
+            width="200"
+            height="200"
+            class="qr-img"
+          />
+        </div>
+        <p class="note text-center">PCでお手元のスマホから<br />QRコードを読み取れます</p>
+      </div>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ── 登録特典 ── */}
+    <section class="stack benefits-sec" data-reveal>
+      <p class="kicker">Present</p>
+      <h2>ご登録いただいた方への2大特典</h2>
+
+      <div class="benefits-grid">
+        {benefits.map((b) => (
+          <div class="benefit-card stack">
+            <div class="benefit-card__head">
+              <span class="benefit-card__icon">{b.icon}</span>
+              <span class="benefit-card__tag">{b.tag}</span>
+            </div>
+            <h3 class="benefit-card__title mj">{b.title}</h3>
+            <p class="benefit-card__desc">{b.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── LINEで届くこと ── */}
+    <section class="stack contents-sec" data-reveal>
+      <p class="kicker">Contents</p>
+      <h2>LINEでお届けしていること</h2>
+
+      <div class="contents-grid">
+        {contents.map((c) => (
+          <div class="content-card stack">
+            <div class="content-card__head">
+              <span class="content-card__badge">{c.badge}</span>
+              <h3 class="content-card__title mj">{c.title}</h3>
+            </div>
+            <p class="content-card__desc">{c.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── 登録CTA ── */}
+    <section class="stack text-center cta-sec" data-reveal>
+      <h2 class="mj">あなたとLINEでお会いできることを<br />楽しみにしています。</h2>
+      <p class="lede">登録後、すぐに特典動画と14日間講座の第1回目が届きます。</p>
+      <div class="cta-box">
+        <a href={LINE_URL} class="btn btn--line btn--lg" target="_blank" rel="noopener">
+          LINE公式に登録して特典を受け取る
+        </a>
+      </div>
+      <p class="note">※ 通知が多く感じる場合は、設定からいつでも通知オフ・ブロックが可能です。</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .line-hero {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 3.5rem;
+    align-items: center;
+    margin-block: 1rem 2rem;
+  }
+  @media (max-width: 768px) {
+    .line-hero {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 2.5rem;
+    }
+  }
+
+  .line-hero__action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+    margin-top: 1rem;
+  }
+
+  .btn--line {
+    background: #06c755;
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 16px rgba(6, 199, 85, 0.35);
+  }
+  .btn--line:hover {
+    background: #05b34c;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(6, 199, 85, 0.5);
+  }
+
+  .btn--lg {
+    padding: 1rem 2.25rem;
+    font-size: 1.05rem;
+  }
+
+  .line-hero__qr-box {
+    background: var(--bg-2);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    align-items: center;
+  }
+
+  .qr-frame {
+    background: #ffffff;
+    padding: 0.75rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .qr-img {
+    width: 180px;
+    height: 180px;
+    display: block;
+  }
+
+  /* 特典カード */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .benefit-card {
+    background: var(--bg-2);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 8px;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .benefit-card__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .benefit-card__icon {
+    font-size: 1.5rem;
+  }
+
+  .benefit-card__tag {
+    font-size: var(--fs-note);
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .benefit-card__title {
+    font-size: 1.25rem;
+    color: var(--fg);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .benefit-card__desc {
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  /* LINEお届け内容カード */
+  .contents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .content-card {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+
+  .content-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .content-card__badge {
+    font-size: var(--fs-note);
+    color: var(--asagi);
+    font-weight: 500;
+  }
+
+  .content-card__title {
+    font-size: 1.1rem;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .content-card__desc {
+    font-size: 0.925rem;
+    color: var(--fg-2);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .cta-sec {
+    padding-block: 2.5rem 1.5rem;
+  }
+  .cta-box {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+</style>

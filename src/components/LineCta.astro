@@ -1,0 +1,119 @@
+---
+import { withBase } from '../utils/base';
+
+/** LINE登録セクション。サイトの最重要CV（顧客の67%がLINE希望） */
+interface Props {
+  /** 'section' = 大きなブロック / 'inline' = 記事末などに置く小さい版 */
+  variant?: 'section' | 'inline';
+}
+const { variant = 'section' } = Astro.props;
+const LINE_URL = 'https://lin.ee/XAxux9k';
+---
+
+{variant === 'section' ? (
+  <section class="line surface-dark">
+    <div class="wrap line-grid">
+      <div class="stack">
+        <p class="kicker">LINE Official</p>
+        <h2>
+          神社と、心の整え方の話を<br />週に一度お届けします
+        </h2>
+        <p class="lede">
+          ご登録で「石を使った瞑想の動画」と「14日間ステップ講座」をプレゼント中。<br />
+          新しい石のご案内や神遊びの募集も、ここがいちばん早いです。
+        </p>
+        <div class="line-btns">
+          <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
+          <a href={withBase('/line/')} class="btn btn--ghost">LINEの特典・詳細</a>
+        </div>
+        <p class="note">※ いつでも解除できます。費用は一切かかりません。</p>
+      </div>
+
+      <div class="line-qr">
+        <div class="line-qr__frame">
+          <img
+            src={withBase('/assets/line-qr-green.png')}
+            alt="LINE公式 QRコード"
+            width="150"
+            height="150"
+          />
+        </div>
+        <span class="note">スマホで読取</span>
+      </div>
+    </div>
+  </section>
+) : (
+  <aside class="line-inline">
+    <p class="note">こういう話を、週に一度LINEでお送りしています。</p>
+    <div class="line-btns">
+      <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
+      <a href={withBase('/line/')} class="btn btn--ghost">詳細</a>
+    </div>
+  </aside>
+)}
+
+<style>
+  .line { padding-block: var(--gap-section); }
+  .line-grid {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .line-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .line-qr { display: none; }
+  }
+
+  .line-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .btn--line {
+    background: #06c755;
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+  }
+  .btn--line:hover {
+    background: #05b34c;
+    color: #ffffff;
+  }
+
+  .line-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-2);
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+  }
+  .line-qr__frame {
+    background: #ffffff;
+    padding: 0.5rem;
+    border-radius: 4px;
+  }
+  .line-qr__frame img {
+    width: 140px;
+    height: 140px;
+    display: block;
+  }
+
+  .line-inline {
+    margin-top: 3rem;
+    padding: 1.75rem;
+    background: var(--bg-2);
+    border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+</style>

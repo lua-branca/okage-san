@@ -1,0 +1,384 @@
+---
+/** 神遊び 1回分のページ。
+ *  中身は src/content/tours/*.md（1回＝1ファイル）。
+ *  新しい回を出すときは _TEMPLATE.md をコピーするだけ。ここは触りません。
+ *
+ *  🔴 セクションの順番には理由があります → 20_Site/CONTENT_DRAFT/03b_ツアーページ_テンプレ.md
+ *     「何をするか → 行程 → 参加費 → 法務 → 流れ → Q&A → 申込」
+ *     法務（各自手配・効果を保証しない）は、申込ボタンより前に必ず置く。 */
+import Base from '../../layouts/Base.astro';
+import Itinerary from '../../components/Itinerary.astro';
+import PriceBox from '../../components/PriceBox.astro';
+import NoticeBox from '../../components/NoticeBox.astro';
+import Steps from '../../components/Steps.astro';
+import Faq from '../../components/Faq.astro';
+import Gallery from '../../components/Gallery.astro';
+import { withBase } from '../../utils/base';
+import VoiceCard from '../../components/VoiceCard.astro';
+import LineCta from '../../components/LineCta.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  // 🔴 draft はローカル（npm run dev）でだけ表示。公開ビルドには出ません
+  const tours = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+    .sort((a, b) => +b.data.date - +a.data.date);
+  return tours.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const dt = d.date.toLocaleDateString('ja-JP', {
+  year: 'numeric', month: 'long', day: 'numeric', weekday: 'short',
+});
+const iso = d.date.toISOString().slice(0, 10);
+
+const isOpen = d.state === '受付中';
+const isOver = d.state === '終了';
+
+// 代表価格＝初回。過去回は空のことがある
+const base = d.prices?.[0];
+
+// 記録：写真だけでも成立させる（文章がなくても、写真が並べば一日は伝わる）
+const rp = d.report;
+const hasText = !!(rp?.summary || rp?.changed || rp?.voices.length);
+const hasPhotos = !!rp?.photos.length;
+const hasReport = hasText || hasPhotos;
+
+// 概要表。埋まっている行だけ出す。
+// 🔴 終了した回には「参加費」と「集合・解散の時刻」を出しません。
+//    ・価格は募集中の回だけ（回ごとに違うので、過去の額が独り歩きしないように）
+//    ・時刻は分刻みの行程にあたるので伏せる
+//    → 03b_ツアーページ_テンプレ／福田判断 2026-07-29
+const facts = (isOver
+  ? [
+      ['日程', dt],
+      ['エリア', d.area],
+    ]
+  : [
+      ['日程', dt],
+      d.meetTime && d.meetPlace ? ['集合', `${d.meetTime}　${d.meetPlace}`] : null,
+      d.endTime && d.endPlace ? ['解散', `${d.endTime}　${d.endPlace}`] : null,
+      d.capacity ? ['定員', `${d.capacity}名`] : null,
+      d.transportNote ? ['移動', d.transportNote] : null,
+      base ? ['参加費', `${base.label} ¥${base.amount.toLocaleString('ja-JP')}〜`] : null,
+    ]
+).filter(Boolean) as [string, string][];
+
+const steps = [
+  { t: 'お申し込み', d: 'このページのフォームから送信していただきます。' },
+  { t: 'ご案内メール', d: '3日以内に、お振込先と金額をお送りします。' },
+  { t: 'お支払い', d: '7日以内にお願いしています。入金を確認した時点で参加確定です。' },
+  { t: 'しおりが届く', d: '開催の1週間前に、集合場所・持ち物・当日の流れをお送りします。' },
+  { t: '当日', d: d.meetTime && d.meetPlace ? `${d.meetTime} に ${d.meetPlace} でお会いしましょう。` : '集合場所でお会いしましょう。' },
+];
+---
+
+<Base title={d.title} description={d.lead} surface="dark" reading>
+  <article class="tp">
+    <!-- ── 冒頭：いつ・どこで・何をする回か ── -->
+    <header class="section">
+      <div class="wrap stack" data-reveal>
+        <nav class="crumb" aria-label="パンくず">
+          <a href={withBase('/')}>トップ</a>
+          <span aria-hidden="true">›</span>
+          <a href={withBase('/kamiasobi/')}>神遊び</a>
+        </nav>
+
+        <p class="kicker">{d.theme}</p>
+        <h1>{d.title}</h1>
+
+        <p class="meta tabnum">
+          <time datetime={iso}>{dt}</time>
+          <span aria-hidden="true">・</span>
+          <span>{d.area}</span>
+        </p>
+
+        <p class="lede">{d.lead}</p>
+
+        {d.state !== '準備中' && (
+          <p><span class={`pill${isOpen ? ' pill--open' : ''}`}>{d.state}</span></p>
+        )}
+      </div>
+    </header>
+
+    {d.heroImage && (
+      <figure class="tp__hero kenburns" data-reveal>
+        <img src={d.heroImage} alt="" width="1600" height="900" />
+      </figure>
+    )}
+
+    <!-- ── 概要：申し込むか決めるのに要る事実だけ ── -->
+    <section class="section--tight">
+      <div class="wrap" data-reveal>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              {facts.map(([k, v]) => <tr><th>{k}</th><td class="tabnum">{v}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 本文：岡さんの言葉 ── -->
+    <section class="section--tight">
+      <div class="wrap"><div class="body"><Content /></div></div>
+    </section>
+
+    {/* ── 終了した回の記録 ──
+        これから参加する人が知りたいのは「予定どおりだったか」ではなく
+        「どんな一日だったか」。だから行程より前に置きます。 */}
+    {isOver && hasReport && rp && (
+      <section class="section">
+        <div class="wrap stack">
+          <div data-reveal>
+            <p class="kicker">この回の記録</p>
+            {/* 写真だけの回は見出しを変える。無理に文章があるふりをしない */}
+            <h2>{hasText ? '実際は、こんな一日でした' : 'この日の写真'}</h2>
+          </div>
+
+          {rp.summary && (
+            <div class="rp note" data-reveal>
+              {rp.summary.split('\n').filter((l) => l.trim()).map((l) => <p>{l}</p>)}
+            </div>
+          )}
+
+          {hasPhotos && (
+            <div data-reveal><Gallery photos={rp.photos} lead={hasText} /></div>
+          )}
+
+          {/* 🔴 予定から変えたところは隠さない。
+              「その日に応じて変える」ことが神遊びの中身そのものなので、
+              むしろここが読まれると信頼になります */}
+          {rp.changed && (
+            <div data-reveal>
+              <NoticeBox title="予定から変えたところ" tone="info">
+                {rp.changed.split('\n').filter((l) => l.trim()).map((l) => <p>{l}</p>)}
+              </NoticeBox>
+            </div>
+          )}
+
+          {rp.voices.length > 0 && (
+            <div class="rp__v" data-reveal>
+              {rp.voices.map((v) => <VoiceCard text={v.text} who={v.who} />)}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- ── 行程 ── -->
+    {d.itinerary.length > 0 && (
+      <section class="section">
+        <div class="wrap stack">
+          <div data-reveal>
+            <p class="kicker">{isOver ? '記録' : 'めぐる場所'}</p>
+            <h2>{isOver ? 'この回でめぐった場所' : 'めぐる予定の場所'}</h2>
+            {/* 🔴 分刻みの行程・住所は公開しません → 03b_ツアーページ_テンプレ */}
+            {isOver ? (
+              <p class="note">
+                その日の流れや天候によって、順番や場所を変えながらめぐりました。
+              </p>
+            ) : (
+              <p class="note">
+                天候や神事の都合で変わることがあります。<br />
+                くわしい時刻と道のりは、お申し込みのあとにしおりでお送りします。
+              </p>
+            )}
+          </div>
+          <Itinerary stops={d.itinerary} compact />
+        </div>
+      </section>
+    )}
+
+    {/* ══ ここから下は、終了した回では出しません ══ */}
+    {!isOver && (
+      <>
+        <!-- ── 参加費 ── -->
+        {base && (
+        <section class="section">
+          <div class="wrap stack" data-reveal>
+            <p class="kicker">参加費</p>
+            <h2>参加費と、含まれるもの</h2>
+
+            <div class="tablewrap">
+              <table>
+                <thead><tr><th>区分</th><th>参加費（税込）</th></tr></thead>
+                <tbody>
+                  {d.prices!.map((p) => (
+                    <tr>
+                      <td>{p.label}{p.note && <><br /><span class="note">{p.note}</span></>}</td>
+                      <td class="tabnum">¥{p.amount.toLocaleString('ja-JP')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p class="note">
+              二度目からは、ぐっとお安くなります。<br />
+              同じ場所でも、そのときの自分によって受け取るものが変わるからです。
+            </p>
+
+            <PriceBox
+              price={base.amount}
+              unit={`${base.label}・1名さま`}
+              includes={d.includes}
+              excludes={d.excludes}
+              payment={d.payment}
+            />
+          </div>
+        </section>
+        )}
+
+        <!-- ── 法務：申込ボタンより前に置く ── -->
+        <section class="section--tight">
+          <div class="wrap stack" data-reveal>
+            <NoticeBox title="この企画について（お申し込み前に必ずお読みください）" tone="law">
+              <p>
+                本プログラムは、その場を感じ、自分を整えることを学ぶ<strong>「講習・ガイドプログラム」</strong>です。
+                旅行業法上の企画旅行（旅行商品）ではありません。
+              </p>
+              {/* 🔴 仕組み（誰が誰に払うか）はここに書きません。書くほど誤解されます。
+                     必要なのは「参加費に含まれない」ことと「いくらかかるか」の2つだけ → 03b 第2d章 */}
+              {/* 🔴 2026-07-30：実態が確認できたので、事実にもとづく表現に戻しました。
+                     ・移動＝岡さんご自身の車。第三者の運送機関を手配していない
+                     ・宿泊＝各自が予約・支払い（従来からそうしている）
+                     ⚠️ この形を変えたら、この文言も必ず直すこと → TRAVEL_LAW_MEMO 第4d章 */}
+              <p>
+                <strong>移動について。</strong>
+                岡の車に同乗いただきます。ガソリン代・高速代・駐車場代を、
+                その日の実費として人数で分け、当日精算します。
+                参加費には含まれません。
+              </p>
+              <p>
+                <strong>宿泊について。</strong>
+                宿泊が必要な回は、ご予約とお支払いをご自身で宿へお願いしています。
+                おすすめの宿はご案内します。主催が予約の代行や代金のお預かりをすることはありません。
+              </p>
+              <p>
+                <strong>効果について。</strong>
+                本企画は祈祷・医療行為ではありません。特定の効果や結果（病状の改善、願望成就など）を保証するものではなく、
+                医療・法律・投資等の専門的助言にも該当しません。
+              </p>
+              <p>
+                <strong>責任の範囲。</strong>
+                移動中の事故・盗難・紛失等について、主催者の重過失による場合を除き、各自の管理となります。
+                国内旅行保険等へのご加入をご検討ください。
+              </p>
+              <p>
+                心身にご不安のある方、服薬・通院中の方は、事前にご相談ください。
+                神域での作法・撮影の可否は、現地の規定と宮司様のご指示に従います。
+              </p>
+            </NoticeBox>
+
+            <NoticeBox title="キャンセルについて" tone="warn">
+              <ul class="list-accent">
+                <li>開催の7日前まで ── 全額返金します</li>
+                <li>6日前〜前日 ── 50%を返金します</li>
+                <li>当日 ── 返金はできません</li>
+              </ul>
+              <p>
+                天候や主催者の事情で中止する場合は、全額返金または日程の振り替えで対応します。<br />
+                返金の手続きは7営業日以内に行います。振込手数料はお客様のご負担となります。
+              </p>
+            </NoticeBox>
+
+            <NoticeBox title="服装と持ちもの" tone="info">
+              <ul class="list-accent">
+                <li>歩きやすい靴／防寒具／雨具</li>
+                <li>両手があくバッグ（リュックなど）</li>
+                <li>参拝にふさわしい、清潔感のある服装</li>
+              </ul>
+            </NoticeBox>
+          </div>
+        </section>
+
+        <!-- ── 申し込みの流れ ── -->
+        <section class="section">
+          <div class="wrap stack">
+            <div data-reveal>
+              <p class="kicker">お申し込み</p>
+              <h2>お申し込みから当日まで</h2>
+            </div>
+            <Steps items={steps} />
+          </div>
+        </section>
+
+        <!-- ── Q&A ── -->
+        {d.faq.length > 0 && (
+          <section class="section--tight">
+            <div class="wrap stack">
+              <div data-reveal><h2>よくあるご質問</h2></div>
+              <Faq items={d.faq} openFirst />
+            </div>
+          </section>
+        )}
+
+        <!-- ── 申し込み ── -->
+        <section class="section">
+          <div class="wrap stack" data-reveal>
+            {isOpen && d.applyUrl ? (
+              <>
+                <h2>この回に申し込む</h2>
+                <p class="note">
+                  {d.capacity && <>定員{d.capacity}名です。</>}お申し込みのあと、こちらからご連絡します。
+                </p>
+                <p><a href={d.applyUrl} class="btn">申し込む</a></p>
+              </>
+            ) : (
+              <>
+                <h2>{d.state === '満席' ? 'この回は満席になりました' : 'この回はまだ受付前です'}</h2>
+                <p class="note">
+                  次の回のご案内は、LINEがいちばん早いです。
+                </p>
+              </>
+            )}
+          </div>
+        </section>
+      </>
+    )}
+
+    {isOver && (
+      <section class="section">
+        <div class="wrap stack" data-reveal>
+          <h2>この回は終了しました</h2>
+          <p class="note">
+            次の神遊びのご案内は、LINEでお送りしています。<br />
+            <a href={withBase('/kamiasobi/')}>これからの回を見る →</a>
+          </p>
+        </div>
+      </section>
+    )}
+  </article>
+
+  <LineCta />
+</Base>
+
+<style>
+  .crumb { display: flex; gap: .5rem; font-size: var(--fs-label); color: var(--fg-2); }
+  .crumb a { color: var(--fg-2); border-bottom: 0; }
+  .crumb a:hover { color: var(--link); }
+
+  .meta { font-size: var(--fs-note); color: var(--fg-2); display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  .tp__hero { margin-block: 1.5rem 0; }
+  .tp__hero img { width: 100%; }
+
+  /* 概要表：項目名の幅を揃えて読みやすく */
+  .tp th { white-space: nowrap; width: 5.5rem; }
+
+  /* 本文（記事と同じ見た目） */
+  .body :global(p) { margin-block: 1.6rem; }
+  .body :global(h2) {
+    font-family: var(--mincho); font-weight: 400; font-size: var(--fs-h2);
+    color: var(--accent); margin-block: 3rem 1.4rem;
+    padding-top: 1.4rem; border-top: 1px solid var(--rule); line-height: 1.6;
+  }
+  .body :global(strong) { color: var(--white); }
+
+  /* 記録 */
+  .rp p + p { margin-top: .8rem; }
+  .rp__v { display: flex; flex-direction: column; gap: 1rem; }
+</style>

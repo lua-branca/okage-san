@@ -1,0 +1,44 @@
+---
+/** お知らせ・注意・免責の箱。
+ *  🔴 tone="law" は旅行業法まわりの必須文言専用。
+ *     「各自手配型である」「運送・宿泊の手配はしない」旨を必ずここに置く
+ *     → TRAVEL_LAW_MEMO。文言は勝手に短くしない。 */
+interface Props {
+  title?: string;
+  /** info=ふつうの補足 / warn=読み落とすと困る / law=法令上の必須表示 */
+  tone?: 'info' | 'warn' | 'law';
+}
+const { title, tone = 'info' } = Astro.props;
+---
+
+<aside class={`nb nb--${tone}`} role={tone === 'info' ? undefined : 'note'}>
+  {title && <p class="nb__t mj">{title}</p>}
+  <div class="nb__b note">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .nb {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: 1.25rem 1.4rem;
+    border-left: 2px solid var(--rule);
+    background: color-mix(in srgb, var(--white) 4%, transparent);
+  }
+  .nb__t { font-size: 1rem; color: var(--fg); }
+  .nb__b :global(p + p) { margin-top: .6rem; }
+  .nb__b :global(ul) { margin-top: .5rem; line-height: 1.9; }
+
+  /* ふつうの補足：主張しない */
+  .nb--info { border-left-color: var(--rule); }
+
+  /* 読み落とすと困る：金 */
+  .nb--warn { border-left-color: var(--accent); }
+  .nb--warn .nb__t { color: var(--accent); }
+
+  /* 法令上の必須表示：朱。ここだけは目に入らせる */
+  .nb--law { border-left-color: var(--state); }
+  .nb--law .nb__t { color: var(--state); }
+</style>

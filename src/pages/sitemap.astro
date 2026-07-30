@@ -1,0 +1,133 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../utils/base';
+
+// コンテンツコレクションから動的にリンクを取得
+const tours = (await getCollection('tours')).sort((a, b) => +b.data.date - +a.data.date);
+const ishi = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+
+const mainPages = [
+  { href: withBase('/'), label: 'トップページ', desc: 'ファーストビュー・開催予定・案内' },
+  { href: withBase('/kamiasobi/'), label: '神社へ行く（神遊び一覧）', desc: '場を借りて整える神社参拝' },
+  { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、本物のパワーストーン' },
+  { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
+  { href: withBase('/session/'), label: '深く整える', desc: '内側から整える（催眠・タントラ）' },
+  { href: withBase('/blog/'), label: '読み物（ブログ）', desc: '言葉で整える思想・解説記事' },
+  { href: withBase('/about/'), label: '岡慶行について', desc: '植木屋40年・神道40余年の思想' },
+];
+
+const subPages = [
+  { href: withBase('/voice/'), label: '参加した方の声', desc: '神遊び・セッション参加者の体験談' },
+  { href: withBase('/book/'), label: '著書案内', desc: '『願わず叶う神社参拝入門』紹介' },
+  { href: withBase('/line/'), label: 'LINE公式のご案内', desc: '登録特典・最新情報の案内' },
+  { href: withBase('/contact/'), label: 'お問い合わせ', desc: 'ご質問・ご相談フォーム' },
+];
+
+const legalPages = [
+  { href: withBase('/commerce-law/'), label: '特定商取引法に基づく表記' },
+  { href: withBase('/privacy-policy/'), label: 'プライバシーポリシー' },
+  { href: withBase('/styleguide/'), label: '部品カタログ（社内用）' },
+];
+---
+
+<Base
+  title="サイトマップ（リンク確認用）"
+  description="マインドフリー神道学アカデミア（okage-san.com）の全ページ一覧です。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    <header class="stack">
+      <p class="kicker">Sitemap</p>
+      <h1>サイトマップ（全ページリンク一覧）</h1>
+      <p class="lede">全ページの動作・表示リンク確認用ページです。</p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    {/* ① メインメニュー */}
+    <section class="sm-sec stack">
+      <h2>主要ページ</h2>
+      <ul class="sm-list">
+        {mainPages.map((p) => (
+          <li>
+            <a href={p.href} class="sm-link">{p.label}</a>
+            <span class="note"> — {p.desc}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ② 神遊び（開催回） */}
+    <section class="sm-sec stack">
+      <h2>神遊び（各開催ページ）</h2>
+      <ul class="sm-list">
+        {tours.map((t) => (
+          <li>
+            <a href={withBase(`/kamiasobi/${t.id}/`)} class="sm-link">{t.data.title}</a>
+            <span class="note"> （{t.data.date} ／ {t.data.place}）</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ③ 石のギャラリー */}
+    <section class="sm-sec stack">
+      <h2>整える石（個別ページ）</h2>
+      <ul class="sm-list">
+        {ishi.map((s) => (
+          <li>
+            <a href={withBase(`/mind/${s.data.id}/`)} class="sm-link">No.{s.data.id} {s.data.name}</a>
+            <span class="note"> （¥{s.data.price?.toLocaleString('ja-JP')}）</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ④ 読み物（記事） */}
+    <section class="sm-sec stack">
+      <h2>読み物（記事一覧）</h2>
+      <ul class="sm-list">
+        {posts.map((p) => (
+          <li>
+            <a href={withBase(`/blog/${p.id}/`)} class="sm-link">{p.data.title}</a>
+            <span class="note"> 【{p.data.category}】</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ⑤ サブ・案内ページ */}
+    <section class="sm-sec stack">
+      <h2>案内・メディア</h2>
+      <ul class="sm-list">
+        {subPages.map((p) => (
+          <li>
+            <a href={p.href} class="sm-link">{p.label}</a>
+            <span class="note"> — {p.desc}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ⑥ 法務・その他 */}
+    <section class="sm-sec stack">
+      <h2>法務・社内資料</h2>
+      <ul class="sm-list">
+        {legalPages.map((p) => (
+          <li>
+            <a href={p.href} class="sm-link">{p.label}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sm-sec { padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+  .sm-list { display: flex; flex-direction: column; gap: .6rem; padding-left: 1rem; }
+  .sm-link { font-size: 1.05rem; font-weight: 500; color: var(--fg); border-bottom: 1px solid var(--accent); }
+  .sm-link:hover { color: var(--accent); }
+</style>

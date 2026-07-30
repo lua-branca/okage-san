@@ -1,0 +1,209 @@
+---
+import Base from '../layouts/Base.astro';
+import LineCta from '../components/LineCta.astro';
+import IshiCard from '../components/IshiCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../utils/base';
+
+// 原稿: CONTENT_DRAFT/01_トップ.md（v3）
+// 並び順 ①FV ②何をする人か ③直近の募集 ④石 ⑤声 ⑥LINE ⑦読み物 ⑧著書 ⑨整える会 ⑩締め
+const ishi = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate).slice(0, 3);
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
+  .slice(0, 4);
+---
+
+<Base
+  title="マインドフリー神道学アカデミア"
+  description="神社は願いを叶える場所ではなく、自分を整える場所。植木屋歴40年・神道歴40年余の岡慶行が案内する神遊び（神社ツアー）と、選んだ石。"
+  surface="dark"
+>
+  {/* ① ファーストビュー ─ 暗い面 */}
+  <section class="fv">
+    <div class="wrap fv__in">
+      <figure class="fv__img kenburns">
+        <img src={withBase('/assets/oka-hero.jpg')} alt="杉並木の参道を歩く岡慶行" width="1200" height="800" />
+      </figure>
+      <div class="stack" data-reveal data-reveal-delay="1">
+        <h1>
+          神社は、願いを叶える場所じゃない。<br />
+          自分を整える場所です。
+        </h1>
+        <p class="lede">
+          植木屋が40年。神道が40年あまり。<br />
+          <strong>庭も、神社も、やっていることは同じでした。</strong>
+        </p>
+        <p class="fv__btns">
+          <a href={withBase('/kamiasobi/')} class="btn">神社参拝の日程を見る</a>
+          <a href="#line" class="btn btn--ghost">LINEで受け取る</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ② 何をする人か */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">神社参拝</p>
+      <h2>観光でも、修行でもありません</h2>
+      <p>
+        神社という場所を借りて、<strong>自分のエネルギーを整えに行く</strong>。それだけです。<br />
+        整うと、仕事も、お金も、人との関係も、勝手に動きはじめます。岡慶行は、この参拝を「神遊び（かみあそび）」と呼んでいます。
+      </p>
+      <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
+    </div>
+  </section>
+
+  <hr class="rule-accent" />
+
+  {/* ③ 直近の募集 ─ 最大2件 */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">開催予定</p>
+      <h2>直近の参拝日程</h2>
+      {/* TODO: 02_ツアーマスタから2件。選択肢は2件まで（並べると選べなくなる） */}
+      <p class="note">（日程が決まったらここに最大2件。3件目以降は /kamiasobi/ へ）</p>
+      <p><a href={withBase('/kamiasobi/')}>これからの日程をすべて見る →</a></p>
+    </div>
+  </section>
+
+  <hr class="rule-accent" />
+
+  {/* ④ 心を整える（本物のパワーストーン） */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">心を整える</p>
+      <h2>日々の心を整える<br /><span style="font-size: 1.15rem; color: var(--accent); display: block; margin-top: .3rem;">─ 瞑想と、本物のパワーストーン ─</span></h2>
+      <p class="lede">
+        心を整え、神（自然・宇宙エネルギー）とつながる手助けとなる道具。<br />
+        岡慶行が自ら手を触れ、気の流れを感じて選んだ一点ものの本物のパワーストーンです。
+      </p>
+      <div class="ishi-grid">
+        {ishi.map((s) => (
+          <IshiCard
+            id={s.data.id}
+            name={s.data.name}
+            price={s.data.price}
+            photo={s.data.photos[0]}
+            soldout={s.data.soldout}
+          />
+        ))}
+      </div>
+      <p><a href={withBase('/mind/')}>「心を整える」ギャラリーを見る →</a></p>
+    </div>
+  </section>
+
+  <hr class="rule-accent" />
+
+  {/* ⑤ 参加した人の声 ─ 3件 */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">参加した方の声</p>
+      {/* TODO: CONTENT_DRAFT/05_voice.md から3件。イニシャル＋年代＋性別＋都道府県 */}
+      <p class="note">（原稿から3件）</p>
+      <p><a href={withBase('/voice/')}>ほかの声を読む →</a></p>
+    </div>
+  </section>
+
+  {/* ⑥ LINE ★最重要CV */}
+  <div id="line"><LineCta /></div>
+
+  {/* ⑦ 読み物 */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">読み物</p>
+      <h2>書いてきたこと</h2>
+      <div class="posts">
+        {posts.map((p) => (
+          <PostCard
+            slug={p.id}
+            title={p.data.title}
+            description={p.data.description}
+            category={p.data.category}
+            pubDate={p.data.pubDate}
+            chars={p.body?.length ?? 0}
+          />
+        ))}
+      </div>
+      <p><a href={withBase('/blog/')}>すべての読み物 →</a></p>
+    </div>
+  </section>
+
+  <hr class="rule-accent" />
+
+  {/* ⑧ 著書 */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">著書</p>
+      <h2>40年ぶんを、<br />1冊にしました。</h2>
+      <p>
+        『願わず叶う神社参拝入門 ─ 心の動きが運命を変える ─』<br />
+        2025年8月刊行。Kindle Unlimitedなら読み放題です。
+      </p>
+      <p class="fv__btns">
+        <a href="https://amzn.to/40UznBY" class="btn" target="_blank" rel="noopener">Amazonで見る</a>
+        <a href={withBase('/about/')} class="btn btn--ghost">目次を見る</a>
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule-accent" />
+
+  {/* ⑨ 整える会 ─ アカデミアの枠（実体のある商品） */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">整える会</p>
+      <h2>月に一度、<br />一緒に整える時間があります。</h2>
+      <p class="lede">
+        オンラインなので、どこからでも。<br />
+        お話をして、一緒に瞑想して、感じたことを分かち合う。60分ほどの会です。<br />
+        <strong>マインドも、持って帰ってもらいます。</strong>
+      </p>
+      <p class="note">月1回・2,000円・録画のアーカイブつき</p>
+      <p class="fv__btns">
+        {/* TODO: 第1回の日程が決まったら */}
+        <a href="#line" class="btn">次の会を見る</a>
+      </p>
+    </div>
+  </section>
+
+  {/* ⑩ 締め */}
+  <section class="section">
+    <div class="wrap stack" data-reveal>
+      <p class="mj closing">
+        神社に行っても救われない。<br />
+        そう思っている人が、けっこういます。<br />
+        <br />
+        それは、行き方の話かもしれません。
+      </p>
+      <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fv { padding-block: 2.5rem 3.5rem; }
+  .fv__in { display: flex; flex-direction: column; gap: 2rem; max-width: 64rem; }
+  .fv__img { background: #0d0b10; }
+  .fv__btns { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+  .ishi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 640px) {
+    .ishi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .posts { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+
+  .closing { font-size: 1.15rem; line-height: 2; color: var(--fg); }
+
+  @media (min-width: 861px) {
+    .fv__in { flex-direction: row; align-items: center; gap: 3rem; }
+    .fv__img { flex: 0 0 46%; }
+    .fv__in > .stack { flex: 1 1 auto; }
+  }
+</style>

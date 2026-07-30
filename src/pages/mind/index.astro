@@ -1,0 +1,210 @@
+---
+/** 「心を整える」＝ 瞑想と石の入口。
+ *
+ *  ★このページの読み手（2026-07-29 福田整理）
+ *    ・瞑想に興味がある
+ *    ・**まずは無料でやりたい**
+ *    ・でも岡さんが選んだ石なら興味ある。どんな石があるのか見てみたい
+ *
+ *  だから順番は「無料 → 橋渡し → ギャラリー」。
+ *  いきなり石を並べると物販ページになり、「まず無料で」の人を追い返します。
+ *
+ *  🔴 「石を持つと効果が上がる」とは書きません（→ 04b_石の詳細ページ設計 第2章）。
+ *     書けるのは「集中の手がかりになる」まで。
+ *     売りは効果ではなく **誰が選んだか（岡さんの目利き）** です。 */
+import Base from '../../layouts/Base.astro';
+import LineCta from '../../components/LineCta.astro';
+import IshiCard from '../../components/IshiCard.astro';
+import Faq from '../../components/Faq.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../../utils/base';
+
+const LINE_URL = 'https://lin.ee/XAxux9k';
+
+// 新しい順。販売中もSOLDも混ぜて並べる（SOLDも作品歴として効く）
+const all = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const onSale = all.filter((s) => !s.data.soldout).length;
+
+// 点数が少ないうちは大きく見せる。3列に1点だと寂しく見えるため
+const cols = all.length >= 5 ? 3 : all.length >= 3 ? 3 : 2;
+
+const faq = [
+  {
+    q: 'どの石を選べばいいですか。',
+    a: '「これだ」と目が留まったもので大丈夫です。\n迷ったらお問い合わせください。今どういう状態か伺って、岡がお答えします。',
+  },
+  {
+    q: '石がないと瞑想できませんか。',
+    a: 'いいえ。何も持たずにできます。\n石は、意識の置きどころを作るための手がかりです。なくても始められます。',
+  },
+  {
+    q: '手入れや浄化は必要ですか。',
+    a: '（ヒアリング待ち：岡さんの言葉で）',
+  },
+  {
+    q: '同じ名前の石なら、どれも同じですか。',
+    a: '違います。同じタイガーアイでも、縞の出方も光の返し方もひとつずつ違います。\nすべて一点もので、同じものは二つとありません。',
+  },
+];
+---
+
+<Base
+  title="心を整える ─ 瞑想と、石"
+  description="瞑想は、何も持たずに始められます。まずは無料の音声から。そのうえで、手に持つものがあると変わります。岡慶行が選んだ一点ものの石。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    {/* ── ① まず「売り込まない」ことを言う。ここで信頼を取る ── */}
+    <header class="stack" data-reveal>
+      <p class="kicker">心を整える</p>
+      <h1 class="mj">
+        瞑想は、<br />何も持たずに始められます
+      </h1>
+      <p class="lede">
+        道具は要りません。座って、目を閉じて、呼吸を数える。<br />
+        それだけで始まります。
+      </p>
+    </header>
+
+    {/* ── ② 無料で始める。★このページの第一CV ──
+        .free 自身が金の上下線を持つので、ここに <hr> は置かない（二重線になる） */}
+    <section class="stack free" data-reveal>
+      <p class="kicker">まず、無料で</p>
+      <h2>今日から、ひとりでできます</h2>
+
+      <ul class="free__l">
+        <li>
+          <span class="free__t mj">瞑想の導入動画</span>
+          <span class="note">座り方、呼吸、意識の置きどころ。岡が解説しています</span>
+        </li>
+        <li>
+          <span class="free__t mj">14日間のステップ講座</span>
+          <span class="note">1日1通。読みながら、少しずつ身につけていきます</span>
+        </li>
+        <li>
+          <span class="free__t mj">月に一度の「整える会」</span>
+          <span class="note">オンラインで、みんなで一緒に瞑想する会。前後に岡のお話つき</span>
+        </li>
+      </ul>
+
+      <p><a href={LINE_URL} class="btn" target="_blank" rel="noopener">LINEで受け取る</a></p>
+      <p class="note">すべて無料です。いつでも解除できます。</p>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── ③ 橋渡し。ここで初めて石の話をする ──
+        🔴 「効果が上がる」と書かない。書けるのは「手がかりになる」まで */}
+    <section class="stack" data-reveal>
+      <p class="kicker">それから</p>
+      <h2>手に持つものがあると、<br />少し楽になります</h2>
+
+      <div class="prose">
+        <p>
+          手ぶらで座ると、思考がうろうろします。<br />
+          今日のこと、明日のこと。
+        </p>
+        <p>
+          手のなかに石をひとつ握ると、<br />
+          意識の置きどころができます。<br />
+          <strong>石が何かをしてくれるわけではありません。</strong><br />
+          戻ってくる場所が、手のなかにできるだけです。
+        </p>
+        <p>
+          それでも、その「戻ってくる場所」があるかないかで、<br />
+          ずいぶん違います。
+        </p>
+      </div>
+    </section>
+
+    {/* ── ④ 岡が選ぶということ ＝ ここが商品価値 ── */}
+    <section class="stack" data-reveal>
+      <p class="kicker">選び方</p>
+      <h2>名前で選んでいません</h2>
+
+      <div class="prose">
+        <p>
+          世に出ている石には、<br />
+          色を付けたものや、樹脂で固めたものもあります。
+        </p>
+        <p>
+          岡が手渡すのは、<br />
+          <strong>自分で手に取って、流れを感じたものだけ</strong>です。<br />
+          石の名前や相場では選びません。
+        </p>
+        <p>
+          だから数がそろいません。<br />
+          今あるのは、それだけです。
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule-accent" />
+
+    {/* ── ⑤ ギャラリー ── */}
+    <section class="stack" data-reveal>
+      <p class="kicker">今ある石</p>
+      <h2>見ていただくだけでも、<br />うれしいです</h2>
+      <p class="note">
+        {all.length}点あります{onSale < all.length && `（うちお迎えいただけるのは${onSale}点）`}。<br />
+        気になるものがあれば、写真と動画でじっくりご覧ください。
+      </p>
+
+      <div class="gal" style={`--cols:${cols}`}>
+        {all.map((s) => (
+          <IshiCard
+            id={s.data.id}
+            name={s.data.name}
+            price={s.data.price}
+            photo={s.data.cardPhoto ?? s.data.photos[0]}
+            soldout={s.data.soldout}
+          />
+        ))}
+      </div>
+
+      <p class="note">
+        新しい石が入ったときは、<a href={withBase('/line/')}>LINE</a>でいちばん先にお知らせしています。
+      </p>
+    </section>
+
+    {/* ── ⑥ 選ぶ前の不安に答える ── */}
+    <section class="stack" data-reveal>
+      <h2>よくあるご質問</h2>
+      <Faq items={faq} />
+    </section>
+
+    <p class="note">
+      ※ 天然石の工芸品です。医療的・霊的な効果を保証するものではありません。
+    </p>
+
+    <LineCta variant="section" />
+  </div>
+</Base>
+
+<style>
+  h1 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); line-height: 1.45; }
+  h2 { line-height: 1.5; }
+
+  .prose p { margin-block: 1.4rem; line-height: 1.95; }
+  .prose strong { color: var(--white); }
+
+  /* 無料でできること：金の細線で挟んで、ページの中でいちばん目立たせる */
+  .free {
+    padding: 1.75rem 0;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  }
+  .free__l { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .free__l li { display: flex; flex-direction: column; gap: .2rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
+  .free__t { font-size: 1.0625rem; color: var(--fg); }
+
+  .gal {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
+    gap: 1.25rem;
+    margin-top: .5rem;
+  }
+  @media (max-width: 640px) {
+    .gal { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

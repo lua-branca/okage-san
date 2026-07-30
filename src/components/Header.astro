@@ -1,0 +1,96 @@
+---
+import { withBase } from '../utils/base';
+
+interface Props { surface?: 'light' | 'dark'; }
+const { surface = 'light' } = Astro.props;
+
+const nav = [
+  { href: withBase('/kamiasobi/'), label: '神社参拝' },
+  { href: withBase('/mind/'), label: '心を整える' },
+  { href: withBase('/session/'), label: '個人セッション' },
+  { href: withBase('/blog/'), label: '読み物' },
+  { href: withBase('/about/'), label: '岡慶行について' },
+];
+const LINE_URL = 'https://lin.ee/XAxux9k';
+---
+
+<header class="hd">
+  <div class="wrap hd__in">
+    <a href={withBase('/')} class="brand" aria-label="トップへ">
+      <img src={withBase('/assets/logo.png')} alt="" width="52" height="52" />
+      <span class="brand__tx">
+        <span class="brand__n">マインドフリー神道学アカデミア</span>
+        <span class="brand__s">神社は、自分を整える場所</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="メインメニュー">
+      {nav.map((i) => <a href={i.href}>{i.label}</a>)}
+      <a href={LINE_URL} class="nav__line" target="_blank" rel="noopener">LINEで受け取る</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hd {
+    border-bottom: 1px solid var(--rule);
+    padding-block: 1rem;
+  }
+  .hd__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    max-width: 64rem; /* ヘッダーだけ本文より広く */
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    border-bottom: 0;
+    flex-shrink: 0;
+  }
+  .brand img { width: 52px; height: 52px; }
+  .brand__tx { display: flex; flex-direction: column; gap: .1rem; }
+  .brand__n {
+    font-family: var(--mincho);
+    font-size: .9375rem;
+    letter-spacing: .05em;
+    color: var(--fg);
+    line-height: 1.4;
+  }
+  .brand__s {
+    font-size: var(--fs-label);
+    letter-spacing: .1em;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .nav a {
+    font-size: .9375rem;
+    border-bottom: 0;
+    color: var(--fg);
+  }
+  .nav a:hover { color: var(--link); }
+  .nav__line {
+    color: var(--accent) !important;
+    border: 1px solid var(--accent) !important;
+    padding: .4rem .8rem;
+    border-radius: var(--radius);
+    font-size: var(--fs-note) !important;
+  }
+
+  /* スマホ：ロゴだけ残してナビは下に折る（v1は簡易対応） */
+  @media (max-width: 860px) {
+    .hd__in { flex-direction: column; align-items: flex-start; gap: .9rem; }
+    .nav { gap: .9rem 1rem; }
+    .brand__n { font-size: .875rem; }
+  }
+</style>

@@ -1,0 +1,52 @@
+# ════════════════════════════════════════════════════════════
+#  岡さん確認用プレビュー（GitHub Pages）
+#  https://lua-branca.github.io/okage-san/
+#
+#  main へ push すると自動で公開されます。ここは本番ではありません。
+#
+#  🔴 このリポジトリには **サイトのソースだけ** を置いてください。
+#     戦略・顧客データ・法務メモは Obsidian（lua-branca/okage-san-docs／非公開）へ。
+#     Pages を無料で使うには public にする必要があるため、
+#     公開して困るものを混ぜないことが前提の構成です。
+#
+#  🔴 base: '/okage-san' 前提（astro.config.mjs）。
+#     本番切替のときは base を外すので、その時点でこのプレビューは使いません。
+# ════════════════════════════════════════════════════════════
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

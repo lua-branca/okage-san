@@ -1,0 +1,53 @@
+---
+/** 写真を並べる。ツアーの記録に使います。
+ *  🔴 参加者の顔が特定できる写真は載せません（後ろ姿・引き・手元は可）
+ *     → 90_Tasks/2026-08-09_ツアー記録・撮影リスト.md */
+interface Photo {
+  src: string;
+  caption?: string;
+}
+interface Props {
+  photos: Photo[];
+  /** 1枚目を大きく出す（その日の空気が伝わる1枚がある回に） */
+  lead?: boolean;
+}
+const { photos, lead = false } = Astro.props;
+const [first, ...rest] = photos;
+---
+
+{photos.length > 0 && (
+  <div class="gl">
+    {lead && first && (
+      <figure class="gl__lead">
+        <img src={first.src} alt="" loading="lazy" />
+        {first.caption && <figcaption class="note">{first.caption}</figcaption>}
+      </figure>
+    )}
+    <div class="gl__g">
+      {(lead ? rest : photos).map((p) => (
+        <figure class="gl__i">
+          <img src={p.src} alt="" loading="lazy" />
+          {p.caption && <figcaption class="note">{p.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .gl { display: flex; flex-direction: column; gap: 1rem; }
+  .gl__lead img { width: 100%; }
+  .gl__lead figcaption { margin-top: .6rem; }
+
+  .gl__g {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .gl__i img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .gl__i figcaption { margin-top: .45rem; }
+
+  @media (max-width: 640px) {
+    .gl__g { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

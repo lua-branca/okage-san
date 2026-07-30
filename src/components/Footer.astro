@@ -1,0 +1,72 @@
+---
+import { withBase } from '../utils/base';
+
+const year = new Date().getFullYear();
+const links = [
+  { href: withBase('/kamiasobi/'), label: '神社参拝' },
+  { href: withBase('/mind/'), label: '心を整える' },
+  { href: withBase('/session/'), label: '個人セッション' },
+  { href: withBase('/private/'), label: 'プライベートプラン' },
+  { href: withBase('/blog/'), label: '読み物' },
+  { href: withBase('/voice/'), label: '参加した方の声' },
+  { href: withBase('/about/'), label: '岡慶行について' },
+  { href: withBase('/book/'), label: '著書' },
+  { href: withBase('/line/'), label: 'LINE公式' },
+  { href: withBase('/contact/'), label: 'お問い合わせ' },
+  { href: withBase('/sitemap/'), label: 'サイトマップ' },
+  { href: withBase('/commerce-law/'), label: '特定商取引法に基づく表記' },
+  { href: withBase('/privacy-policy/'), label: 'プライバシーポリシー' },
+];
+---
+
+<footer class="ft surface-dark">
+  <div class="wrap ft__in">
+    <div class="ft__brand">
+      <img src={withBase('/assets/logo.png')} alt="" width="44" height="44" />
+      <span class="mj ft__name">マインドフリー神道学アカデミア</span>
+    </div>
+
+    <nav class="ft__nav" aria-label="フッターメニュー">
+      {links.map((i) => <a href={i.href}>{i.label}</a>)}
+    </nav>
+
+    <div class="ft__sns">
+      <a href="https://www.facebook.com/yoshiyuki.oka.3" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+      <a href="https://www.instagram.com/kaiunnavigator/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+      <a href="https://lin.ee/XAxux9k" target="_blank" rel="noopener" aria-label="LINE公式">LINE公式</a>
+    </div>
+
+    <div class="ft__meta">
+      <p class="note">
+        岡 慶行<br />
+        〒223-0058 神奈川県横浜市港北区新吉田東4-8-20<br />
+        contact@okage-san.com
+      </p>
+      <p class="note">© {year} マインドフリー神道学アカデミア</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft { padding-block: 3rem 4rem; margin-top: var(--gap-section); }
+  .ft__in { max-width: 64rem; display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .ft__brand { display: flex; align-items: center; gap: .8rem; }
+  .ft__name { font-size: .9375rem; letter-spacing: .05em; color: var(--fg); }
+
+  .ft__nav { display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; }
+  .ft__nav a { font-size: var(--fs-note); border-bottom: 0; color: var(--fg-2); }
+  .ft__nav a:hover { color: var(--asagi); }
+
+  .ft__sns { display: flex; gap: 1.25rem; font-size: var(--fs-note); }
+  .ft__sns a { color: var(--accent); border-bottom: 0; }
+  .ft__sns a:hover { color: var(--fg); }
+
+  .ft__meta {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+</style>

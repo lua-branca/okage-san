@@ -1,0 +1,119 @@
+---
+import { withBase } from '../utils/base';
+
+/** 記事カード。サムネイル画像、タイトル、説明、日付、カテゴリを表示 */
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  pubDate: Date;
+  heroImage?: string;
+  chars?: number;
+  compact?: boolean;
+}
+const { slug, title, description, category, pubDate, heroImage, chars = 0, compact = false } = Astro.props;
+const dt = pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+const minutes = Math.max(1, Math.round(chars / 400));
+---
+
+<a href={withBase(`/blog/${slug}/`)} class={`pc${compact ? ' pc--compact' : ''}`}>
+  {heroImage && (
+    <div class="pc__thumb">
+      <img src={withBase(heroImage)} alt={title} loading="lazy" width="360" height="220" />
+    </div>
+  )}
+  <div class="pc__body">
+    <span class="pc__cat">{category}</span>
+    <h3 class="pc__t mj">{title}</h3>
+    {!compact && <p class="pc__d">{description}</p>}
+    <span class="pc__m tabnum">
+      <time datetime={pubDate.toISOString()}>{dt}</time>
+      {chars > 0 && <> ・ 約{minutes}分</>}
+    </span>
+  </div>
+</a>
+
+<style>
+  .pc {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1.5rem;
+    padding-block: 1.6rem;
+    border-bottom: 1px solid var(--rule);
+    transition: border-color 0.25s ease;
+    align-items: center;
+    text-decoration: none;
+  }
+  .pc:hover {
+    border-bottom-color: var(--accent);
+  }
+  .pc:hover .pc__t {
+    color: var(--accent);
+  }
+  .pc:hover .pc__thumb img {
+    transform: scale(1.04);
+  }
+
+  .pc__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--bg-2);
+  }
+  .pc__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .pc__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .pc__cat {
+    font-size: var(--fs-label);
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .pc__t {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--fg);
+    margin: 0;
+    transition: color 0.25s ease;
+  }
+  .pc__d {
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    line-height: 1.7;
+    margin: 0;
+  }
+  .pc__m {
+    font-size: var(--fs-label);
+    color: var(--fg-2);
+    margin-top: 0.2rem;
+  }
+
+  .pc--compact {
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    padding-block: 1rem;
+  }
+  .pc--compact .pc__t {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .pc {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/base';
+
+const policySections = [
+  {
+    title: '1. 個人情報の取得',
+    content:
+      '当方は、適正かつ公正な手段によって、お客様の個人情報（お名前、メールアドレス、電話番号、ご住所、お申し込み・お問い合わせ内容等）を取得いたします。',
+  },
+  {
+    title: '2. 利用目的',
+    content:
+      '取得した個人情報は、以下の目的のためにのみ利用いたします。\n・お申し込みいただいたプログラム・サービスの提供および商品の発送\n・お問い合わせ・ご相談への回答および必要なご連絡\n・サービス・イベント等の各種ご案内（メール・LINE配信等）\n・サービスの改善および品質向上のための分析',
+  },
+  {
+    title: '3. 個人情報の安全管理',
+    content:
+      '当方は、取り扱う個人情報の漏洩、滅失または毀損の防止その他の個人情報の安全管理のために必要かつ適切な措置を講じます。',
+  },
+  {
+    title: '4. 第三者提供の制限',
+    content:
+      '当方は、法令に基づく場合や、人の生命・身体・財産の保護に必要な場合を除き、ご本人の事前の同意を得ることなく、個人情報を第三者に提供いたしません。',
+  },
+  {
+    title: '5. 業務の委託',
+    content:
+      '利用目的の達成に必要な範囲内において、個人情報の取扱いの全部または一部を外部事業者へ委託することがあります（決済処理、商品の発送、メール配信、データ管理等）。この場合、委託先において適切な安全管理が図られるよう監督を行います。',
+  },
+  {
+    title: '6. アクセス解析ツール（Cookie）について',
+    content:
+      '当サイトでは、サービスの改善および利用状況の把握のためGoogle Analyticsを利用しています。これに伴いCookieを通じて匿名のトラフィックデータを収集しますが、個人を特定する情報は一切含まれません。Cookieの機能はブラウザの設定により無効化することが可能です。',
+  },
+  {
+    title: '7. 個人情報の開示・訂正・削除・利用停止等',
+    content:
+      'ご本人から自らの個人情報の開示、訂正、削除、または利用停止のご請求があった場合は、ご本人確認を行ったうえで法令に基づき迅速に対応いたします。',
+  },
+  {
+    title: '8. 個人情報取扱事業者およびお問い合わせ窓口',
+    content:
+      'マインドフリー神道学アカデミア\n代表・運営統括責任者：岡 慶行\n所在地：〒223-0058 神奈川県横浜市港北区新吉田東4-8-20\nメールアドレス：contact@okage-san.com',
+  },
+];
+---
+
+<Base
+  title="プライバシーポリシー"
+  description="マインドフリー神道学アカデミアのプライバシーポリシー（個人情報保護方針）です。"
+  surface="dark"
+>
+  <div class="wrap section stack">
+    <header class="stack" data-reveal>
+      <p class="kicker">Privacy Policy</p>
+      <h1>プライバシーポリシー</h1>
+      <p class="lede">
+        マインドフリー神道学アカデミア（以下「当方」）は、個人情報保護に関する法令を遵守し、お客様の個人情報の適切な保護と管理に努めます。
+      </p>
+    </header>
+
+    <hr class="rule-accent" />
+
+    <section class="stack privacy-sec" data-reveal>
+      <div class="privacy-list stack">
+        {policySections.map((sec) => (
+          <div class="privacy-card stack">
+            <h2 class="mj">{sec.title}</h2>
+            <p class="whitespace-pre">{sec.content}</p>
+          </div>
+        ))}
+
+        <div class="privacy-date">
+          <p class="note text-right">制定日：2026年2月11日</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .privacy-sec {
+    margin-block: 1rem 3rem;
+  }
+
+  .privacy-list {
+    gap: 2rem;
+    max-width: 48rem;
+  }
+
+  .privacy-card {
+    background: var(--bg-2);
+    padding: 1.75rem 2rem;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    gap: 0.75rem;
+  }
+
+  .privacy-card h2 {
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .privacy-card p {
+    font-size: 0.95rem;
+    color: var(--fg);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .whitespace-pre {
+    white-space: pre-line;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+</style>

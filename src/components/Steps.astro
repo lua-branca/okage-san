@@ -1,0 +1,72 @@
+---
+/** 申込から当日までの流れ。
+ *  番号は「順番に起こること」にだけ使う（飾りで番号を振らない）。 */
+interface Item {
+  t: string;
+  d?: string;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="steps">
+  {items.map((it, i) => (
+    <li class="steps__i">
+      <span class="steps__n tabnum" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <div class="steps__b">
+        <p class="steps__t mj">{it.t}</p>
+        {it.d && <p class="note">{it.d}</p>}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .steps__i {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1rem;
+    padding-bottom: 1.6rem;
+  }
+  /* 番号どうしを縦線でつなぐ（＝順番であることを形で示す） */
+  .steps__i::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 1.9rem;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .steps__i:last-child { padding-bottom: 0; }
+  .steps__i:last-child::before { display: none; }
+
+  .steps__n {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: 50%;
+    background: var(--bg);
+    font-family: var(--mincho);
+    font-size: .95rem;
+    color: var(--accent);
+  }
+
+  .steps__b { display: flex; flex-direction: column; gap: .35rem; padding-top: .55rem; }
+  .steps__t { font-size: 1rem; color: var(--fg); }
+</style>
