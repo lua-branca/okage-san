@@ -19,7 +19,8 @@ npm run build
 戦略・顧客データ・売上・法務メモ・顧客アンケートの原文は、
 **絶対にここへコミットしないでください。**
 
-それらは Obsidian と、非公開リポジトリ `lua-branca/okage-san-docs` にあります。
+それらは **Obsidian（Googleドライブ）にのみ** あります。gitでは管理していません。
+`Projects/Mind_Free_Shinto/50_Rebuild_2026/`
 
 ## ドキュメント
 
