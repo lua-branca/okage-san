@@ -15,6 +15,8 @@
 import Base from '../../layouts/Base.astro';
 import TourCard from '../../components/TourCard.astro';
 import NoticeBox from '../../components/NoticeBox.astro';
+import PhotoBand from '../../components/PhotoBand.astro';
+import PlaceGrid from '../../components/PlaceGrid.astro';
 import LineCta from '../../components/LineCta.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
@@ -37,6 +39,23 @@ const themes = [
   // { need: '心を整える', area: '寒川・箱根', note: '' },
   // { need: '原点に還る', area: '伊勢・三輪山', note: '' },
 ];
+
+/** これまでに訪れた社。写真は岡さんの撮影分（データサンプル/神社）から。
+ *
+ *  🔴 社名は福田さんがファイル名で確定させたものだけを載せています。
+ *     判読できなかった1枚（磐座）は場所を書かずに帯で使っています。
+ *  ⚠️ 「参拝プログラムで行った社」とは書いていません（岡さん個人の参拝かも
+ *     しれないため）。回として行った社が確定したら、そう書き換えてください。
+ *  🔴 顔が写り込んでいた3枚（寒川・伊勢・戸隠）は、書き出しの時点で
+ *     下を切って人物を外しています → scratchpad/shrine_img.py */
+const places = [
+  { src: '/assets/kamiasobi/p-ise.jpg',         name: '伊勢神宮',  area: '三重', note: '宇治橋の大鳥居。ここから内宮へ入ります', focus: 'center 60%' },
+  { src: '/assets/kamiasobi/p-tsukiyomi.jpg',   name: '月夜見宮',  area: '三重', note: '外宮の別宮。玉砂利を踏む音だけが残ります' },
+  { src: '/assets/kamiasobi/p-tsubaki.jpg',     name: '椿大神社',  area: '三重', note: '杉木立のなかに、朱の鳥居' },
+  { src: '/assets/kamiasobi/p-togakushi.jpg',   name: '戸隠',      area: '長野', note: '随神門。ここから奥社への杉並木が始まります' },
+  { src: '/assets/kamiasobi/p-samukawa.jpg',    name: '寒川神社',  area: '神奈川', note: '社殿の彫りと、太い注連縄', focus: 'center 70%' },
+  { src: '/assets/kamiasobi/p-anahachiman.jpg', name: '穴八幡',    area: '東京', note: '楠に囲まれた、まちなかの神域' },
+];
 ---
 
 <Base
@@ -48,8 +67,24 @@ const themes = [
       🔴 「神社参拝」だけだと「誰でも行けるよね」と思われて価値が伝わりません（福田指摘 2026-07-30）。
          そこに正面から答えるところから始めます。
          位置づけ＝神社参拝を通じて自分を整えるプログラム。参拝は目的ではなく手段。 */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
+  {/* 🖼 ヒーローだけは PhotoBand を使わず直に書いています。
+         ①最初の1枚なので lazy にしない（fetchpriority="high"）
+         ②見出しを写真の裾に重ねる、このページ専用のレイアウトだから
+      文字は「写真の上」ではなく「地の色まで溶けきったところ」に置いています。
+      写真の上に白文字を載せると、木漏れ日の明るい部分で読めなくなるため。 */}
+  <section class="hero">
+    <figure class="hero__f kenburns">
+      <img
+        src={withBase('/assets/kamiasobi/hero-miwa.jpg')}
+        alt="三輪の社。杉木立のあいだに、太い注連縄がかかっている"
+        width="1500"
+        height="971"
+        fetchpriority="high"
+      />
+      <span class="hero__fade" aria-hidden="true"></span>
+    </figure>
+
+    <div class="wrap stack hero__txt" data-reveal>
       <p class="kicker">神社参拝プログラム</p>
       <h1>神社は、<br />誰でも行けます</h1>
       <p class="lede">
@@ -149,6 +184,15 @@ const themes = [
     </div>
   </section>
 
+  {/* 🖼 一日の流れに入る直前に、その始まりの場所を見せます。
+         「永田町集合」がただの待ち合わせではないことが、写真1枚で伝わります。 */}
+  <PhotoBand
+    src="/assets/kamiasobi/band-kokyo.jpg"
+    alt="朝の光が差す皇居のほりばた。木立のあいだから日が昇っている"
+    caption="早朝の皇居。どの回も、ここから始まります"
+    focus="center 55%"
+  />
+
   {/* ── ② 何をするのか（概要まで） ── */}
   <section class="section--tight">
     <div class="wrap stack" data-reveal>
@@ -204,6 +248,19 @@ const themes = [
       🔴 「差し出す」はある神社での個別のエピソードで、全体に共通する話ではありません
          （福田指摘 2026-07-30）。ここでは使わないこと。
       🔴 軸は「感じる」と「整える」。作法の指導が主ではありません（本の内容と揃える） */}
+
+  {/* 🖼 このページで一番の1枚。ページの真ん中で、いちばん長く見せます。
+         「願う」ではなく「感じる」の話に入るので、社殿ではなく磐座にしました。
+         建物より、苔と岩と木のほうが「空気の温度」の話に合うためです。
+      ⚠️ 場所が判読できていないので、キャプションに社名を書いていません。 */}
+  <PhotoBand
+    src="/assets/kamiasobi/band-iwakura.jpg"
+    alt="苔むした林のなかに立つ大きな磐座。注連縄がかけられている"
+    caption="注連縄のかかった磐座。木と苔と、岩だけの場所"
+    size="tall"
+    focus="center 50%"
+  />
+
   <section class="section--tight">
     <div class="wrap stack" data-reveal>
       <h2>願わずに、感じる</h2>
@@ -348,9 +405,41 @@ const themes = [
       </ul>
 
       <p class="note">
-        このほか、寒川・箱根・三輪山・伊勢・戸隠・熱田神宮・瀧原宮・皇居・室生龍穴神社
-        などをめぐってきました。<br />
         次にどこへ行くかは、その回のテーマによって決まります。
+      </p>
+    </div>
+  </section>
+
+  {/* 🖼 森ばかりだと重くなるので、ここに海の1枚を入れて空気を変えます。
+         「行き先が変わる」の直後なので、開けた景色のほうが話に合います。
+      ⚠️ 石碑にある「富士見鳥居」は鳥居の名前です。社名ではありません。
+         2月の回の写真ですが、何年の回か確定していないので日付は書いていません。 */}
+  <PhotoBand
+    src="/assets/kamiasobi/p-fujimi.jpg"
+    alt="海を見下ろす崖の上に立つ白い鳥居。空と海が青く晴れている"
+    caption="海に向かって立つ、富士見鳥居"
+    focus="center 55%"
+  />
+
+  {/* ── 訪れた社を写真で ──
+      🔴 文字で社名を並べるより、写真のほうが「行ってみたい」に直結します。
+         ただし社名が確かなものだけ。→ places 定義のコメント */}
+  <section class="section--tight">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">これまでに訪れた社</p>
+      <h2>こういう場所へ行きます</h2>
+    </div>
+  </section>
+
+  <PlaceGrid places={places} />
+
+  <section class="section--tight">
+    <div class="wrap" data-reveal>
+      {/* ⚠️ 三輪山を残しているのは、ページ上部のヒーロー写真が三輪だからです。
+             写真にキャプションを付けていないので、社名はここで受けています。 */}
+      <p class="note">
+        このほか、三輪山・箱根・熱田神宮・瀧原宮・室生龍穴神社などもめぐってきました。<br />
+        有名かどうかではなく、その日に合う社を選んでいます。
       </p>
     </div>
   </section>
@@ -405,6 +494,51 @@ const themes = [
   h1 { line-height: 1.45; }
   h2 { line-height: 1.5; }
   th { white-space: nowrap; width: 6.5rem; }
+
+  /* ── ヒーロー ──
+     写真の裾を地の色まで溶かし、その溶けきったところに見出しを重ねます。
+     写真から文字が立ち上がって見えて、かつ文字は必ず単色の上にあります。 */
+  .hero { position: relative; padding-bottom: var(--gap-section); }
+  .hero__f {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    background: #0d0b10;
+  }
+  .hero__f img {
+    width: 100%;
+    height: clamp(300px, 56vh, 540px);
+    object-fit: cover;
+    object-position: center 42%;
+  }
+  /* 🔴 写真の裾は、下から 22.4%（56% × 60%）が完全に地の色になります。
+        文字を重ねるのはその単色の部分だけ。木漏れ日の明るいところに
+        白文字が乗ると読めなくなるためです。
+        この数字と下の margin-top は一組。片方だけ触らないでください。 */
+  .hero__fade {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 56%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--bg) 55%, transparent) 32%,
+      var(--bg) 60%
+    );
+    pointer-events: none;
+  }
+  .hero__txt {
+    position: relative;
+    /* 単色になりきった部分にだけ食い込ませる。写真の裾から文字が立ち上がって見える。
+       画面の高さが変わっても単色の外へ出ないよう、clamp で上下を止めています */
+    margin-top: clamp(-3.5rem, -6vh, -3rem);
+  }
+  .hero__txt h1 { text-shadow: 0 2px 18px rgba(0, 0, 0, .55); }
+
+  /* スマホは横幅が狭いので、高さを詰めて横位置の写真の左右を残します */
+  @media (max-width: 700px) {
+    .hero__f img { height: clamp(260px, 40vh, 380px); }
+  }
 
   /* ひとりで行くのと何が違うか */
   .diff { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }

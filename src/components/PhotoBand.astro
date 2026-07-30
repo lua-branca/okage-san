@@ -1,0 +1,91 @@
+---
+/** 全幅の写真の帯。文章の流れを一度切って、空気を入れるための部品。
+ *
+ *  ★なぜ全幅なのか
+ *    本文カラムは41rem（約656px）と細いので、その幅に収めた写真は
+ *    「挿絵」になってしまい、神域の広さが出ません。
+ *    帯にして本文を一度断ち切ると、読み手の呼吸が変わります。
+ *
+ *  🔴 src は**素のパス**を渡してください（例 `/assets/kamiasobi/band-kokyo.jpg`）。
+ *     base の付与はこの中で行います。呼び出し側で withBase() すると二重になります。
+ *
+ *  🔴 参加者の顔が特定できる写真は使いません（後ろ姿・引き・手元は可）。
+ *     一般の参拝者が写る場合も、書き出しの時点で下を切って外しています。
+ *
+ *  ⚠️ <section> の中ではなく、<section> と同じ階層に置くこと。
+ *     .wrap の中に入れると全幅になりません。 */
+interface Props {
+  src: string;
+  /** 何が写っているかを書く。装飾ではなく情報として扱っています */
+  alt: string;
+  /** 写真の下に出る一文。場所や、この写真がなぜここにあるのか */
+  caption?: string;
+  /** 見せる高さ。tall は「この1枚で語らせたい」ときだけ */
+  size?: 'normal' | 'tall';
+  /** 写真のどこを見せるか。object-position の値をそのまま渡します */
+  focus?: string;
+  /** 上端も地の色に溶かす（前が写真や濃いブロックのとき） */
+  fadeTop?: boolean;
+}
+import { withBase } from '../utils/base';
+const { src, alt, caption, size = 'normal', focus = 'center 45%', fadeTop = false } = Astro.props;
+---
+
+<div class={`pb pb--${size}`} data-reveal>
+  <figure class="pb__f">
+    <img src={withBase(src)} alt={alt} loading="lazy" decoding="async" style={`object-position:${focus}`} />
+    {fadeTop && <span class="pb__fade pb__fade--t" aria-hidden="true"></span>}
+    <span class="pb__fade pb__fade--b" aria-hidden="true"></span>
+  </figure>
+  {caption && (
+    <div class="wrap">
+      <p class="pb__cap note">{caption}</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .pb { margin: 0; }
+  .pb__f {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    /* 読み込み中に地の色が透けないように。写真が来る前の穴を塞ぐ */
+    background: #0d0b10;
+  }
+  .pb__f img {
+    width: 100%;
+    height: clamp(220px, 38vh, 400px);
+    object-fit: cover;
+  }
+  .pb--tall .pb__f img { height: clamp(280px, 54vh, 560px); }
+
+  /* 地の色に溶かす。帯が「貼り付けた四角」に見えないようにするため */
+  .pb__fade { position: absolute; left: 0; right: 0; pointer-events: none; }
+  .pb__fade--b {
+    bottom: 0;
+    height: 24%;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+  }
+  .pb__fade--t {
+    top: 0;
+    height: 22%;
+    background: linear-gradient(to top, transparent, var(--bg));
+  }
+
+  /* キャプションは写真の右下にぶら下げる。本文と混ざらない位置に */
+  .pb__cap {
+    margin-top: .7rem;
+    text-align: right;
+    font-size: var(--fs-label);
+    letter-spacing: .04em;
+  }
+
+  /* 🔴 スマホでは高さ指定をやめて比率で持たせます。
+     幅が390pxしかないところに高さ456pxを指定すると、横位置の写真から
+     真ん中の縦一本だけを切り出すことになり、何が写っているか分からなくなります。 */
+  @media (max-width: 700px) {
+    .pb__f img { height: auto; aspect-ratio: 4 / 3; }
+    .pb--tall .pb__f img { height: auto; aspect-ratio: 1 / 1; }
+  }
+</style>

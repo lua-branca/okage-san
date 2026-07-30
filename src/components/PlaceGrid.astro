@@ -1,0 +1,105 @@
+---
+/** めぐった社を、写真と名前で並べる部品。
+ *
+ *  ★Gallery との違い
+ *    Gallery＝「その日の写真」（記録・時系列）
+ *    PlaceGrid＝「どこへ行くのか」（場所の一覧・名前が主役）
+ *    名前が情報の中心になるので、キャプションではなく見出しとして扱います。
+ *
+ *  🔴 名前が確かなものだけ並べてください。
+ *     「たぶんここ」で社名を書くと、いちばん信用を落とす種類の間違いになります。
+ *
+ *  🔴 src は素のパス。base はこの中で付けます。
+ *
+ *  ⚠️ 本文カラム（41rem）より広く出したいので、自前で幅を持っています。
+ *     .wrap の中に入れないこと。 */
+interface Place {
+  src: string;
+  /** 社名。都道府県は name に含めず area に */
+  name: string;
+  /** 都道府県など。省略可 */
+  area?: string;
+  /** 写真の説明を一行。効能や体験の保証は書かない */
+  note?: string;
+  /** 写真のどこを見せるか */
+  focus?: string;
+}
+interface Props {
+  places: Place[];
+}
+import { withBase } from '../utils/base';
+const { places } = Astro.props;
+---
+
+<div class="pg" data-reveal>
+  <ul class="pg__l">
+    {places.map((p) => (
+      <li class="pg__i">
+        <figure class="pg__f">
+          <img
+            src={withBase(p.src)}
+            alt={`${p.name}${p.note ? `。${p.note}` : ''}`}
+            loading="lazy"
+            decoding="async"
+            style={p.focus ? `object-position:${p.focus}` : undefined}
+          />
+        </figure>
+        <p class="pg__n mj">
+          {p.name}
+          {p.area && <span class="pg__a">{p.area}</span>}
+        </p>
+        {p.note && <p class="pg__note note">{p.note}</p>}
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .pg { max-width: 58rem; margin-inline: auto; padding-inline: 1.5rem; }
+  .pg__l {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem 1.25rem;
+  }
+  .pg__i { display: flex; flex-direction: column; }
+
+  .pg__f {
+    margin: 0 0 .7rem;
+    overflow: hidden;
+    background: #0d0b10;
+    border-radius: var(--radius);
+  }
+  .pg__f img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    /* 写真ごとの明るさの差をならす。深紫の上で1枚だけ浮かないように */
+    filter: saturate(.94);
+  }
+
+  .pg__n {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem;
+    font-size: 1.0625rem;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  /* 都道府県は社名より一段下げる（社名を拾って読めるように） */
+  .pg__a {
+    font-family: var(--gothic);
+    font-size: var(--fs-label);
+    letter-spacing: .08em;
+    color: var(--fg-2);
+  }
+  .pg__note { margin-top: .3rem; font-size: var(--fs-label); line-height: 1.75; }
+
+  @media (max-width: 700px) {
+    .pg__l { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+    .pg__n { font-size: 1rem; }
+  }
+</style>

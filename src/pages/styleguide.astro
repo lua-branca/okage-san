@@ -13,6 +13,8 @@ import PriceBox from '../components/PriceBox.astro';
 import Steps from '../components/Steps.astro';
 import NoticeBox from '../components/NoticeBox.astro';
 import Itinerary from '../components/Itinerary.astro';
+import PhotoBand from '../components/PhotoBand.astro';
+import PlaceGrid from '../components/PlaceGrid.astro';
 import LineCta from '../components/LineCta.astro';
 import { withBase } from '../utils/base';
 
@@ -310,6 +312,37 @@ const sections = [
         <LineCta variant="inline" />
       </div>
     </div>
+  </section>
+
+  <!-- ══════════ 写真 ══════════
+       🔴 この2つは全幅で出る部品なので、sg-wrap の外に置いています。
+          wrap の中に入れて確認すると本番と違う見え方になります。 -->
+  <section class="sg-sec" id="photo">
+    <div class="sg-wrap">
+      <h2 class="sg-h">写真の見せ方</h2>
+      <p class="note sg-note">
+        本文カラムは41remと細いので、その幅に収めた写真は「挿絵」になります。
+        神域の広さを出したいときは全幅の帯にして、本文を一度断ち切ります。
+      </p>
+      <p class="sg-tag">PhotoBand — 全幅の帯。裾が地の色に溶ける</p>
+    </div>
+    <PhotoBand
+      src="/assets/kamiasobi/band-kokyo.jpg"
+      alt="朝の光が差す皇居のほりばた"
+      caption="キャプションは右下。場所や、この写真がなぜここにあるのか"
+      focus="center 55%"
+    />
+
+    <div class="sg-wrap">
+      <p class="sg-tag">PlaceGrid — 社名が主役（Gallery は写真が主役）</p>
+    </div>
+    <PlaceGrid
+      places={[
+        { src: '/assets/kamiasobi/p-ise.jpg', name: '伊勢神宮', area: '三重', note: '宇治橋の大鳥居', focus: 'center 60%' },
+        { src: '/assets/kamiasobi/p-togakushi.jpg', name: '戸隠', area: '長野', note: '随神門' },
+        { src: '/assets/kamiasobi/p-tsubaki.jpg', name: '椿大神社', area: '三重', note: '杉木立のなかに、朱の鳥居' },
+      ]}
+    />
   </section>
 
   <!-- ══════════ 記事本文 ══════════ -->
