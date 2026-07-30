@@ -4,7 +4,9 @@ import { getCollection } from 'astro:content';
 import { withBase } from '../utils/base';
 
 // コンテンツコレクションから動的にリンクを取得
-const tours = (await getCollection('tours')).sort((a, b) => +b.data.date - +a.data.date);
+// 🔴 draft を除く（他のページと同じ条件にしないと、公開ビルドでリンク切れになる）
+const tours = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+  .sort((a, b) => +b.data.date - +a.data.date);
 const ishi = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
 

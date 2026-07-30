@@ -298,7 +298,7 @@ const themes = [
               price={t.data.prices?.[0]?.amount}
               state={t.data.state === '準備中' ? undefined : t.data.state}
               note={t.data.lead}
-              href={withBase(`/kamiasobi/${t.id}/`)}
+              href={`/kamiasobi/${t.id}/`}
             />
           ))}
         </div>
@@ -372,7 +372,7 @@ const themes = [
               place={t.data.area}
               state="終了"
               past
-              href={withBase(`/kamiasobi/${t.id}/`)}
+              href={`/kamiasobi/${t.id}/`}
             />
           ))}
         </div>
