@@ -14,9 +14,11 @@ export default defineConfig({
     smartypants: false,
   },
   build: {
-    // preserve: ファイル構造どおりに出力
-    // ルート直下 → xxx.html／サブフォルダのindex → folder/index.html
-    // public/ 配下のPHP（form/ api/ mypage/）はそのまま dist/ にコピーされる
-    format: 'preserve',
+    // 🔴 directory：全ページを about/index.html の形で出力します。
+    //    'preserve' だと about.html になり、サイト内リンク（/about/）が
+    //    GitHub Pages で 404 になりました（2026-07-30 修正）。
+    //    Xserver（Apache）でも directory のほうが素直に動きます。
+    //    ※ public/ 配下のPHPは format に関係なくそのまま dist/ にコピーされます
+    format: 'directory',
   },
 });
