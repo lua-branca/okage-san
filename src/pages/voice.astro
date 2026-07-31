@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
+import PhotoBand from '../components/PhotoBand.astro';
 import { withBase } from '../utils/base';
 
 interface VoiceItem {
@@ -106,6 +107,19 @@ const demographics = [
       <p class="lede">アンケートに書いてくださったものを、そのまま載せています。</p>
     </header>
 
+    {/* 🖼 このページに置ける唯一の「人が写った写真」です。
+           後ろ姿なので顔が分かりません。それでも「参拝している」は伝わります。
+        🔴 集合写真は使いません。掲載同意が未取得であること、
+           ぼかし加工は「隠している」印象になること、そして
+           団体ツアーに見えて「定員6名でひとりずつ」というこの企画の
+           いちばんの価値と食い違うためです。 */}
+    <PhotoBand
+      src="/assets/shrine/plate-sanpai.jpg"
+      alt="拝殿の前にひとりで立ち、手を合わせている人の後ろ姿"
+      caption="愛宕神社（東京）"
+      plate
+    />
+
     <hr class="rule-accent" />
 
     {/* ② 声（8件・4カテゴリ） */}
@@ -143,9 +157,19 @@ const demographics = [
         </div>
       </section>
     ))}
+  </div>
 
-    <hr class="rule-accent" />
+  {/* 🖼 声を8件読んだあとに、一度言葉を切ります。
+         🔴 全幅の帯は .wrap の中に置けないので、ここでいったん wrap を閉じています。
+            この下でまた開き直しています。触るときは対応する </div> を見失わないこと。 */}
+  <PhotoBand
+    src="/assets/shrine/band-okumiya.jpg"
+    alt="紫の幕がかかった拝殿。三つ巴の紋が並んでいる"
+    caption="麻賀多神社 奥宮（千葉）"
+    focus="center 45%"
+  />
 
+  <div class="wrap stack voice-lower">
     {/* ③ どんな人が来ているか */}
     <section class="stack demo-sec" data-reveal>
       <p class="kicker">Demographics</p>
@@ -180,6 +204,10 @@ const demographics = [
 </Base>
 
 <style>
+  /* 帯を挟むために wrap を分けた下半分。
+     上の wrap が持っていた .section の余白をここで補っています */
+  .voice-lower { padding-block: 1rem var(--gap-section); }
+
   .v-cat { margin-block: 1.5rem; }
   .v-cat__title {
     font-size: var(--fs-h2);

@@ -30,31 +30,58 @@ const past = all.filter((t) => t.data.state === '終了').reverse();
 /** 🔴 テーマ（願い）× 行き先の対応。
  *  過去回を日付順に並べても、読み手は「自分の願いに合うのはどれ？」が分かりません。
  *  だから日付ではなく**ニーズ別**に見せます（福田判断 2026-07-30）。
- *  ⚠️ 3件は福田さん確認済み。それ以外は岡さんに確認してから足すこと。 */
+ *
+ *  ★ここが過去の記録の入口です（福田判断 2026-07-31）。
+ *    以前はページ末尾に「その日のこと」という日付順の一覧を置いていましたが、
+ *    やめました。読み手は日付ではなく**願い**で探すので、
+ *    「仕事・決断なら香取・鹿島 → その回の記録へ」という流れのほうが自然です。
+ *
+ *  ⚠️ 3件は福田さん確認済み。それ以外は岡さんに確認してから足すこと。
+ *  🔴 record には tours のファイル名（拡張子なし）を書きます。
+ *     存在しないIDを書いてもリンクは出ません（下の pastIds で弾いています）。 */
 const themes = [
   { need: '恋愛・ご縁', area: '日光', note: '男体山・女峰山と、二社一寺。結びの神さまが並ぶ土地です' },
-  { need: '仕事・決断', area: '香取・鹿島', note: '始まりの神と、道を開く神。区切りをつけたいときに' },
+  {
+    need: '仕事・決断', area: '香取・鹿島',
+    note: '始まりの神と、道を開く神。区切りをつけたいときに',
+    record: '2026-02-11-kenkoku',
+    recordLabel: '建国記念の日の回を見る',
+  },
   { need: '金運', area: '山梨・富士吉田', note: '富士の北麓。土地そのものが持つ豊かさに触れます' },
   // 🔴 以下は要確認（岡さんに聞いてから公開）
   // { need: '心を整える', area: '寒川・箱根', note: '' },
   // { need: '原点に還る', area: '伊勢・三輪山', note: '' },
 ];
 
-/** これまでに訪れた社。写真は岡さんの撮影分（データサンプル/神社）から。
+/** 🔴 リンク切れよけ。記録ページが無い（または draft の）回には
+ *     リンクを出しません。themes に書いたIDを消し忘れても壊れません。 */
+const pastIds = new Set(past.map((t) => t.id));
+
+/** これまでに訪れた社。すべて**参拝プログラムで実際に行った社**です
+ *  （福田さん確認 2026-07-30）。写真は岡さんの撮影分。
  *
- *  🔴 社名は福田さんがファイル名で確定させたものだけを載せています。
- *     判読できなかった1枚（磐座）は場所を書かずに帯で使っています。
- *  ⚠️ 「参拝プログラムで行った社」とは書いていません（岡さん個人の参拝かも
- *     しれないため）。回として行った社が確定したら、そう書き換えてください。
- *  🔴 顔が写り込んでいた3枚（寒川・伊勢・戸隠）は、書き出しの時点で
- *     下を切って人物を外しています → scratchpad/shrine_img.py */
+ *  🔴 12枚（3×4）で打ち止めにしています。これ以上増やすと「写真集」になって、
+ *     一枚ずつ見てもらえなくなります。追加分は各回の記録ページへ回すこと。
+ *  🔴 並びは地理ではなく、願い別の3テーマ（下の themes）と対応させています。
+ *     恋愛＝日光（瀧尾）／仕事・決断＝香取・鹿島／金運＝山梨（新屋山）。
+ *     テーマを増やすときは、その土地の社をここにも足してください。
+ *  🔴 社名が確かなものだけ。「たぶんここ」で書かないこと。
+ *  🔴 顔が写り込んでいた写真は、書き出しの時点で切って人物を外しています
+ *     → _tools/export_selected.py（Obsidian側）
+ *  ⚠️ 集合写真は1枚も使っていません。参加者の掲載同意が未取得のため。 */
 const places = [
-  { src: '/assets/kamiasobi/p-ise.jpg',         name: '伊勢神宮',  area: '三重', note: '宇治橋の大鳥居。ここから内宮へ入ります', focus: 'center 60%' },
-  { src: '/assets/kamiasobi/p-tsukiyomi.jpg',   name: '月夜見宮',  area: '三重', note: '外宮の別宮。玉砂利を踏む音だけが残ります' },
-  { src: '/assets/kamiasobi/p-tsubaki.jpg',     name: '椿大神社',  area: '三重', note: '杉木立のなかに、朱の鳥居' },
-  { src: '/assets/kamiasobi/p-togakushi.jpg',   name: '戸隠',      area: '長野', note: '随神門。ここから奥社への杉並木が始まります' },
-  { src: '/assets/kamiasobi/p-samukawa.jpg',    name: '寒川神社',  area: '神奈川', note: '社殿の彫りと、太い注連縄', focus: 'center 70%' },
-  { src: '/assets/kamiasobi/p-anahachiman.jpg', name: '穴八幡',    area: '東京', note: '楠に囲まれた、まちなかの神域' },
+  { src: '/assets/shrine/p-ise.jpg',        name: '伊勢神宮',   area: '三重',   note: '宇治橋の大鳥居。ここから内宮へ入ります', focus: 'center 60%' },
+  { src: '/assets/shrine/p-izawa.jpg',      name: '伊雑宮',     area: '三重',   note: '木の鳥居と玉砂利だけの、静かな別宮' },
+  { src: '/assets/shrine/p-tsubaki.jpg',    name: '椿大神社',   area: '三重',   note: '杉木立のなかに、朱の鳥居' },
+  { src: '/assets/shrine/p-miwa.jpg',       name: '三輪',       area: '奈良',   note: '山そのものが神さま。太い注連縄がかかります' },
+  { src: '/assets/shrine/p-samukawa.jpg',   name: '寒川神社',   area: '神奈川', note: '日が落ちてからの神門。灯りだけが残ります' },
+  { src: '/assets/shrine/p-kashima.jpg',    name: '鹿島神宮',   area: '茨城',   note: '始まりの神。区切りをつけたいときに' },
+  { src: '/assets/shrine/p-katori.jpg',     name: '香取神宮',   area: '千葉',   note: '朱の楼門。鹿島と対で参ります' },
+  { src: '/assets/shrine/p-sunosaki.jpg',   name: '洲崎神社',   area: '千葉',   note: '海に向かって立つ、富士見鳥居' },
+  { src: '/assets/shrine/p-takinoo.jpg',    name: '瀧尾神社',   area: '栃木',   note: '日光。杉と紅葉のなかの石鳥居' },
+  { src: '/assets/shrine/p-arayayama.jpg',  name: '新屋山神社', area: '山梨',   note: '富士の北麓。金運の社として知られます' },
+  { src: '/assets/shrine/p-mitsumine.jpg',  name: '三峯神社',   area: '埼玉',   note: '狼が守る社。白い三ツ鳥居はここだけの形' },
+  { src: '/assets/shrine/p-togakushi.jpg',  name: '戸隠',       area: '長野',   note: '随神門。ここから奥社への杉並木が始まります' },
 ];
 ---
 
@@ -71,14 +98,20 @@ const places = [
          ①最初の1枚なので lazy にしない（fetchpriority="high"）
          ②見出しを写真の裾に重ねる、このページ専用のレイアウトだから
       文字は「写真の上」ではなく「地の色まで溶けきったところ」に置いています。
-      写真の上に白文字を載せると、木漏れ日の明るい部分で読めなくなるため。 */}
+      写真の上に白文字を載せると、明るい部分で読めなくなるため。
+
+      ★なぜ夜の写真なのか（2026-07-30 差し替え）
+        サイト全体が深紫（#241C2E）です。昼の緑の写真だと、
+        写真が終わって地の色が始まる線がはっきり出てしまいます。
+        夜の参道なら**写真がそのまま地の色に続いて見える**。
+        灯籠が奥へ収束していく構図も、これから入っていく感じに合います。 */}
   <section class="hero">
     <figure class="hero__f kenburns">
       <img
-        src={withBase('/assets/kamiasobi/hero-miwa.jpg')}
-        alt="三輪の社。杉木立のあいだに、太い注連縄がかかっている"
+        src={withBase('/assets/shrine/hero-samukawa-night.jpg')}
+        alt="日が落ちたあとの寒川神社の参道。灯籠の灯りが奥までまっすぐ続いている"
         width="1500"
-        height="971"
+        height="1129"
         fetchpriority="high"
       />
       <span class="hero__fade" aria-hidden="true"></span>
@@ -184,10 +217,20 @@ const places = [
     </div>
   </section>
 
+  {/* 🖼 「何が変わるのか」の直後に、光が差し込む1枚を額装で。
+         縦位置なので帯にはできません（幅いっぱいに広げると縦一本に切られる）。
+         変化の話のあとなので、明るくなる写真をここに置いています。 */}
+  <PhotoBand
+    src="/assets/shrine/plate-hikari.jpg"
+    alt="木立のあいだから光の筋が差し込む参道"
+    caption="穴八幡宮（東京）"
+    plate
+  />
+
   {/* 🖼 一日の流れに入る直前に、その始まりの場所を見せます。
          「永田町集合」がただの待ち合わせではないことが、写真1枚で伝わります。 */}
   <PhotoBand
-    src="/assets/kamiasobi/band-kokyo.jpg"
+    src="/assets/shrine/band-kokyo.jpg"
     alt="朝の光が差す皇居のほりばた。木立のあいだから日が昇っている"
     caption="早朝の皇居。どの回も、ここから始まります"
     focus="center 55%"
@@ -254,7 +297,7 @@ const places = [
          建物より、苔と岩と木のほうが「空気の温度」の話に合うためです。
       ⚠️ 場所が判読できていないので、キャプションに社名を書いていません。 */}
   <PhotoBand
-    src="/assets/kamiasobi/band-iwakura.jpg"
+    src="/assets/shrine/band-iwakura.jpg"
     alt="苔むした林のなかに立つ大きな磐座。注連縄がかけられている"
     caption="注連縄のかかった磐座。木と苔と、岩だけの場所"
     size="tall"
@@ -399,10 +442,20 @@ const places = [
           <li class="th__i">
             <span class="th__n mj">{t.need}</span>
             <span class="th__a">{t.area}</span>
-            <span class="note">{t.note}</span>
+            <span class="note">
+              {t.note}
+              {t.record && pastIds.has(t.record) && (
+                <><br /><a href={withBase(`/kamiasobi/${t.record}/`)} class="th__r">
+                  {t.recordLabel ?? 'この回の記録を見る'} →
+                </a></>
+              )}
+            </span>
           </li>
         ))}
       </ul>
+      <p class="note">
+        記録のある回は、写真でその日をご覧いただけます。
+      </p>
 
       <p class="note">
         次にどこへ行くかは、その回のテーマによって決まります。
@@ -410,15 +463,13 @@ const places = [
     </div>
   </section>
 
-  {/* 🖼 森ばかりだと重くなるので、ここに海の1枚を入れて空気を変えます。
-         「行き先が変わる」の直後なので、開けた景色のほうが話に合います。
-      ⚠️ 石碑にある「富士見鳥居」は鳥居の名前です。社名ではありません。
-         2月の回の写真ですが、何年の回か確定していないので日付は書いていません。 */}
+  {/* 🖼 「行き先が変わる」の直後。玉砂利と木の鳥居だけの、いちばん静かな1枚。
+         この下に12枚のグリッドが続くので、ここで一度静かにしておきます。 */}
   <PhotoBand
-    src="/assets/kamiasobi/p-fujimi.jpg"
-    alt="海を見下ろす崖の上に立つ白い鳥居。空と海が青く晴れている"
-    caption="海に向かって立つ、富士見鳥居"
-    focus="center 55%"
+    src="/assets/shrine/band-takihara.jpg"
+    alt="木の鳥居と白い玉砂利だけの境内。杉に囲まれている"
+    caption="瀧原宮（三重）。伊勢の奥にあります"
+    focus="center 50%"
   />
 
   {/* ── 訪れた社を写真で ──
@@ -435,39 +486,25 @@ const places = [
 
   <section class="section--tight">
     <div class="wrap" data-reveal>
-      {/* ⚠️ 三輪山を残しているのは、ページ上部のヒーロー写真が三輪だからです。
-             写真にキャプションを付けていないので、社名はここで受けています。 */}
+      {/* ⚠️ グリッドに出した12社は書かないこと（重複します）。
+             🔴 金運の回でお寺（長福寿寺）にも行っています（福田さん確認 2026-07-30）。
+                「神社参拝プログラム」という名前と実態がずれるので、
+                ここで一言だけ触れて、写真は載せていません
+                （金の象が主役の写真で、深紫のデザインとトーンが合わないため）。 */}
       <p class="note">
-        このほか、三輪山・箱根・熱田神宮・瀧原宮・室生龍穴神社などもめぐってきました。<br />
-        有名かどうかではなく、その日に合う社を選んでいます。
+        このほか、箱根・熱田神宮・室生龍穴神社・古峯神社・二荒山神社などもめぐってきました。<br />
+        願いによっては、お寺を合わせてお参りする回もあります。<br />
+        有名かどうかではなく、その日に合う場所を選んでいます。
       </p>
     </div>
   </section>
 
-  {/* ── ⑧ 過去回の記録。🔴 価格は出しません ── */}
-  {past.length > 0 && (
-    <section class="section--tight">
-      <div class="wrap stack">
-        <div data-reveal>
-          <p class="kicker">記録</p>
-          <h2>その日のこと</h2>
-          <p class="note">どんな一日なのか、過去の回の記録と写真からご覧いただけます。</p>
-        </div>
-        <div>
-          {past.map((t) => (
-            <TourCard
-              date={t.data.date}
-              title={t.data.title}
-              place={t.data.area}
-              state="終了"
-              past
-              href={`/kamiasobi/${t.id}/`}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
+  {/* 🔴 2026-07-31：ここにあった「その日のこと」（過去回を日付順に並べたカード一覧）を
+         やめました（福田判断）。
+         読み手は日付では探しません。**願い**で探します。
+         だから記録への入口は上の「願いによって、行き先が変わります」に一本化しました。
+         → 過去回を増やすときは themes に record を足してください。
+            カードの一覧をここに戻すと、入口が2つになって導線がぼやけます。 */}
 
   {/* ── ⑧ 法務 ── */}
   <section class="section--tight">
@@ -578,6 +615,8 @@ const places = [
   }
   .th__a { grid-area: area; color: var(--fg); font-size: 1.0625rem; }
   .th__i .note { grid-area: note; }
+  /* 記録へのリンク。行を変えて少し離す（説明文と地続きに見えないように） */
+  .th__r { display: inline-block; margin-top: .35rem; }
 
   @media (max-width: 560px) {
     .th__i { grid-template-columns: 1fr; grid-template-areas: 'need' 'area' 'note'; }

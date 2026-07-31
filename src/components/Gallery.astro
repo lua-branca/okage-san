@@ -11,6 +11,7 @@ interface Props {
   /** 1枚目を大きく出す（その日の空気が伝わる1枚がある回に） */
   lead?: boolean;
 }
+import { withBase } from '../utils/base';
 const { photos, lead = false } = Astro.props;
 const [first, ...rest] = photos;
 ---
@@ -19,14 +20,17 @@ const [first, ...rest] = photos;
   <div class="gl">
     {lead && first && (
       <figure class="gl__lead">
-        <img src={first.src} alt="" loading="lazy" />
+        {/* 🔴 withBase を通すこと。素の src のままだと GitHub Pages（/okage-san/）で
+               画像だけ404になります。ページは表示されるので気づきにくい不具合です
+               （2026-07-31 修正。記録ページに写真を入れた時点で発覚） */}
+        <img src={withBase(first.src)} alt={first.caption ?? ''} loading="lazy" decoding="async" />
         {first.caption && <figcaption class="note">{first.caption}</figcaption>}
       </figure>
     )}
     <div class="gl__g">
       {(lead ? rest : photos).map((p) => (
         <figure class="gl__i">
-          <img src={p.src} alt="" loading="lazy" />
+          <img src={withBase(p.src)} alt={p.caption ?? ''} loading="lazy" decoding="async" />
           {p.caption && <figcaption class="note">{p.caption}</figcaption>}
         </figure>
       ))}

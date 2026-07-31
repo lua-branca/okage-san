@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
+import PhotoBand from '../components/PhotoBand.astro';
 import IshiCard from '../components/IshiCard.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
@@ -54,6 +55,18 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
     </div>
   </section>
+
+  {/* 🖼 「観光でも修行でもない」と言ったあとに、行き先を1枚見せます。
+         ★ここは FV の岡さんの写真と役割が違います。
+           FV＝誰がやっているか／この帯＝どこへ行くのか。
+         朱の門と紅葉にしたのは、トップだけ少し暖かくしたいからです
+         （神社参拝ページは夜の写真で始まるので、入口で色をずらしておく）。 */}
+  <PhotoBand
+    src="/assets/shrine/band-takinoo.jpg"
+    alt="紅葉に囲まれた朱色の門と、その先へ続く石段"
+    caption="瀧尾神社（栃木・日光）"
+    focus="center 48%"
+  />
 
   <hr class="rule-accent" />
 

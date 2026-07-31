@@ -6,7 +6,7 @@
  *    「挿絵」になってしまい、神域の広さが出ません。
  *    帯にして本文を一度断ち切ると、読み手の呼吸が変わります。
  *
- *  🔴 src は**素のパス**を渡してください（例 `/assets/kamiasobi/band-kokyo.jpg`）。
+ *  🔴 src は**素のパス**を渡してください（例 `/assets/shrine/band-kokyo.jpg`）。
  *     base の付与はこの中で行います。呼び出し側で withBase() すると二重になります。
  *
  *  🔴 参加者の顔が特定できる写真は使いません（後ろ姿・引き・手元は可）。
@@ -26,16 +26,22 @@ interface Props {
   focus?: string;
   /** 上端も地の色に溶かす（前が写真や濃いブロックのとき） */
   fadeTop?: boolean;
+  /** 🔴 縦位置の写真はこれ。全幅にせず、中央に「額装」して置きます。
+   *     縦位置を幅いっぱいに広げると、真ん中の縦一本だけを切り出すことになり
+   *     何が写っているか分からなくなります。size / focus / fade は効きません。 */
+  plate?: boolean;
 }
 import { withBase } from '../utils/base';
-const { src, alt, caption, size = 'normal', focus = 'center 45%', fadeTop = false } = Astro.props;
+const {
+  src, alt, caption, size = 'normal', focus = 'center 45%', fadeTop = false, plate = false,
+} = Astro.props;
 ---
 
-<div class={`pb pb--${size}`} data-reveal>
+<div class={`pb pb--${size}${plate ? ' pb--plate' : ''}`} data-reveal>
   <figure class="pb__f">
-    <img src={withBase(src)} alt={alt} loading="lazy" decoding="async" style={`object-position:${focus}`} />
-    {fadeTop && <span class="pb__fade pb__fade--t" aria-hidden="true"></span>}
-    <span class="pb__fade pb__fade--b" aria-hidden="true"></span>
+    <img src={withBase(src)} alt={alt} loading="lazy" decoding="async" style={plate ? undefined : `object-position:${focus}`} />
+    {!plate && fadeTop && <span class="pb__fade pb__fade--t" aria-hidden="true"></span>}
+    {!plate && <span class="pb__fade pb__fade--b" aria-hidden="true"></span>}
   </figure>
   {caption && (
     <div class="wrap">
@@ -80,6 +86,20 @@ const { src, alt, caption, size = 'normal', focus = 'center 45%', fadeTop = fals
     font-size: var(--fs-label);
     letter-spacing: .04em;
   }
+
+  /* ── 額装（縦位置の写真）──
+     溶かしません。輪郭を残して「1枚の写真」として見せます。
+     帯＝空気を入れる／額装＝1枚を見せる、と役割を分けています。 */
+  .pb--plate { max-width: 30rem; margin-inline: auto; padding-inline: 1.5rem; }
+  .pb--plate .pb__f { border-radius: var(--radius); }
+  .pb--plate .pb__f img {
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+  .pb--plate .pb__cap { text-align: center; }
+  /* 額装のキャプションは自前の .wrap を持たないので、内側の余白を消す */
+  .pb--plate .wrap { padding-inline: 0; max-width: none; }
 
   /* 🔴 スマホでは高さ指定をやめて比率で持たせます。
      幅が390pxしかないところに高さ456pxを指定すると、横位置の写真から

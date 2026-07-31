@@ -105,7 +105,9 @@ const steps = [
 
     {d.heroImage && (
       <figure class="tp__hero kenburns" data-reveal>
-        <img src={d.heroImage} alt="" width="1600" height="900" />
+        {/* 🔴 withBase を通すこと。素の src だと GitHub Pages（/okage-san/）で
+               この画像だけ404になります（2026-07-31 修正） */}
+        <img src={withBase(d.heroImage)} alt="" width="1400" height="1050" />
       </figure>
     )}
 
@@ -144,11 +146,18 @@ const steps = [
               {rp.summary.split('\n').filter((l) => l.trim()).map((l) => <p>{l}</p>)}
             </div>
           )}
+        </div>
 
-          {hasPhotos && (
-            <div data-reveal><Gallery photos={rp.photos} lead={hasText} /></div>
-          )}
+        {/* 🔴 写真は本文カラム（41rem）より広く出します。
+               本文幅に収めると1枚200pxほどになって、何が写っているか分かりません。
+               ここだけ .wrap を抜けています（上で閉じて、下で開き直しています）。 */}
+        {hasPhotos && (
+          <div class="tp__gal" data-reveal>
+            <Gallery photos={rp.photos} lead={hasText} />
+          </div>
+        )}
 
+        <div class="wrap stack">
           {/* 🔴 予定から変えたところは隠さない。
               「その日に応じて変える」ことが神遊びの中身そのものなので、
               むしろここが読まれると信頼になります */}
@@ -340,12 +349,17 @@ const steps = [
       </>
     )}
 
+    {/* 🔴 2026-07-31：見出しを「この回は終了しました」から変えました（福田さんと検討）。
+           ・終了は上のピル（朱）と日付ですでに伝わっています。同じことを2回言わない
+           ・写真と「この回の記録」が入った時点で、レポートであることは見れば分かります
+           ・ここの本当の役目は締めの挨拶ではなく**次への導線**です。
+             最後まで読んだ人を行き止まりで終わらせない */}
     {isOver && (
       <section class="section">
         <div class="wrap stack" data-reveal>
-          <h2>この回は終了しました</h2>
+          <h2>次の回で、お会いしましょう</h2>
           <p class="note">
-            次の神遊びのご案内は、LINEでお送りしています。<br />
+            日程が決まりしだい、LINEでお知らせしています。<br />
             <a href={withBase('/kamiasobi/')}>これからの回を見る →</a>
           </p>
         </div>
@@ -363,8 +377,11 @@ const steps = [
 
   .meta { font-size: var(--fs-note); color: var(--fg-2); display: flex; gap: .5rem; flex-wrap: wrap; }
 
-  .tp__hero { margin-block: 1.5rem 0; }
-  .tp__hero img { width: 100%; }
+  .tp__hero { margin-block: 1.5rem 0; overflow: hidden; }
+  .tp__hero img { width: 100%; height: clamp(240px, 44vh, 460px); object-fit: cover; }
+
+  /* 記録の写真だけ本文カラムより広く。1枚が小さいと記録の意味がない */
+  .tp__gal { max-width: 58rem; margin: 1.5rem auto 0; padding-inline: 1.5rem; }
 
   /* 概要表：項目名の幅を揃えて読みやすく */
   .tp th { white-space: nowrap; width: 5.5rem; }
