@@ -1,17 +1,23 @@
 ---
-/** 「心を整える」＝ 瞑想と石の入口。
+/** 「心を整える」＝ 神社参拝で得た感覚を、日常に持ち帰るための入口。
  *
- *  ★このページの読み手（2026-07-29 福田整理）
- *    ・瞑想に興味がある
- *    ・**まずは無料でやりたい**
- *    ・でも岡さんが選んだ石なら興味ある。どんな石があるのか見てみたい
+ *  ★2026-07-31 福田再整理：「瞑想が目的」ではない。
+ *    目的は「神社参拝で整った感覚を、家でも続けられるようにする」こと。
+ *    瞑想はそのやり方のひとつ（今すぐ無料で始められる入口）にすぎない。
+ *    書籍『願わず叶う神社参拝入門』・LINEステップ配信（40_Marketing/LINE_STEP_PLAN.md）の
+ *    本編は神棚・祈りの型・言霊が中心で、瞑想の比重は小さい。ここもそれに揃える。
  *
- *  だから順番は「無料 → 橋渡し → ギャラリー」。
- *  いきなり石を並べると物販ページになり、「まず無料で」の人を追い返します。
+ *  ★読み手の心の動き
+ *    無料で始める（瞑想音声・LINE）
+ *      → 続けたくなったら、家に祈る場所を（神棚・準備中）
+ *      → 道具が欲しくなったら、石か松ぼっくり
  *
- *  🔴 「石を持つと効果が上がる」とは書きません（→ 04b_石の詳細ページ設計 第2章）。
- *     書けるのは「集中の手がかりになる」まで。
- *     売りは効果ではなく **誰が選んだか（岡さんの目利き）** です。 */
+ *  🔴 石・松ぼっくりは「入門→上級」のラダーではない（2026-07-31 方針変更）。
+ *     松ぼっくり（額に当てる・サードアイ）は価格は安いが行為としてはニッチなため、
+ *     価格順の階段ではなく **並列の選択肢** として見せる。
+ *
+ *  🔴 「天と繋がりやすくなる」は明言してよい（本人確認済み・スピリチュアルに振り切る方針）。
+ *     ただし「肩こりが楽になる」等の身体的効能表現は04_石のページ.mdのNGリストに抵触するため書かない。 */
 import Base from '../../layouts/Base.astro';
 import LineCta from '../../components/LineCta.astro';
 import IshiCard from '../../components/IshiCard.astro';
@@ -23,48 +29,68 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
 
 // 新しい順。販売中もSOLDも混ぜて並べる（SOLDも作品歴として効く）
 const all = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
-const onSale = all.filter((s) => !s.data.soldout).length;
+
+// 石と松ぼっくりは並列の選択肢として別セクションで見せる（ラダーにしない）
+const stones = all.filter((s) => s.data.kind === '石');
+const pinecones = all.filter((s) => s.data.kind === '松ぼっくり');
+const stoneOnSale = stones.filter((s) => !s.data.soldout).length;
 
 // 点数が少ないうちは大きく見せる。3列に1点だと寂しく見えるため
-const cols = all.length >= 5 ? 3 : all.length >= 3 ? 3 : 2;
+const colsOf = (n: number) => (n >= 3 ? 3 : 2);
+const stoneCols = colsOf(stones.length);
+const pineconeCols = colsOf(pinecones.length);
 
 const faq = [
   {
-    q: 'どの石を選べばいいですか。',
+    q: 'どれを選べばいいですか。',
     a: '「これだ」と目が留まったもので大丈夫です。\n迷ったらお問い合わせください。今どういう状態か伺って、岡がお答えします。',
   },
   {
-    q: '石がないと瞑想できませんか。',
-    a: 'いいえ。何も持たずにできます。\n石は、意識の置きどころを作るための手がかりです。なくても始められます。',
+    q: '石や松ぼっくりがないと、瞑想できませんか。',
+    a: 'いいえ。何も持たずにできます。\n石や松ぼっくりは、天との回路を開きやすくする道具です。なくても始められます。',
   },
   {
     q: '手入れや浄化は必要ですか。',
     a: '（ヒアリング待ち：岡さんの言葉で）',
   },
   {
-    q: '同じ名前の石なら、どれも同じですか。',
-    a: '違います。同じタイガーアイでも、縞の出方も光の返し方もひとつずつ違います。\nすべて一点もので、同じものは二つとありません。',
+    q: '同じ種類でも、どれも同じですか。',
+    a: '違います。同じ種類でも、表情はひとつずつ違います。\nすべて一点もので、同じものは二つとありません。',
   },
 ];
 ---
 
 <Base
-  title="心を整える ─ 瞑想と、石"
-  description="瞑想は、何も持たずに始められます。まずは無料の音声から。そのうえで、手に持つものがあると変わります。岡慶行が選んだ一点ものの石。"
+  title="心を整える ─ 神社参拝を、日常へ"
+  description="神社参拝で感じた「整う」感覚は、家でも続けられます。まずは無料の瞑想音声から。続けたくなったら神棚、道具が欲しくなったら石や松ぼっくり。岡慶行が選んだ、一点ものの道具たち。"
   surface="dark"
 >
   <div class="wrap section stack">
-    {/* ── ① まず「売り込まない」ことを言う。ここで信頼を取る ── */}
+    {/* ── ① まず「売り込まない」ことを言う。ここで信頼を取る ──
+        🔴 主語は「瞑想」でなく「参拝で整った感覚」。瞑想は②で入口として紹介する */}
     <header class="stack" data-reveal>
       <p class="kicker">心を整える</p>
       <h1 class="mj">
-        瞑想は、<br />何も持たずに始められます
+        あの「整った」感覚は、<br />おうちでも続けられます
       </h1>
       <p class="lede">
-        道具は要りません。座って、目を閉じて、呼吸を数える。<br />
-        それだけで始まります。
+        神社で感じた、あの静けさ。<br />
+        特別な道具がなくても、日常のなかで取り戻せます。
       </p>
     </header>
+
+    {/* ── メインビジュアル。/about/ と同じ、控えめな1枚差し込み型 ──
+        🔴 /kamiasobi/ のケンバーンズ演出はここでは使わない。
+           煽らないギャラリーのトーンなので、静止した1枚で十分。 */}
+    <figure class="hero-landscape wrap" data-reveal>
+      <img
+        src={withBase('/assets/shrine/hero-takinoo.jpg')}
+        alt="滝尾神社、苔むした石段の参道"
+        width="1400"
+        height="1054"
+        class="hero-landscape-img"
+      />
+    </figure>
 
     {/* ── ② 無料で始める。★このページの第一CV ──
         .free 自身が金の上下線を持つので、ここに <hr> は置かない（二重線になる） */}
@@ -91,13 +117,33 @@ const faq = [
       <p class="note">すべて無料です。いつでも解除できます。</p>
     </section>
 
-    <hr class="rule-accent" />
+    {/* ── ③ 神棚（予告）。書籍『願わず叶う神社参拝入門』第十章の要約がベース ──
+        🔴 商品化・詳細ページはまだ先。ここは予告のみ。まだ岡さんの言葉に置き換えていないので、
+           公開前に本人確認を必ず通すこと。 */}
+    <section class="stack sec-rule" data-reveal>
+      <p class="kicker">その先に</p>
+      <h2>家に、神様と暮らす場所を</h2>
 
-    {/* ── ③ 橋渡し。ここで初めて石の話をする ──
-        🔴 「効果が上がる」と書かない。書けるのは「手がかりになる」まで */}
-    <section class="stack" data-reveal>
+      <div class="prose">
+        <p>
+          神棚は、自宅の中に設ける小さな神社の空間です。<br />
+          朝夕、手を合わせるだけで、暮らしに祈りのリズムが生まれます。
+        </p>
+        <p>
+          ここは今、準備を進めています。<br />
+          近いうちに、お祀りの仕方から一緒にお伝えします。
+        </p>
+      </div>
+    </section>
+
+    {/* ── ④ 橋渡し。ここで初めて道具の話をする ──
+        🔴 2026-07-31：「少し楽になります」はNG表現リスト（04_石のページ.md 表現ルール）の
+           「肩こりが楽になる」に抵触するため削除。かわりに「天と繋がりやすくなる」で明言する
+           （本人確認・スピリチュアルに振り切る方針でOK）。
+        経路は道具によって違う：石＝手に持つ／松ぼっくり＝額に当ててサードアイ */}
+    <section class="stack sec-rule" data-reveal>
       <p class="kicker">それから</p>
-      <h2>手に持つものがあると、<br />少し楽になります</h2>
+      <h2>天と繋がりやすくなる、<br />そのための道具です</h2>
 
       <div class="prose">
         <p>
@@ -105,19 +151,18 @@ const faq = [
           今日のこと、明日のこと。
         </p>
         <p>
-          手のなかに石をひとつ握ると、<br />
-          意識の置きどころができます。<br />
-          <strong>石が何かをしてくれるわけではありません。</strong><br />
-          戻ってくる場所が、手のなかにできるだけです。
+          石は、手に持つと。<br />
+          松ぼっくりは、額に当てると、サードアイが目覚めて。<br />
+          <strong>どちらも、天と繋がりやすくなります。</strong>
         </p>
         <p>
-          それでも、その「戻ってくる場所」があるかないかで、<br />
-          ずいぶん違います。
+          道具そのものが特別なのではなく、<br />
+          天との回路を開きやすくしてくれる、そういう存在です。
         </p>
       </div>
     </section>
 
-    {/* ── ④ 岡が選ぶということ ＝ ここが商品価値 ── */}
+    {/* ── ⑤ 石。岡が選ぶということ ＝ ここが商品価値 ── */}
     <section class="stack" data-reveal>
       <p class="kicker">選び方</p>
       <h2>名前で選んでいません</h2>
@@ -139,19 +184,16 @@ const faq = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
-    {/* ── ⑤ ギャラリー ── */}
     <section class="stack" data-reveal>
       <p class="kicker">今ある石</p>
       <h2>見ていただくだけでも、<br />うれしいです</h2>
       <p class="note">
-        {all.length}点あります{onSale < all.length && `（うちお迎えいただけるのは${onSale}点）`}。<br />
-        気になるものがあれば、写真と動画でじっくりご覧ください。
+        {stones.length}点あります{stoneOnSale < stones.length && `（うちお迎えいただけるのは${stoneOnSale}点）`}。<br />
+        気になるものがあれば、写真でじっくりご覧ください。
       </p>
 
-      <div class="gal" style={`--cols:${cols}`}>
-        {all.map((s) => (
+      <div class="gal" style={`--cols:${stoneCols}`}>
+        {stones.map((s) => (
           <IshiCard
             id={s.data.id}
             name={s.data.name}
@@ -167,14 +209,45 @@ const faq = [
       </p>
     </section>
 
-    {/* ── ⑥ 選ぶ前の不安に答える ── */}
+    {/* ── ⑥ 松ぼっくり。石とは並列の、別の選択肢 ──
+        🔴 石の「一点物・目利き」の物語はここでは繰り返さない（04b設計・2026-07-31方針）。
+           松ぼっくりは気軽に迎えられる道具、という軽さで見せる。 */}
+    <section class="stack sec-rule" data-reveal>
+      <p class="kicker">もうひとつ</p>
+      <h2>松ぼっくりという道具</h2>
+
+      <div class="prose">
+        <p>
+          石が、手に持つ道具だとしたら、<br />
+          松ぼっくりは、額に当てる道具です。
+        </p>
+        <p>
+          大王松の松ぼっくりを、そのまま。<br />
+          気軽に迎えられるように、価格も抑えています。
+        </p>
+      </div>
+
+      <div class="gal" style={`--cols:${pineconeCols}`}>
+        {pinecones.map((s) => (
+          <IshiCard
+            id={s.data.id}
+            name={s.data.name}
+            price={s.data.price}
+            photo={s.data.cardPhoto ?? s.data.photos[0]}
+            soldout={s.data.soldout}
+          />
+        ))}
+      </div>
+    </section>
+
+    {/* ── ⑦ 選ぶ前の不安に答える ── */}
     <section class="stack" data-reveal>
       <h2>よくあるご質問</h2>
       <Faq items={faq} />
     </section>
 
     <p class="note">
-      ※ 天然石の工芸品です。医療的・霊的な効果を保証するものではありません。
+      ※ 天然素材でつくられたものです。医療的・霊的な効果を保証するものではありません。
     </p>
 
     <LineCta variant="section" />
@@ -184,6 +257,20 @@ const faq = [
 <style>
   h1 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); line-height: 1.45; }
   h2 { line-height: 1.5; }
+
+  /* メインビジュアル（/about/ の hero-landscape と同じ作り。トリミングなし） */
+  .hero-landscape {
+    max-width: 48rem;
+    margin: 1rem auto 2.5rem;
+  }
+  .hero-landscape-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--rule);
+    display: block;
+  }
 
   .prose p { margin-block: 1.4rem; line-height: 1.95; }
   .prose strong { color: var(--white); }

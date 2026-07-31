@@ -3,88 +3,7 @@ import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
 import PhotoBand from '../components/PhotoBand.astro';
 import { withBase } from '../utils/base';
-
-interface VoiceItem {
-  before?: string;
-  impression: string;
-  after: string;
-  recommended?: string;
-  author: string;
-}
-
-interface VoiceCategory {
-  title: string;
-  items: VoiceItem[];
-}
-
-const voiceCategories: VoiceCategory[] = [
-  {
-    title: '気持ちが整った',
-    items: [
-      {
-        before: 'パートナーを探していたのに、なかなか恋愛が長続きしなくて、悩んでいました。',
-        impression: '感謝することの大切さを改めて感じました。',
-        after: '小さなことに感謝の種を見つけられるようになって、心が穏やかになり、気持ちが整いました。',
-        author: 'H.さん／50代・女性・東京都',
-      },
-      {
-        before: '気持ちが疲れて何事にもやる気が起きない状況でした。',
-        impression: 'エネルギーが強い？と岡さんが言った場所で、なんだか空気の温度を温かく感じたこと。',
-        after: '少し元気を取り戻して、すこし普段の行動にやる気が出てきたような気がします。',
-        author: 'Y.さん／40代・女性・東京都',
-      },
-    ],
-  },
-  {
-    title: '日常が変わった',
-    items: [
-      {
-        impression: '登山したら、お肌がなんかパールみたいにキラキラしてた事。皇居のエネルギーのある木に手をかざしたら暖かかった事。岡さんとツアー以外の話で沢山質問できた事も楽しかった。',
-        after: '毎日「ツいてる」って言うようになった。頑張った見返りがほしくなったら、チャリンと神様からもらうようにした。二礼二拍手以外の参拝方法でのお参りをするようになった。',
-        author: 'M.さん／20代・女性・神奈川県',
-      },
-      {
-        before: '当時は毎日、苦しい気持ちで過ごしていて、そこから抜け出す術を探していました。',
-        impression: '岡さんがおすすめする神社の素晴らしさ、その日のメンバーで決まる順番や、神社で起こる奇跡、行く先々での神様のメッセージに気づきがある事。移動の車内での岡さんとのお話。',
-        after: '少しずつ、心が晴れていく出来事や経験、出会い、学びを引き寄せる事ができ、結婚や出産を経験した。',
-        author: 'Y.さん／30代・女性・千葉県',
-      },
-    ],
-  },
-  {
-    title: '仕事が動いた',
-    items: [
-      {
-        before: '仕事の面で後押しがありました。',
-        impression: '神様からの声が聞こえるなど不思議な現象がありました。',
-        after: '直感力が冴えてきます。',
-        recommended: '何か行き詰まっている人にオススメです。',
-        author: 'H.さん／50代・男性・神奈川県',
-      },
-      {
-        impression: '自然の中で、ステキな方々と、美味しいご飯が食べられる！地球生活楽しんでるな、って感じました。',
-        after: 'ツアー後は、円満なお別れがあったり、個人でしてる仕事に、お申込が多く入りました。以前より、客観的に自分の状態に気づいたり、今を楽しむ時間が増えたかもしれません。',
-        author: 'E.さん／50代・女性・東京都',
-      },
-    ],
-  },
-  {
-    title: '身体で感じた',
-    items: [
-      {
-        impression: '普段からほとんど運動をしていないので、三輪山登拝は大丈夫かしら…と心配もありましたが（子供時代の遠足も苦手だったので）、やはり神様に護られての登拝は全然違うものだと感じるくらいカラダが動きました。簡単ではないけれど辛くない。不思議と心も穏やかに黙々と歩みを進められました。',
-        after: '劇的な変化は特にありませんが、安心して日々を過ごすことができていることが何より。そして、けっこうツイてます。ありがとうございます。',
-        author: 'K.さん／50代・女性・神奈川県',
-      },
-      {
-        before: '基本、大きな悩みはなく、より開運したい気持ちです。',
-        impression: '神社、エネルギーが強いところでピリピリ感じることができるようになったこと。',
-        recommended: 'どんな方にでもおすすめですが、岡さんのツアーは本格的なので神社好きな方向けかとは思います。',
-        author: 'N.さん／50代・女性・神奈川県',
-      },
-    ],
-  },
-];
+import { voiceCategories } from '../data/voices';
 
 const demographics = [
   { label: '性別', value: '女性 約8割' },
@@ -96,13 +15,13 @@ const demographics = [
 
 <Base
   title="参加した方の声"
-  description="神遊び（神社ツアー）に参加された方から届いた声を掲載しています。アンケートに書いてくださったものをそのまま掲載しています。"
+  description="神社参拝プログラム（神遊び）に参加された方から届いた声を掲載しています。アンケートに書いてくださったものをそのまま掲載しています。"
   surface="dark"
 >
   <div class="wrap section stack">
     {/* ① 冒頭 */}
     <header class="stack" data-reveal>
-      <p class="kicker">Voice</p>
+      <p class="kicker">参加した方の声</p>
       <h1>参加した方から<br />届いた声です。</h1>
       <p class="lede">アンケートに書いてくださったものを、そのまま載せています。</p>
     </header>
@@ -119,8 +38,6 @@ const demographics = [
       caption="愛宕神社（東京）"
       plate
     />
-
-    <hr class="rule-accent" />
 
     {/* ② 声（8件・4カテゴリ） */}
     {voiceCategories.map((cat) => (
@@ -171,8 +88,8 @@ const demographics = [
 
   <div class="wrap stack voice-lower">
     {/* ③ どんな人が来ているか */}
-    <section class="stack demo-sec" data-reveal>
-      <p class="kicker">Demographics</p>
+    <section class="stack demo-sec sec-rule" data-reveal>
+      <p class="kicker">どんな方が来ているか</p>
       <h2>どんな人が来ているか</h2>
       <div class="demo-grid">
         {demographics.map((d) => (
@@ -185,10 +102,8 @@ const demographics = [
       <p class="note text-center">ひとりで参加される方がほとんどです。</p>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ④ 締め */}
-    <section class="stack text-center closing-sec" data-reveal>
+    <section class="stack text-center closing-sec sec-rule" data-reveal>
       <h2>次は、あなたの番かもしれません。</h2>
       <div class="closing-btns">
         <a href={withBase('/kamiasobi/')} class="btn">神社参拝の日程を見る</a>

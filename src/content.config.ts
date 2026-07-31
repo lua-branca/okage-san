@@ -28,6 +28,15 @@ const ishi = defineCollection({
   schema: z.object({
     id: z.string(),
     name: z.string(),
+    /** 🔴 2026-07-31：石だけの棚ではなくなりました。
+     *  「自宅で整えるための道具」という括りに広げています（福田判断）。
+     *  ★松ぼっくり＝大王松のもの。額に当てて使います。
+     *    岡さんはエジプトの壁画の記述と結びつけて説明しています
+     *    （FB 2025-12-24 / 2026-01-30）。
+     *  ⚠️ 種類を増やすときは、この enum と /mind/ の絞り込み表示の両方を直すこと。
+     *  ⚠️ コレクション名は `ishi` のままです（URLは /mind/ なので実害なし）。
+     *     リネームすると既存URLと data-store が壊れるので、触らないでください。 */
+    kind: z.enum(['石', '松ぼっくり']).default('石'),
     price: z.number(),
     size: optStr,
     material: z.string(),
@@ -49,15 +58,17 @@ const ishi = defineCollection({
     videoPoster: optStr,
     videoNote: optStr,
 
-    /** 石の種類そのものの基本情報（鉱物としての事実）。
+    /** そのものの基本情報（検証できる事実）。
      *  🔴 ここに「効能」を書かないこと。書いてよいのは検証できる事実だけ。
-     *     岡さんの見立ては本文の「岡の見立て」に分けて書きます。 */
+     *     岡さんの見立ては本文の「岡の見立て」に分けて書きます。
+     *  ⚠️ 松ぼっくりのときは mineral/formula/hardness を空にして、
+     *     jpName（大王松）・origin・feature だけ埋めてください。 */
     basics: z
       .object({
-        jpName: optStr,      // 和名
-        mineral: optStr,     // 鉱物種・グループ
-        formula: optStr,     // 化学組成
-        hardness: optStr,    // モース硬度
+        jpName: optStr,      // 和名（石＝鉱物の和名／松ぼっくり＝樹種）
+        mineral: optStr,     // 鉱物種・グループ（石のみ）
+        formula: optStr,     // 化学組成（石のみ）
+        hardness: optStr,    // モース硬度（石のみ）
         origin: optStr,      // 主な産地
         feature: optStr,     // 見た目の特徴（光学効果など）
       })

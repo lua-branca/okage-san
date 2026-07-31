@@ -1,72 +1,227 @@
 ---
 import { withBase } from '../utils/base';
 
+/** フッター。全ページ共通。
+ *
+ *  🔴 メニューは**階層で見せます**（2026-07-31 再編）。
+ *     以前は13個がフラットに並んでいて、主従が見えませんでした。
+ *     ハンバーガーにはせず、**全体が一度に見える形**にしています
+ *     （ヘッダーで畳んでいるぶん、フッターは全部見せるのが役割）。
+ *
+ *  🔴 メニューに入れないもの
+ *     ・LINE公式 … SNS欄に緑のボタンで独立させています（最重要CVなので埋もれさせない）
+ *     ・サイトマップ … 下の法務リンクの並びへ
+ *
+ *  🔴 「岡 慶行」は表示しません（2026-07-31 福田指示）。
+ *     住所・メールアドレス・コピーライトは残します。
+ *
+ *  ★階層の考え方
+ *     読み物と著書は「岡さんが書いたもの」なので、岡慶行についての下。
+ *     プライベートプランと参加した方の声は神社参拝の下。 */
 const year = new Date().getFullYear();
-const links = [
-  { href: withBase('/kamiasobi/'), label: '神社参拝' },
-  { href: withBase('/mind/'), label: '心を整える' },
-  { href: withBase('/session/'), label: '個人セッション' },
-  { href: withBase('/private/'), label: 'プライベートプラン' },
-  { href: withBase('/blog/'), label: '読み物' },
-  { href: withBase('/voice/'), label: '参加した方の声' },
-  { href: withBase('/about/'), label: '岡慶行について' },
-  { href: withBase('/book/'), label: '著書' },
-  { href: withBase('/line/'), label: 'LINE公式' },
+
+const groups = [
+  {
+    label: '神社参拝',
+    href: withBase('/kamiasobi/'),
+    children: [
+      { href: withBase('/private/'), label: 'プライベートプラン' },
+      { href: withBase('/voice/'), label: '参加した方の声' },
+    ],
+  },
+  { label: '心を整える', href: withBase('/mind/'), children: [] },
+  { label: '個人セッション', href: withBase('/session/'), children: [] },
+  {
+    label: '岡慶行について',
+    href: withBase('/about/'),
+    children: [
+      { href: withBase('/book/'), label: '著書' },
+      { href: withBase('/blog/'), label: '読み物' },
+    ],
+  },
+];
+
+/** 法務・補助。本体メニューとは性格が違うので分けています */
+const sub = [
   { href: withBase('/contact/'), label: 'お問い合わせ' },
   { href: withBase('/sitemap/'), label: 'サイトマップ' },
   { href: withBase('/commerce-law/'), label: '特定商取引法に基づく表記' },
   { href: withBase('/privacy-policy/'), label: 'プライバシーポリシー' },
 ];
+
 ---
 
 <footer class="ft surface-dark">
   <div class="wrap ft__in">
-    <div class="ft__brand">
-      <img src={withBase('/assets/logo.png')} alt="" width="44" height="44" />
-      <span class="mj ft__name">マインドフリー神道学アカデミア</span>
-    </div>
+    {/* ★左：名乗りと連絡先。右：メニュー。
+        佐助稲荷（sasukeinari.jp）の組み方を参考にしています。
+        縦に積むより、左右に分けたほうが締まります（2026-07-31）。 */}
+    <div class="ft__cols">
+      <div class="ft__left">
+        <div class="ft__brand">
+          <img src={withBase('/assets/logo.png')} alt="" width="44" height="44" />
+          <span class="mj ft__name">マインドフリー神道学アカデミア</span>
+        </div>
 
-    <nav class="ft__nav" aria-label="フッターメニュー">
-      {links.map((i) => <a href={i.href}>{i.label}</a>)}
-    </nav>
 
-    <div class="ft__sns">
-      <a href="https://www.facebook.com/yoshiyuki.oka.3" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
-      <a href="https://www.instagram.com/kaiunnavigator/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-      <a href="https://lin.ee/XAxux9k" target="_blank" rel="noopener" aria-label="LINE公式">LINE公式</a>
+        {/* 🔴 LINEだけ緑のボタン。ほかのSNSと同格に埋もれさせないためです（最重要CV）。
+               アイコンはSVGを直接書いています。外部読み込みなし＝軽く、確実に出ます。 */}
+        <div class="ft__sns">
+          <a href="https://www.facebook.com/yoshiyuki.oka.3" class="ft__ic" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.02H7.9v-2.92h2.54V9.84c0-2.52 1.5-3.92 3.78-3.92 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.92h-2.34V22C18.34 21.24 22 17.08 22 12.06Z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/kaiunnavigator/" class="ft__ic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <nav class="ft__nav" aria-label="フッターメニュー">
+        {groups.map((g) => (
+          <div class="ft__g">
+            <a href={g.href} class="ft__g-t">{g.label}</a>
+            {g.children.length > 0 && (
+              <ul class="ft__c">
+                {g.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+              </ul>
+            )}
+          </div>
+        ))}
+      </nav>
     </div>
 
     <div class="ft__meta">
-      <p class="note">
-        岡 慶行<br />
-        〒223-0058 神奈川県横浜市港北区新吉田東4-8-20<br />
-        contact@okage-san.com
-      </p>
-      <p class="note">© {year} マインドフリー神道学アカデミア</p>
+      <nav class="ft__sub" aria-label="規約・補助メニュー">
+        {sub.map((i) => <a href={i.href}>{i.label}</a>)}
+      </nav>
+      <p class="ft__cr">© {year} マインドフリー神道学アカデミア</p>
     </div>
   </div>
 </footer>
 
 <style>
-  .ft { padding-block: 3rem 4rem; margin-top: var(--gap-section); }
-  .ft__in { max-width: 64rem; display: flex; flex-direction: column; gap: 1.75rem; }
+  /* 佐助稲荷（sasukeinari.jp）の組み方を参考にしています（2026-07-31）。
+     取ったもの：**左右2カラム**と**明朝で通すこと**。
+     取らなかったもの：**文字の小ささ**（あちらは12〜13px）。
+       このサイトの読者は50代以上・スマホ中心で、
+       SITE_SPEC にも「日本語の最小は14px」があります。読みやすさを優先しました。 */
+  .ft { padding-block: 3rem 2.5rem; margin-top: var(--gap-section); }
+  .ft__in { max-width: 64rem; display: flex; flex-direction: column; gap: 2.25rem; }
 
-  .ft__brand { display: flex; align-items: center; gap: .8rem; }
-  .ft__name { font-size: .9375rem; letter-spacing: .05em; color: var(--fg); }
+  /* ── 左右2カラム ── */
+  /* 🔴 左は16rem固定。細くして右に幅を渡します。
+        以前20remにしていたら右が4列×137pxまで潰れ、
+        「プライベートプラン」が折り返していました（2026-07-31）。 */
+  .ft__cols { display: grid; grid-template-columns: 17rem 1fr; gap: 3.5rem; align-items: start; }
+  .ft__left { display: flex; flex-direction: column; gap: 1.1rem; }
 
-  .ft__nav { display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; }
-  .ft__nav a { font-size: var(--fs-note); border-bottom: 0; color: var(--fg-2); }
-  .ft__nav a:hover { color: var(--asagi); }
+  /* 🔴 ロゴは屋号の**上**に置きます。
+        横並びにするとロゴ(44px)＋隙間で57px取られ、
+        「マインドフリー神道学アカデミア」が2行に折り返します（2026-07-31）。 */
+  .ft__brand { display: flex; flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .ft__name {
+    font-size: 1.0625rem; letter-spacing: .04em; color: var(--fg); line-height: 1.5;
+    /* 折り返させない。左カラムの幅はこの一行が入る前提で決めています */
+    white-space: nowrap;
+  }
 
-  .ft__sns { display: flex; gap: 1.25rem; font-size: var(--fs-note); }
-  .ft__sns a { color: var(--accent); border-bottom: 0; }
-  .ft__sns a:hover { color: var(--fg); }
+  /* ── 階層メニュー ──
+     🔴 子リンクも明朝で通します（見出しだけ明朝だと和のトーンが途切れる） */
+  /* 🔴 グリッドも flex の折り返しも使わないこと。
+        どちらも「行」ができるので、1行の項目（心を整える）が
+        3行の項目（神社参拝）の隣に来ると、下に大きな空きが残ります。
+        これが間延びの原因でした（2026-07-31）。
 
+        段組み（columns）なら**行がありません**。
+        項目が上から順に流れて、ブラウザが列の高さを自動でそろえます。
+        ⚠️ break-inside: avoid を外さないこと。外すと項目が列をまたいで割れます。 */
+  .ft__nav {
+    /* 🔴 2段。項目が4つ（3行・1行・1行・3行）なので、
+          2段だと左右が同じ高さで釣り合います。3段にすると1つだけ浮きます。 */
+    column-count: 2;
+    column-gap: 3rem;
+  }
+  .ft__g { break-inside: avoid; padding-bottom: 1.5rem; }
+  .ft__g { display: flex; flex-direction: column; gap: .5rem; }
+  .ft__g-t {
+    font-family: var(--mincho);
+    font-size: 1rem;
+    color: var(--fg);
+    border-bottom: 0;
+    line-height: 1.5;
+  }
+  .ft__g-t:hover { color: var(--accent); }
+  .ft__c { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+  .ft__c a {
+    font-family: var(--mincho);
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    border-bottom: 0;
+    padding-left: .9rem;
+    position: relative;
+    line-height: 1.6;
+  }
+  /* ぶら下がりが分かるよう、頭に短い線を引く */
+  .ft__c a::before {
+    content: '';
+    position: absolute; left: 0; top: .8em;
+    width: .5rem; height: 1px;
+    background: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .ft__c a:hover { color: var(--asagi); }
+
+  /* ── SNS ── */
+  .ft__sns { display: flex; align-items: center; gap: .6rem; }
+  .ft__ic {
+    display: inline-flex; align-items: center; justify-content: center;
+    /* 指で押せる大きさ */
+    width: 44px; height: 44px;
+    color: var(--fg-2);
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    transition: color .25s ease, border-color .25s ease;
+  }
+  .ft__ic:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── 規約・著作権 ──
+     著作権は中央・最下部に独立させます（佐助稲荷と同じ置き方） */
   .ft__meta {
-    display: flex;
-    flex-direction: column;
-    gap: .9rem;
-    padding-top: 1.5rem;
+    display: flex; flex-direction: column; gap: 1.1rem;
+    padding-top: 1.75rem;
     border-top: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .ft__sub { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.5rem; }
+  .ft__sub a {
+    font-family: var(--mincho);
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    border-bottom: 0;
+  }
+  .ft__sub a:hover { color: var(--asagi); }
+  .ft__cr {
+    margin: 0;
+    text-align: center;
+    font-size: var(--fs-label);
+    letter-spacing: .06em;
+    color: var(--fg-2);
+  }
+
+  /* 🔴 左右を保つのは860pxまで。
+        1024pxで切ると、画面の狭いノートPCでも縦積みに落ちてしまいます
+        （2026-07-31：実機で落ちていました）。 */
+  @media (max-width: 860px) {
+    .ft__cols { grid-template-columns: 1fr; gap: 2rem; }
+    .ft__nav { column-count: 2; }
+  }
+  @media (max-width: 640px) {
+    .ft__nav { column-count: 2; column-gap: 1.75rem; }
+    .ft__name { font-size: 1rem; }
+    .ft__sub { gap: .5rem 1.1rem; }
   }
 </style>

@@ -48,13 +48,18 @@ const specRows = ([
 
 const faq = [
   {
-    q: '写真と同じ石が届きますか。',
-    a: 'はい。すべて一点ものです。掲載している写真と動画が、そのままお届けする石そのものです。',
+    q: `写真と同じ${d.kind}が届きますか。`,
+    a: `はい。すべて一点ものです。掲載している写真${d.video ? '・動画' : ''}が、そのままお届けするものです。`,
   },
-  {
-    q: '天然石なので、傷や欠けはありますか。',
-    a: '原石のままお渡ししているので、欠けや凹凸、内包物があります。\nそれも含めてその石です。気になる箇所があれば、お申し込み前にお問い合わせください。',
-  },
+  d.kind === '石'
+    ? {
+        q: '天然石なので、傷や欠けはありますか。',
+        a: '原石のままお渡ししているので、欠けや凹凸、内包物があります。\nそれも含めてその石です。気になる箇所があれば、お申し込み前にお問い合わせください。',
+      }
+    : {
+        q: '天然のものなので、欠けや傷はありますか。',
+        a: '自然のものをそのままお渡ししているので、欠けや傷、色むらがあります。\nそれも含めてその表情です。気になる箇所があれば、お申し込み前にお問い合わせください。',
+      },
   {
     q: '贈りものにできますか。',
     a: 'できます。ご注文のときにお申し付けください。',
@@ -64,7 +69,7 @@ const faq = [
 
 <Base
   title={`${d.name}｜心を整える`}
-  description={`${d.name}（一点もの・No.${d.id}）。${b?.jpName ? b.jpName + '。' : ''}岡慶行が選んだ、瞑想のときに手に持つ石。`}
+  description={`${d.name}（一点もの・No.${d.id}）。${b?.jpName ? b.jpName + '。' : ''}岡慶行が選んだ、心を整えるための${d.kind}。`}
   surface="dark"
 >
   <article class="section">
@@ -81,7 +86,7 @@ const faq = [
 
       {/* ── ① まず見せる ── */}
       <figure class="main">
-        <img src={withBase(d.photos[0])} alt={`${d.name}の原石`} width="1600" height="1200" />
+        <img src={withBase(d.photos[0])} alt={d.kind === '石' ? `${d.name}の原石` : d.name} width="1600" height="1200" />
       </figure>
 
       <div class="stack" style="gap:.35rem">
@@ -125,7 +130,7 @@ const faq = [
       {/* ── ⑤ 事実：この石そのもの ── */}
       {specRows.length > 0 && (
         <section class="stack" style="gap:.75rem">
-          <h2 class="mj sec">この石のかたち</h2>
+          <h2 class="mj sec">この{d.kind}のかたち</h2>
           <div class="tablewrap">
             <table><tbody>{specRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
           </div>
@@ -135,11 +140,11 @@ const faq = [
       {/* ── ⑥ 事実：石の種類そのもの ── */}
       {basicRows.length > 0 && (
         <section class="stack" style="gap:.75rem">
-          <h2 class="mj sec">{d.name}という石について</h2>
+          <h2 class="mj sec">{d.name}について</h2>
           <div class="tablewrap">
             <table><tbody>{basicRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
           </div>
-          <p class="note">鉱物としての一般的な情報です。効果・効能を示すものではありません。</p>
+          <p class="note">{d.kind === '石' ? '鉱物としての一般的な情報です。' : '一般的な情報です。'}効果・効能を示すものではありません。</p>
         </section>
       )}
 
@@ -152,7 +157,7 @@ const faq = [
               <tr><th>価格</th><td class="tabnum">¥{d.price.toLocaleString('ja-JP')}（税込）</td></tr>
               <tr><th>送料</th><td>一律1,000円（1万円以上のお買い上げで無料）</td></tr>
               <tr><th>お届け</th><td>ご注文から7〜14日</td></tr>
-              <tr><th>同梱</th><td>瞑想での使い方を書いたカード</td></tr>
+              <tr><th>同梱</th><td>使い方を書いたカード</td></tr>
             </tbody>
           </table>
         </div>
@@ -160,7 +165,8 @@ const faq = [
 
       <NoticeBox tone="law">
         <p>
-          天然石の工芸品です。<strong>医療的・霊的な効果を保証するものではありません。</strong>
+          {d.kind === '石' ? '天然石の工芸品です。' : '天然素材でつくられたものです。'}
+          <strong>医療的・霊的な効果を保証するものではありません。</strong>
         </p>
         <p>
           一点ものにつき、返品・交換はお受けできません（不良・破損の場合を除きます）。
@@ -171,14 +177,15 @@ const faq = [
       {d.soldout ? (
         <div class="stack">
           <p><span class="pill">SOLD</span></p>
-          <p>この石は、お迎えいただきました。</p>
+          <p>{d.kind === '石' ? 'この石は、お迎えいただきました。' : '売り切れました。'}</p>
           <p class="note">
-            新しい石は、<a href={withBase('/line/')}>LINE公式</a>でいちばん先にお知らせしています。
+            新しいものは、<a href={withBase('/line/')}>LINE公式</a>でいちばん先にお知らせしています。
           </p>
         </div>
       ) : (
         <div class="stack">
-          <p><a href={d.stripeLink ?? withBase('/contact/')} class="btn">この石をお迎えする</a></p>
+          {/* 🔴 2026-07-31：石＝お迎えする（一点物・目利き）／松ぼっくり＝購入する（気軽な道具）で分ける */}
+          <p><a href={d.stripeLink ?? withBase('/contact/')} class="btn">{d.kind === '石' ? 'この石をお迎えする' : '購入する'}</a></p>
           <p class="note">
             {d.stripeLink
               ? 'カード決済に進みます。'
@@ -197,7 +204,7 @@ const faq = [
         {next ? <a href={withBase(`/mind/${next.data.id}/`)}>{next.data.name} →</a> : <span></span>}
       </nav>
 
-      <p class="back"><a href={withBase('/mind/')}>石の一覧へもどる</a></p>
+      <p class="back"><a href={withBase('/mind/')}>一覧へもどる</a></p>
     </div>
   </article>
 

@@ -1,128 +1,280 @@
 ---
+/** トップページ。
+ *
+ *  ★構成（2026-07-31 再編。原稿 CONTENT_DRAFT/01_トップ.md v3 から変更）
+ *
+ *    ① FV（神社の写真）② 案内する人 ③ 神社参拝とは ★主役
+ *    ─ 写真の帯 ─ ④ 声 ⑤ これからの参拝 ⑥ LINE ★ ⑦ 読み物 ⑧ ほかにもできること
+ *
+ *  🔴 いちばん大事な原則（触る前に読んでください）
+ *     **主役は神社参拝。前半で厚く書き、ほかのサービスは⑧で薄く拾う。**
+ *     一度「整え方は4つあります」という一覧を③に置きましたが、
+ *     後半の個別ブロックと**同じことを2回言う形**になって失敗しました。
+ *     一覧と個別ブロックを両方持つと必ず重複します。
+ *
+ *  🔴 そのほか、変えた理由
+ *    ・FVが岡さんの顔写真で「人の紹介ページ」に見えていました → 神社の写真へ。
+ *      岡さんは②で小さく紹介します。
+ *    ・声は9件あるのに「（原稿から3件）」のままでした → 実装。
+ *      ★③の直後に置くことで「神社参拝の声」だと文脈で分かります。
+ *    ・読み物にサムネイルが出ていませんでした（heroImage の渡し忘れ）。
+ *    ・「整える会」は日程未定でボタンがLINEへ飛ぶだけ → 単独ブロックをやめました。
+ *    ・締めの文章をやめました。岡さんへの導線は②にあり、二度言う必要がないためです。
+ */
 import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
-import PhotoBand from '../components/PhotoBand.astro';
-import IshiCard from '../components/IshiCard.astro';
+import PhotoStrip from '../components/PhotoStrip.astro';
 import PostCard from '../components/PostCard.astro';
+import TourCard from '../components/TourCard.astro';
+import VoiceCard from '../components/VoiceCard.astro';
 import { getCollection } from 'astro:content';
+import { topVoices } from '../data/voices';
 import { withBase } from '../utils/base';
 
-// 原稿: CONTENT_DRAFT/01_トップ.md（v3）
-// 並び順 ①FV ②何をする人か ③直近の募集 ④石 ⑤声 ⑥LINE ⑦読み物 ⑧著書 ⑨整える会 ⑩締め
-const ishi = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate).slice(0, 3);
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
   .slice(0, 4);
+
+/** 🔴 これからの回。**最大2件**まで。3件以上並べると選べなくなります。
+ *  draft はローカルでだけ出ます（公開ビルドには出ません）。 */
+const upcoming = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+  .filter((t) => t.data.state !== '終了')
+  .sort((a, b) => +a.data.date - +b.data.date)
+  .slice(0, 2);
+
+/** ★トップの横スクロール写真帯。
+ *  🔴 日帰りで行ける社を先に並べています。
+ *     遠方（伊勢・三輪・戸隠）は入れていません。
+ *     サイトで募集するのは日帰りのみなので、トップで遠方を推すと矛盾します
+ *     → TRAVEL_LAW_MEMO 第4f章。もれなく見せるのは /kamiasobi/ の役目です。 */
+const strip = [
+  { src: '/assets/shrine/p-samukawa.jpg',   name: '寒川神社',   area: '神奈川' },
+  { src: '/assets/shrine/p-kashima.jpg',    name: '鹿島神宮',   area: '茨城' },
+  { src: '/assets/shrine/p-katori.jpg',     name: '香取神宮',   area: '千葉' },
+  { src: '/assets/shrine/p-takinoo.jpg',    name: '瀧尾神社',   area: '栃木' },
+  { src: '/assets/shrine/p-mitsumine.jpg',  name: '三峯神社',   area: '埼玉' },
+  { src: '/assets/shrine/p-arayayama.jpg',  name: '新屋山神社', area: '山梨' },
+  { src: '/assets/shrine/p-sunosaki.jpg',   name: '洲崎神社',   area: '千葉' },
+  { src: '/assets/shrine/p-atago.jpg',      name: '愛宕神社',   area: '東京' },
+  { src: '/assets/shrine/p-makata.jpg',     name: '麻賀多神社', area: '千葉' },
+  { src: '/assets/shrine/p-anahachiman.jpg', name: '穴八幡',    area: '東京' },
+];
+
+/** ★神社参拝の「ひとりで行くのと何が違うか」。/kamiasobi/ の要約です。
+ *  🔴 トップは要約、詳細は /kamiasobi/。増やさないこと（3つで止める）。 */
+const points = [
+  { t: 'どの神社へ行くか', d: 'その時期と、その日集まった方の状態に合う社を選びます。有名かどうかでは選びません' },
+  { t: '道中の時間',       d: '車での移動が、この一日の半分です。ここでの話がいちばん濃かった、とよく言われます' },
+  { t: '定員6名',         d: '岡の車に同乗して回る人数です。一日を通して、ひとりずつに向き合えます' },
+];
+
+/** ★「ほかにもできること」＝**神社を除いた3つ**。
+ *
+ *  🔴 2026-07-31：以前ここに「整え方は4つあります」という一覧を置いていましたが、
+ *     後半の個別ブロック（自宅で整える・著書）と**同じことを2回言う形**になっていました。
+ *     一覧と個別ブロックを両方持つと必ず重複します。
+ *     → **主役（神社）はページ前半で厚く、それ以外はここで薄く**、に整理しました。
+ *     ここに神社を足さないでください。重複が復活します。
+ *
+ *  🔴 著書はAmazonへ直リンクせず /book/ を経由します。
+ *     サイトからの離脱を、いちばん最後に寄せるためです。 */
+const others = [
+  { t: '手元に置く',   d: '岡が選んだ一点ものの石と、大王松の松ぼっくり。家でも整えるための道具です。', href: '/mind/',    label: '心を整える' },
+  { t: '内側から解く', d: '前世療法・ヒプノセラピー。深いところに残っているものを解いていきます。',   href: '/session/', label: '個人セッション' },
+  { t: '読んでみる',   d: '『願わず叶う神社参拝入門』。40年ぶんを1冊にしました。',                     href: '/book/',    label: '著書' },
+];
 ---
 
 <Base
   title="マインドフリー神道学アカデミア"
-  description="神社は願いを叶える場所ではなく、自分を整える場所。植木屋歴40年・神道歴40年余の岡慶行が案内する神遊び（神社ツアー）と、選んだ石。"
+  description="神社は願いを叶える場所ではなく、自分を整える場所。神道歴40年あまりの岡慶行が案内する、日帰り・定員6名の神社参拝プログラムと、手元で整えるための道具。"
   surface="dark"
 >
-  {/* ① ファーストビュー ─ 暗い面 */}
+  {/* ① ファーストビュー
+      🔴 2026-07-31：岡さんの顔写真をやめ、神社の写真に変えました。
+         顔がドーンと出ていて「人の紹介ページ」に見えていたためです（福田指摘）。
+         ★売っているのは岡さんではなく「整う一日」なので、まず場所を見せます。
+         岡さんは②で小さく紹介します。
+      文字は写真の上ではなく、地の色まで溶けきったところに置いています
+      （明るい部分に白文字が乗ると読めないため）。/kamiasobi/ と同じ作りです。 */}
+  {/* 🔴 写真は4枚をゆっくり切り替えます（1枚6秒・全24秒）。
+         ★動きは**切り替えだけ**。ケンバーンズ（ゆっくり寄る）は付けていません。
+           2つ重ねるとうるさくなり、岡さんの文章の静けさとぶつかります。
+         ★色の系統をばらけさせています：夜（青）→ 紅葉（暖）→ 白い鳥居 → 夕暮れ。
+           同系色を並べると、切り替わったことに気づきません。
+         🔴 CSSアニメーションだけで動かしています。JSは使いません。
+            JSが止まっても1枚目が出たままになるので、内容は必ず読めます。
+            動きを減らす設定の人には1枚目で固定されます（下のCSS）。
+         ⚠️ 1枚目だけ eager。残り3枚は lazy にして初回表示を軽くしています。 */}
   <section class="fv">
-    <div class="wrap fv__in">
-      <figure class="fv__img kenburns">
-        <img src={withBase('/assets/oka-hero.jpg')} alt="杉並木の参道を歩く岡慶行" width="1200" height="800" />
-      </figure>
-      <div class="stack" data-reveal data-reveal-delay="1">
-        <h1>
-          神社は、願いを叶える場所じゃない。<br />
-          自分を整える場所です。
-        </h1>
-        <p class="lede">
-          植木屋が40年。神道が40年あまり。<br />
-          <strong>庭も、神社も、やっていることは同じでした。</strong>
-        </p>
-        <p class="fv__btns">
-          <a href={withBase('/kamiasobi/')} class="btn">神社参拝の日程を見る</a>
-          <a href="#line" class="btn btn--ghost">LINEで受け取る</a>
-        </p>
-      </div>
-    </div>
-  </section>
+    <figure class="fv__f">
+      {[
+        { src: '/assets/shrine/fv-1-samukawa.jpg',  alt: '日が落ちたあとの寒川神社の参道。灯籠の灯りが奥までまっすぐ続いている' },
+        { src: '/assets/shrine/fv-2-takinoo.jpg',   alt: '紅葉に囲まれた朱色の門と、その先へ続く石段' },
+        { src: '/assets/shrine/fv-3-mitsumine.jpg', alt: '三峯神社の白い三ツ鳥居。左右に狼の像が立つ' },
+        { src: '/assets/shrine/fv-4-kashima.jpg',   alt: '雪の残る夕暮れの鹿島神宮。楼門に灯りがともる' },
+      ].map((s, i) => (
+        <img
+          class="fv__slide"
+          src={withBase(s.src)}
+          alt={i === 0 ? s.alt : ''}
+          width="1400"
+          height="1054"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'low'}
+          aria-hidden={i === 0 ? undefined : 'true'}
+        />
+      ))}
+      <span class="fv__fade" aria-hidden="true"></span>
+    </figure>
 
-  {/* ② 何をする人か */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">神社参拝</p>
-      <h2>観光でも、修行でもありません</h2>
-      <p>
-        神社という場所を借りて、<strong>自分のエネルギーを整えに行く</strong>。それだけです。<br />
-        整うと、仕事も、お金も、人との関係も、勝手に動きはじめます。岡慶行は、この参拝を「神遊び（かみあそび）」と呼んでいます。
-      </p>
-      <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
-    </div>
-  </section>
-
-  {/* 🖼 「観光でも修行でもない」と言ったあとに、行き先を1枚見せます。
-         ★ここは FV の岡さんの写真と役割が違います。
-           FV＝誰がやっているか／この帯＝どこへ行くのか。
-         朱の門と紅葉にしたのは、トップだけ少し暖かくしたいからです
-         （神社参拝ページは夜の写真で始まるので、入口で色をずらしておく）。 */}
-  <PhotoBand
-    src="/assets/shrine/band-takinoo.jpg"
-    alt="紅葉に囲まれた朱色の門と、その先へ続く石段"
-    caption="瀧尾神社（栃木・日光）"
-    focus="center 48%"
-  />
-
-  <hr class="rule-accent" />
-
-  {/* ③ 直近の募集 ─ 最大2件 */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">開催予定</p>
-      <h2>直近の参拝日程</h2>
-      {/* TODO: 02_ツアーマスタから2件。選択肢は2件まで（並べると選べなくなる） */}
-      <p class="note">（日程が決まったらここに最大2件。3件目以降は /kamiasobi/ へ）</p>
-      <p><a href={withBase('/kamiasobi/')}>これからの日程をすべて見る →</a></p>
-    </div>
-  </section>
-
-  <hr class="rule-accent" />
-
-  {/* ④ 心を整える（本物のパワーストーン） */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">心を整える</p>
-      <h2>日々の心を整える<br /><span style="font-size: 1.15rem; color: var(--accent); display: block; margin-top: .3rem;">─ 瞑想と、本物のパワーストーン ─</span></h2>
+    <div class="wrap stack fv__txt" data-reveal>
+      <h1>
+        神社は、願いを叶える場所じゃない。<br />
+        自分を整える場所です。
+      </h1>
       <p class="lede">
-        心を整え、神（自然・宇宙エネルギー）とつながる手助けとなる道具。<br />
-        岡慶行が自ら手を触れ、気の流れを感じて選んだ一点ものの本物のパワーストーンです。
+        観光でもなく、修行でもなく。<br />
+        <strong>場を借りて、自分のエネルギーを整えに行く一日</strong>です。
       </p>
-      <div class="ishi-grid">
-        {ishi.map((s) => (
-          <IshiCard
-            id={s.data.id}
-            name={s.data.name}
-            price={s.data.price}
-            photo={s.data.photos[0]}
-            soldout={s.data.soldout}
-          />
-        ))}
-      </div>
-      <p><a href={withBase('/mind/')}>「心を整える」ギャラリーを見る →</a></p>
+      <p class="fv__btns">
+        <a href={withBase('/kamiasobi/')} class="btn">神社参拝について見る</a>
+        <a href="#line" class="btn btn--ghost">LINEで受け取る</a>
+      </p>
     </div>
   </section>
 
-  <hr class="rule-accent" />
-
-  {/* ⑤ 参加した人の声 ─ 3件 */}
+  {/* ② 何をする人か ＋ 岡さんの紹介（小さく）
+      ★写真は横に小さく置きます。主役は言葉のほうです。 */}
   <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">参加した方の声</p>
-      {/* TODO: CONTENT_DRAFT/05_voice.md から3件。イニシャル＋年代＋性別＋都道府県 */}
-      <p class="note">（原稿から3件）</p>
-      <p><a href={withBase('/voice/')}>ほかの声を読む →</a></p>
+    <div class="wrap" data-reveal>
+      <div class="who">
+        <figure class="who__img">
+          <img src={withBase('/assets/oka-portrait.jpg')} alt="岡 慶行" width="360" height="270" loading="lazy" />
+        </figure>
+        {/* 🔴 2026-07-31：肩書きの列挙をやめました。
+               「植木屋40年／神道40年」だけだと経歴で、人柄が出ません。
+               ★岡さんのFB932件から出てくる実像は「明るくて、出し惜しみしない人」です。
+                 神様の話をしていても深刻になりません。そこが伝わる書き方に変えました。
+               ⚠️ ここは要約です。根拠と詳細は /about/ の「こういう人です」に置いています。 */}
+        <div class="stack">
+          <p class="kicker">案内する人</p>
+          <h2>庭を40年、<br />神社を40年。</h2>
+          <p>
+            土をさわる仕事と、神様と話す仕事。<br />
+            まったく別だと言われますが、<strong>岡慶行にとっては同じことでした</strong>。
+            どちらも、流れが止まっているところを見つけて、整える。
+          </p>
+          <p class="note">
+            考えていることは、いつも全部書いてしまう人です。<br />
+            神様の話をしていても、深刻になりません。
+          </p>
+          <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
+        </div>
+      </div>
     </div>
   </section>
 
-  {/* ⑥ LINE ★最重要CV */}
-  <div id="line"><LineCta /></div>
+  {/* ③ 神社参拝とは ─ ★メイン商品。ここだけ厚く書きます（2026-07-31）
+      🔴 トップの主役は神社参拝です。ほかのサービスは⑧で薄く拾います。
+         ここに石やセッションの話を混ぜないでください。主役がぼやけます。 */}
+  <section class="section sec-rule">
+    <div class="wrap stack" data-reveal>
+      <p class="kicker">神社参拝プログラム</p>
+      <h2>神社は、誰でも行けます</h2>
+      <p class="lede">
+        でも、行っただけでは変わりません。<br />
+        何を感じ、どう整えるか。<br />
+        そこを案内する人がいるかどうかで、<strong>同じ一日の意味が変わります</strong>。
+      </p>
 
-  {/* ⑦ 読み物 */}
+      <ul class="pts">
+        {points.map((p) => (
+          <li class="pts__i">
+            <span class="pts__t mj">{p.t}</span>
+            <span class="note">{p.d}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p class="note">
+        <strong>日帰りです。</strong>朝に永田町を出て、その日のうちに永田町へ戻ります。
+      </p>
+      <p><a href={withBase('/kamiasobi/')} class="btn">神社参拝について見る</a></p>
+    </div>
+  </section>
+
+  {/* 🖼 主役の説明のあとに、行き先を横に流して見せます（2026-07-31）。
+         ★1枚の帯から横スクロールに変えました。
+           「どこへ行くのか」は1枚では伝わらず、枚数と幅で伝わるためです。
+         🔴 ここは自動で動かしません。ヒーローが切り替わっているので、
+            2か所が同時に動くと画面が落ち着きません。 */}
+  <PhotoStrip places={strip} note="これまでにめぐってきた社。指で横に送れます" />
+
+  {/* ④ 参加した方の声 ─ 3件
+      ★③のすぐ後ろに置いています。**神社参拝の声**だと文脈で分かるようにするためです
+        （2026-07-31 福田指摘：サービス一覧の直後だと、どれの声か分からなくなっていた）。
+      🔴 文面は src/data/voices.ts が正本。ここで書き換えないこと */}
+  <section class="section">
+    <div class="wrap stack">
+      <div data-reveal>
+        <p class="kicker">参加した方の声</p>
+        <h2>何が変わったのか</h2>
+        <p class="note">アンケートに書いてくださったものを、そのまま載せています。</p>
+      </div>
+      <div class="voices" data-reveal>
+        {topVoices.map((v) => <VoiceCard text={v.after} who={v.author} />)}
+      </div>
+      <p data-reveal><a href={withBase('/voice/')}>ほかの声を読む →</a></p>
+    </div>
+  </section>
+
+  {/* ⑤ 直近の日程 ─ 最大2件
+      🔴 空のときに空欄を見せないこと。「調整しています」と言うほうが正直で、
+         LINEへの動機にもなります */}
+  <section class="section sec-rule">
+    <div class="wrap stack">
+      <div data-reveal>
+        <p class="kicker">開催予定</p>
+        <h2>これからの参拝</h2>
+      </div>
+      {upcoming.length > 0 ? (
+        <div data-reveal>
+          {upcoming.map((t) => (
+            <TourCard
+              date={t.data.date}
+              title={t.data.title}
+              place={t.data.area}
+              price={t.data.prices?.[0]?.amount}
+              state={t.data.state === '準備中' ? undefined : t.data.state}
+              note={t.data.lead}
+              href={`/kamiasobi/${t.id}/`}
+            />
+          ))}
+          <p class="tour-more"><a href={withBase('/kamiasobi/')}>日程をすべて見る →</a></p>
+        </div>
+      ) : (
+        <div class="stack" data-reveal>
+          <p class="note">
+            次の日程を調整しています。<br />
+            決まりしだい、LINEでいちばん早くお知らせします。
+          </p>
+          <p><a href={withBase('/kamiasobi/')}>神社参拝について見る →</a></p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* 🔴 2026-07-31：LINEブロックはページのいちばん最後へ移しました（福田判断）。
+         ここ（日程の直後）にあると、読み物とサービス紹介がLINEの後ろに埋もれます。
+         ★LINEは「今日は申し込まない人」の受け皿なので、最後で正しい。
+         FVの「LINEで受け取る」ボタンは #line へのアンカーなので、押せば最後まで飛びます。 */}
+
+  {/* ⑥ 読み物
+      🔴 heroImage を渡すこと。渡さないとサムネイルが出ません
+         （2026-07-31 まで渡し忘れていて、文字だけのリストになっていました）。
+      ⚠️ PostCard は「200pxのサムネ＋本文」の横並びです。
+         グリッドにすると潰れるので、1列のリストのまま使ってください。 */}
   <section class="section">
     <div class="wrap stack" data-reveal>
       <p class="kicker">読み物</p>
@@ -135,6 +287,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             description={p.data.description}
             category={p.data.category}
             pubDate={p.data.pubDate}
+            heroImage={p.data.heroImage}
             chars={p.body?.length ?? 0}
           />
         ))}
@@ -143,76 +296,148 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <hr class="rule-accent" />
-
-  {/* ⑧ 著書 */}
-  <section class="section">
+  {/* ⑦ ほかにもできること ─ **神社を除いた3つ**（2026-07-31）
+      🔴 ここに神社を足さないこと。③と重複します。
+      ★締めの文章は置きません（岡さんへの導線は②にあり、二度言う必要がないため）。 */}
+  <section class="section sec-rule">
     <div class="wrap stack" data-reveal>
-      <p class="kicker">著書</p>
-      <h2>40年ぶんを、<br />1冊にしました。</h2>
-      <p>
-        『願わず叶う神社参拝入門 ─ 心の動きが運命を変える ─』<br />
-        2025年8月刊行。Kindle Unlimitedなら読み放題です。
-      </p>
-      <p class="fv__btns">
-        <a href="https://amzn.to/40UznBY" class="btn" target="_blank" rel="noopener">Amazonで見る</a>
-        <a href={withBase('/about/')} class="btn btn--ghost">目次を見る</a>
-      </p>
-    </div>
-  </section>
-
-  <hr class="rule-accent" />
-
-  {/* ⑨ 整える会 ─ アカデミアの枠（実体のある商品） */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">整える会</p>
-      <h2>月に一度、<br />一緒に整える時間があります。</h2>
+      <p class="kicker">ほかにも</p>
+      <h2>神社へ行くほかにも、<br />整え方があります</h2>
       <p class="lede">
-        オンラインなので、どこからでも。<br />
-        お話をして、一緒に瞑想して、感じたことを分かち合う。60分ほどの会です。<br />
-        <strong>マインドも、持って帰ってもらいます。</strong>
+        参拝の日に予定が合わなくても、できることはあります。
       </p>
-      <p class="note">月1回・2,000円・録画のアーカイブつき</p>
-      <p class="fv__btns">
-        {/* TODO: 第1回の日程が決まったら */}
-        <a href="#line" class="btn">次の会を見る</a>
-      </p>
+
+      <ul class="others">
+        {others.map((o) => (
+          <li class="others__i">
+            <a href={withBase(o.href)} class="others__a">
+              <span class="others__t mj">{o.t}</span>
+              <span class="others__l">{o.label}</span>
+              <span class="note">{o.d}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
-  {/* ⑩ 締め */}
-  <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="mj closing">
-        神社に行っても救われない。<br />
-        そう思っている人が、けっこういます。<br />
-        <br />
-        それは、行き方の話かもしれません。
-      </p>
-      <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
-    </div>
-  </section>
+  {/* ⑧ LINE ★最重要CV。ページのいちばん最後 */}
+  <div id="line"><LineCta /></div>
 </Base>
 
 <style>
-  .fv { padding-block: 2.5rem 3.5rem; }
-  .fv__in { display: flex; flex-direction: column; gap: 2rem; max-width: 64rem; }
-  .fv__img { background: #0d0b10; }
+  /* ── ① ファーストビュー ──
+     写真の裾を地の色まで溶かし、その溶けきったところに見出しを重ねます。
+     🔴 写真の下から22.4%（56% × 60%）が完全な単色。
+        文字を重ねるのはそこだけ。この数字と margin-top は一組です。
+        /kamiasobi/ の .hero と同じ作りなので、片方だけ直さないこと。 */
+  .fv { position: relative; padding-bottom: var(--gap-section); }
+  .fv__f {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    background: #0d0b10;
+    /* 写真を重ねるので、高さは入れ物のほうで決める */
+    height: clamp(320px, 60vh, 560px);
+  }
+  .fv__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 46%;
+    /* 🔴 既定は非表示。動かないブラウザでも1枚目だけは下の指定で出ます */
+    opacity: 0;
+    animation: fvfade 24s linear infinite;
+  }
+  .fv__slide:nth-child(1) { animation-delay:  0s; }
+  .fv__slide:nth-child(2) { animation-delay:  6s; }
+  .fv__slide:nth-child(3) { animation-delay: 12s; }
+  .fv__slide:nth-child(4) { animation-delay: 18s; }
+
+  /* 6秒のうち 1.2秒かけて入れ替わる。ぱっと切り替えず、溶けるように */
+  @keyframes fvfade {
+    0%   { opacity: 0; }
+    5%   { opacity: 1; }
+    25%  { opacity: 1; }
+    30%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* 🔴 動きを減らす設定の人・CSSアニメが効かない環境では、1枚目を出したままにする */
+  @media (prefers-reduced-motion: reduce) {
+    .fv__slide { animation: none; opacity: 0; }
+    .fv__slide:nth-child(1) { opacity: 1; }
+  }
+  .fv__fade {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 56%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--bg) 55%, transparent) 32%,
+      var(--bg) 60%
+    );
+    pointer-events: none;
+  }
+  .fv__txt { position: relative; margin-top: clamp(-3.5rem, -6vh, -3rem); }
+  .fv__txt h1 { line-height: 1.45; text-shadow: 0 2px 18px rgba(0, 0, 0, .55); }
   .fv__btns { display: flex; flex-wrap: wrap; gap: .7rem; }
 
-  .ishi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+  @media (max-width: 700px) {
+    .fv__f img { height: clamp(280px, 42vh, 400px); }
   }
+
+  /* ── ② 案内する人 ── */
+  .who { display: flex; flex-direction: column; gap: 1.5rem; }
+  .who__img { margin: 0; overflow: hidden; border-radius: var(--radius); background: #0d0b10; }
+  .who__img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  @media (min-width: 720px) {
+    .who { flex-direction: row; align-items: center; gap: 2rem; }
+    /* 写真は小さく。主役は言葉のほう */
+    .who__img { flex: 0 0 34%; }
+    .who > .stack { flex: 1 1 auto; }
+  }
+
+  /* ── ③ 神社参拝とは（要点3つ）── */
+  .pts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+  .pts__i { display: flex; flex-direction: column; gap: .25rem; }
+  .pts__t { font-size: 1.0625rem; color: var(--accent); }
+
+  /* ── ⑧ ほかにもできること ──
+     カード3枚。全部リンクなので、押せることが分かる見た目にしています */
+  .others {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  .others__a {
+    display: flex; flex-direction: column; gap: .3rem;
+    height: 100%;
+    padding: 1.25rem 1.35rem;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius);
+    color: inherit;
+    transition: border-color .25s ease, background-color .25s ease;
+  }
+  .others__a:hover { background: color-mix(in srgb, var(--bg-2) 80%, var(--accent) 8%); border-color: var(--accent); }
+  .others__t { font-size: 1.125rem; color: var(--fg); line-height: 1.5; }
+  .others__l { font-size: var(--fs-label); letter-spacing: .1em; color: var(--accent); }
   @media (max-width: 640px) {
-    .ishi-grid { grid-template-columns: repeat(2, 1fr); }
+    .others { grid-template-columns: 1fr; }
   }
+
+  /* ── ④ 声 ── */
+  .voices { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* ── ⑤ 日程 ── */
+  .tour-more { margin-top: 1.1rem; }
 
   .posts { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
 
-  .closing { font-size: 1.15rem; line-height: 2; color: var(--fg); }
 
   @media (min-width: 861px) {
     .fv__in { flex-direction: row; align-items: center; gap: 3rem; }

@@ -1,0 +1,106 @@
+---
+/** 横にスクロールする写真の列。
+ *
+ *  ★PlaceGrid（一覧・全部見せる）との違い
+ *    PlaceGrid＝「どこへ行くのか」を**もれなく**見せる（/kamiasobi/ の12社）
+ *    PhotoStrip＝「こんなに行っている」を**枚数と幅で**感じてもらう（トップ）
+ *    同じ写真を使っても、役割が違います。
+ *
+ *  ★なぜ横スクロールか
+ *    縦に積むとページが長くなり、枚数が多いほど読み飛ばされます。
+ *    横なら、指で流すぶんだけ見てもらえて、見ない人の邪魔もしません。
+ *
+ *  🔴 src は素のパス。base はこの中で付けます。
+ *  🔴 自動では動かしません。ヒーローが動いているので、
+ *     ここまで動かすと画面が落ち着きません。
+ *  ⚠️ <section> の外（同じ階層）に置くこと。.wrap の中だと全幅になりません。 */
+interface Place {
+  src: string;
+  name: string;
+  area?: string;
+}
+interface Props {
+  places: Place[];
+  /** 見出し代わりの一行。省略可 */
+  note?: string;
+}
+import { withBase } from '../utils/base';
+const { places, note } = Astro.props;
+---
+
+<div class="ps" data-reveal>
+  {note && <p class="ps__note note wrap">{note}</p>}
+
+  {/* role="list" は、CSSで list-style を消しても読み上げに残すため */}
+  <ul class="ps__l" role="list" tabindex="0" aria-label="これまでに訪れた社の写真">
+    {places.map((p) => (
+      <li class="ps__i">
+        <figure class="ps__f">
+          <img
+            src={withBase(p.src)}
+            alt={`${p.name}${p.area ? `（${p.area}）` : ''}`}
+            loading="lazy"
+            decoding="async"
+            width="800"
+            height="600"
+          />
+        </figure>
+        <p class="ps__n mj">
+          {p.name}
+          {p.area && <span class="ps__a">{p.area}</span>}
+        </p>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .ps { display: flex; flex-direction: column; gap: .9rem; }
+  .ps__note { margin: 0 auto; }
+
+  .ps__l {
+    list-style: none;
+    margin: 0;
+    /* 左端は本文と揃え、右端は画面の外へ流す。「まだ続く」が伝わる */
+    padding: .25rem 1.5rem .75rem max(1.5rem, calc((100vw - var(--col)) / 2));
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    /* iOSで慣性スクロールを効かせる */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .ps__l:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+
+  .ps__i {
+    flex: 0 0 auto;
+    width: clamp(200px, 42vw, 300px);
+    scroll-snap-align: start;
+  }
+
+  .ps__f {
+    margin: 0 0 .55rem;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #0d0b10;
+  }
+  .ps__f img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    /* 写真ごとの明るさの差をならす。深紫の上で1枚だけ浮かないように */
+    filter: saturate(.94);
+  }
+
+  .ps__n {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .45rem;
+    font-size: 1rem; color: var(--accent); line-height: 1.5;
+  }
+  .ps__a {
+    font-family: var(--gothic);
+    font-size: var(--fs-label);
+    letter-spacing: .08em;
+    color: var(--fg-2);
+  }
+</style>

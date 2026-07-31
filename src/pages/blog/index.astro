@@ -20,7 +20,7 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
   <div class="wrap section stack">
     {/* ── ヘッダー ── */}
     <header class="blog-header stack" data-reveal>
-      <p class="kicker">Articles</p>
+      <p class="kicker">読み物</p>
       <h1>読み物</h1>
       <p class="lede">
         Facebookに投稿してきたメッセージを、<br />
@@ -44,10 +44,8 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
       </div>
     </header>
 
-    <hr class="rule-accent" />
-
     {/* ── 記事一覧 ── */}
-    <section class="stack" data-reveal>
+    <section class="stack sec-rule" data-reveal>
       {posts.length === 0 ? (
         <p class="note">まだ記事がありません。</p>
       ) : (

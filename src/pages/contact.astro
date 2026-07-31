@@ -5,24 +5,22 @@ import { withBase } from '../utils/base';
 
 <Base
   title="お問い合わせ"
-  description="神遊び（神社参拝）、整える石、個別セッションについてのご質問・ご相談フォームです。"
+  description="神社参拝、整える石、個別セッションについてのご質問・ご相談フォームです。"
   surface="dark"
 >
   <div class="wrap section stack">
     {/* ── 冒頭 ── */}
     <header class="contact-header stack" data-reveal>
-      <p class="kicker">Contact</p>
+      <p class="kicker">お問い合わせ</p>
       <h1>お問い合わせ</h1>
       <p class="lede">
-        神遊びのこと、石のこと、個別セッションのこと。<br />
+        神社参拝のこと、石のこと、個別セッションのこと。<br />
         どんなことでも、下記のフォームよりお気軽にお尋ねください。
       </p>
     </header>
 
-    <hr class="rule-accent" />
-
     {/* ── お問い合わせフォーム UI ── */}
-    <section class="stack form-section" data-reveal>
+    <section class="stack form-section sec-rule" data-reveal>
       <h2>お問い合わせフォーム</h2>
 
       <form
@@ -76,7 +74,7 @@ import { withBase } from '../utils/base';
           </label>
           <select id="category" name="category" required class="form-control">
             <option value="" disabled selected>選択してください</option>
-            <option value="神遊びについて">神遊び（神社参拝ツアー）について</option>
+            <option value="神社参拝について">神社参拝について</option>
             <option value="整える石について">整える石（天然石ギャラリー）について</option>
             <option value="個別セッション・前世療法">個別セッション・前世療法について</option>
             <option value="取材・講演">取材・講演・メディア掲載について</option>
@@ -124,10 +122,8 @@ import { withBase } from '../utils/base';
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── メールソフトから直接送信したい方向けの補助案内 ── */}
-    <section class="stack direct-email-section" data-reveal>
+    <section class="stack direct-email-section sec-rule" data-reveal>
       <div class="direct-email-box">
         <h3>メールアプリから直接送信される場合</h3>
         <p>

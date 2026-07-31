@@ -12,7 +12,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
 
 const mainPages = [
   { href: withBase('/'), label: 'トップページ', desc: 'ファーストビュー・開催予定・案内' },
-  { href: withBase('/kamiasobi/'), label: '神社へ行く（神遊び一覧）', desc: '場を借りて整える神社参拝' },
+  { href: withBase('/kamiasobi/'), label: '神社参拝プログラム', desc: '場を借りて整える神社参拝' },
   { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、本物のパワーストーン' },
   { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
   { href: withBase('/session/'), label: '深く整える', desc: '内側から整える（催眠・タントラ）' },
@@ -21,7 +21,7 @@ const mainPages = [
 ];
 
 const subPages = [
-  { href: withBase('/voice/'), label: '参加した方の声', desc: '神遊び・セッション参加者の体験談' },
+  { href: withBase('/voice/'), label: '参加した方の声', desc: '神社参拝・セッション参加者の体験談' },
   { href: withBase('/book/'), label: '著書案内', desc: '『願わず叶う神社参拝入門』紹介' },
   { href: withBase('/line/'), label: 'LINE公式のご案内', desc: '登録特典・最新情報の案内' },
   { href: withBase('/contact/'), label: 'お問い合わせ', desc: 'ご質問・ご相談フォーム' },
@@ -41,15 +41,13 @@ const legalPages = [
 >
   <div class="wrap section stack">
     <header class="stack">
-      <p class="kicker">Sitemap</p>
+      <p class="kicker">サイトマップ</p>
       <h1>サイトマップ（全ページリンク一覧）</h1>
       <p class="lede">全ページの動作・表示リンク確認用ページです。</p>
     </header>
 
-    <hr class="rule-accent" />
-
     {/* ① メインメニュー */}
-    <section class="sm-sec stack">
+    <section class="sm-sec stack sec-rule">
       <h2>主要ページ</h2>
       <ul class="sm-list">
         {mainPages.map((p) => (
@@ -63,7 +61,7 @@ const legalPages = [
 
     {/* ② 神遊び（開催回） */}
     <section class="sm-sec stack">
-      <h2>神遊び（各開催ページ）</h2>
+      <h2>神社参拝（各開催ページ）</h2>
       <ul class="sm-list">
         {tours.map((t) => (
           <li>

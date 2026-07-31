@@ -7,7 +7,7 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
 const benefits = [
   {
     tag: '登録特典 ①',
-    title: '石を使った瞑想についての導入動画',
+    title: '岡の声でご案内する、瞑想の導入動画',
     desc: '瞑想の際に手に持つ石の見立てや、心を深く静めるための基本的な意識の持ち方を解説した特別導入動画をお渡ししています。',
     icon: '🧘',
   },
@@ -26,8 +26,8 @@ const contents = [
     badge: '毎週配信',
   },
   {
-    title: '神遊び（神社参拝）の優先案内',
-    desc: '少人数で開催される神遊びの最新日程や募集告知を、一般公開よりも優先してLINE読者様へお届けします。',
+    title: '神社参拝の優先案内',
+    desc: '少人数で開催される神社参拝の最新日程を、サイトより先にLINEでお届けします。',
     badge: '優先告知',
   },
   {
@@ -45,7 +45,7 @@ const contents = [
 
 <Base
   title="LINE公式のご案内"
-  description="神社参拝の本質と心の整え方を週に一度お届け。登録特典として「石を使った瞑想の導入動画」と「14日間のステップ学び講座」をプレゼント中。"
+  description="神社参拝の本質と心の整え方を不定期でお届け。ご登録で「岡の声でご案内する瞑想の導入動画」と「14日間のステップ学び講座」をお送りしています。"
   surface="dark"
 >
   <div class="wrap section stack">
@@ -55,7 +55,7 @@ const contents = [
         <p class="kicker">LINE Official</p>
         <h1 class="mj">
           神社と、心の整え方の話を<br />
-          週に一度お届けします。
+          不定期でお届けします。
         </h1>
         <p class="lede">
           売るのはLINEです。サイトは「信じてもらう場所」。<br />
@@ -72,24 +72,21 @@ const contents = [
 
       {/* QRコード（スマホでもPCでも確認しやすい） */}
       <div class="line-hero__qr-box stack">
-        <div class="qr-frame">
+        <div class="qr" style="--qr-size:200px">
           <img
             src={withBase('/assets/line-qr-green.png')}
             alt="LINE公式 友だち追加 QRコード"
-            width="200"
-            height="200"
-            class="qr-img"
+            width="360"
+            height="360"
           />
         </div>
         <p class="note text-center">PCでお手元のスマホから<br />QRコードを読み取れます</p>
       </div>
     </header>
 
-    <hr class="rule-accent" />
-
     {/* ── 登録特典 ── */}
-    <section class="stack benefits-sec" data-reveal>
-      <p class="kicker">Present</p>
+    <section class="stack benefits-sec sec-rule" data-reveal>
+      <p class="kicker">ご登録の特典</p>
       <h2>ご登録いただいた方への2大特典</h2>
 
       <div class="benefits-grid">
@@ -106,11 +103,9 @@ const contents = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── LINEで届くこと ── */}
-    <section class="stack contents-sec" data-reveal>
-      <p class="kicker">Contents</p>
+    <section class="stack contents-sec sec-rule" data-reveal>
+      <p class="kicker">お届けしていること</p>
       <h2>LINEでお届けしていること</h2>
 
       <div class="contents-grid">
@@ -126,10 +121,8 @@ const contents = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── 登録CTA ── */}
-    <section class="stack text-center cta-sec" data-reveal>
+    <section class="stack text-center cta-sec sec-rule" data-reveal>
       <h2 class="mj">あなたとLINEでお会いできることを<br />楽しみにしています。</h2>
       <p class="lede">登録後、すぐに特典動画と14日間講座の第1回目が届きます。</p>
       <div class="cta-box">
@@ -192,19 +185,6 @@ const contents = [
     align-items: center;
   }
 
-  .qr-frame {
-    background: #ffffff;
-    padding: 0.75rem;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .qr-img {
-    width: 180px;
-    height: 180px;
-    display: block;
-  }
 
   /* 特典カード */
   .benefits-grid {

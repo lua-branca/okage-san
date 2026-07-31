@@ -34,7 +34,7 @@ const faqs = [
   <div class="wrap section stack">
     {/* ── ヒーロー ── */}
     <header class="session-hero stack" data-reveal>
-      <p class="kicker">Individual Session</p>
+      <p class="kicker">個人セッション</p>
       <h1 class="mj">
         頭で考えても、<br />
         どうしても動かないものへ。
@@ -45,11 +45,9 @@ const faqs = [
       </p>
     </header>
 
-    <hr class="rule-accent" />
-
     {/* ── 深いところへ降りる ── */}
-    <section class="stack prose-section" data-reveal>
-      <p class="kicker">Concept</p>
+    <section class="stack prose-section sec-rule" data-reveal>
+      <p class="kicker">考え方</p>
       <h2>なぜ、個別セッションを行うのか</h2>
       <div class="prose">
         <p>
@@ -67,11 +65,9 @@ const faqs = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── セッション内容（2つのアプローチ） ── */}
-    <section class="stack approach-section" data-reveal>
-      <p class="kicker">Approaches</p>
+    <section class="stack approach-section sec-rule" data-reveal>
+      <p class="kicker">進め方</p>
       <h2>2つのアプローチ</h2>
 
       <div class="approach-grid">
@@ -95,11 +91,9 @@ const faqs = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── 料金・プラン（1種類に統一） ── */}
-    <section class="stack plan-section text-center" data-reveal>
-      <p class="kicker">Price Plan</p>
+    <section class="stack plan-section text-center sec-rule" data-reveal>
+      <p class="kicker">料金</p>
       <h2>セッション料金</h2>
 
       <div class="plan-card stack">
@@ -126,10 +120,8 @@ const faqs = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── 法務・注意事項 ── */}
-    <section class="stack" data-reveal>
+    <section class="stack sec-rule" data-reveal>
       <NoticeBox title="セッションに関する大切なお知らせ" tone="law">
         <p>
           本セッションは<strong>医療行為ではありません。</strong>
@@ -145,10 +137,8 @@ const faqs = [
       </NoticeBox>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── FAQ ── */}
-    <section class="stack" data-reveal>
+    <section class="stack sec-rule" data-reveal>
       <h2>よくあるご質問</h2>
       <Faq items={faqs} openFirst />
     </section>

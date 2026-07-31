@@ -1,32 +1,46 @@
 ---
+/** 岡慶行について。
+ *
+ *  🔴 表記の決めごと（2026-07-31 統一）
+ *     ・見出し・本文は「**岡慶行**」（スペースなし）。メニューと揃えます
+ *     ・スペース入りの「岡 慶行（おか よしゆき）」は**運営者情報と特商法だけ**
+ *     ・kicker は**日本語**。英語のkickerはこのサイトの静かなトーンから浮きます
+ *       ⚠️ session / voice / line / book / blog / contact / sitemap / 法務ページは
+ *          まだ英語のままです。揃えるならそちらも直してください
+ *
+ *  ⚠️ 「マインドフリー神道学アカデミアとは」の章だけ文体が硬く、
+ *     直前の「こういう人です」と落差があります。要検討 → DESIGN_REFS/CONTENT_DRAFT
+ */
 import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
 import { withBase } from '../utils/base';
 
+/** 4つの柱。
+ *  🔴 サイト全体と食い違わせないこと（2026-07-31 に3か所直しました）。
+ *     ・神社参拝＝**日帰り・定員6名**。「ツアー」と書かない
+ *     ・心を整える＝石**と松ぼっくり**。石だけの棚ではありません
+ *     ・LINE＝**不定期**配信。「週1回」と書かない（守れない約束になります）
+ *  ⚠️ 絵文字アイコンは外しました。明朝と深紫の静かなトーンから浮くためです。 */
 const approaches = [
   {
-    title: '神社参拝（神遊び）',
-    desc: '神社という清浄な場を借りて、自分のエネルギーと意識を整える実地プログラム。観光でも修行でもなく、場と調和する作法と対話を学びます。',
+    title: '神社参拝プログラム',
+    desc: '神社という場を借りて、自分のエネルギーと意識を整える一日。観光でも修行でもありません。日帰りで、定員は6名です。岡はこれを「神遊び」と呼んでいます。',
     href: '/kamiasobi/',
-    icon: '⛩️',
   },
   {
-    title: '心を整える（瞑想と本物のパワーストーン）',
-    desc: '心を整え神とつながる手助けとなる1点ものの本物のパワーストーン。瞑想時の手元の道具としてお見立てしお届けしています。',
+    title: '心を整える（自宅で使う道具）',
+    desc: '岡が手を触れ、気の流れを感じて選んだ一点ものの石。それと、大王松の松ぼっくり。神社は毎日行けないので、手元で整えるためのものをお分けしています。',
     href: '/mind/',
-    icon: '💎',
   },
   {
     title: '個人セッション（前世療法・ヒプノセラピー）',
-    desc: '顕在意識（思考）では動かない深層の悩みへ。潜在意識にアクセスし、前世や記憶の感情を解きほぐす90分間の個別ワーク。',
+    desc: '考えても動かない深いところへ。潜在意識にアクセスし、前世や記憶の感情を解きほぐす90分の個別ワークです。',
     href: '/session/',
-    icon: '🧘',
   },
   {
-    title: '読み物・言葉の配信（ブログ / 公式LINE）',
-    desc: '著書『願わず叶う神社参拝入門』や公式LINEでの14日間ステップ講座・週1回配信を通じ、日常で心を整える知恵を共有しています。',
+    title: '読み物と、公式LINE',
+    desc: '著書『願わず叶う神社参拝入門』と、ブログ。公式LINEでは14日間のステップ講座と、日常で心を整える話を不定期でお送りしています。',
     href: '/blog/',
-    icon: '📖',
   },
 ];
 
@@ -54,8 +68,8 @@ const overview = [
   <div class="wrap section stack">
     {/* ── ページタイトル ── */}
     <header class="about-hero stack" data-reveal>
-      <p class="kicker">Profile & Concept</p>
-      <h1 class="mj">岡 慶行について</h1>
+      <p class="kicker">岡慶行について</p>
+      <h1 class="mj">岡慶行について</h1>
       <p class="lede">
         庭も、神社も、やっていることは同じでした。<br />
         エネルギーを読んで、整える。40年、それだけをやってきました。
@@ -73,22 +87,21 @@ const overview = [
       />
     </figure>
 
-    {/* ── ① 岡慶行のパーソナリティ・歩み（最初に配置） ── */}
+    {/* ── ① これまで（何をしてきた人か）
+        ★ここと①bは**両方とも岡さんの紹介**です。続けて置くこと。
+          以前は間にアカデミアの理念が挟まっていて、
+          「人の話」と「組織の話」が交互になっていました（2026-07-31 整理）。 */}
     <section class="stack personality-sec" data-reveal>
-      <p class="kicker">Story</p>
-      <h2>岡 慶行の歩み</h2>
+      <p class="kicker">これまで</p>
+      <h2>土をさわる仕事と、<br />神様と話す仕事</h2>
 
       <div class="prose-card stack">
-        <h3 class="mj">「土をさわる仕事と、神様と話す仕事。同じなんです。」</h3>
+        <p class="lede">まったく別のことをしていると、よく言われます。<br />でも、同じなんです。</p>
 
         <div class="prose">
           <p>
             神道家、と名乗っています。でも長いこと、現場で泥にまみれて働く植木屋（造園家）でした。<br />
             どちらも十代の頃から師事し、40年以上にわたって土と木、そして神々の気配と向き合い続けてきました。
-          </p>
-          <p>
-            まったく別のことをしていると、よく言われます。<br />
-            でも、同じなんです。
           </p>
           <p>
             庭を見れば、その家や住む人の気の滞りが分かります。<br />
@@ -105,47 +118,75 @@ const overview = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
+    {/* ── ①b こういう人です（2026-07-31 新設）
+        🔴 ここに書いたことは**全部、岡さんのFB投稿932件が出典**です。創作していません。
+           ・出し惜しみしない … 数千字の長文を無料で投げている（実測：3,000字超の投稿が複数）
+           ・よく笑う … 「長文の読めるドMな人だけどうぞ🤣」のような前置きを付ける
+           ・人をすぐ紹介する … 斎藤一人さん14件／小田桐あさぎさん等を自分の投稿で紹介
+           ・「ツイてる」… ツイテル11件・ついてる5件・一人さん13件。
+             加えて参加者アンケートに「毎日『ツいてる』って言うようになった」がある（二重の裏づけ）
+           ・脳科学と並べて話す … 松ぼっくりの投稿（2025-12-24）が典型
+        ⚠️ 「斎藤一人さんが好き」とは**書いていません**。
+           ご本人がそう言った記録がないためです。文体と姿勢だけ寄せています。
+        ⚠️ 「情報でお金を取る奴はクソ」は本人の言葉ですが、
+           サイトに載せるには強いので言い換えています。使いたければ引用に戻せます。 */}
+    <section class="stack person-sec sec-rule" data-reveal>
+      <p class="kicker">人となり</p>
+      <h2>こういう人です</h2>
 
-    {/* ── ② マインドフリー神道学アカデミアについて（そのあとに配置） ── */}
-    <section class="stack academy-sec" data-reveal>
-      <p class="kicker">Vision & Concept</p>
-      <h2>マインドフリー神道学アカデミアとは</h2>
+      <ul class="traits">
+        <li>
+          <span class="traits__t mj">出し惜しみをしません</span>
+          <span class="note">
+            考えていることを、いつも無料で全部書いてしまいます。
+            Facebookには3,000字を超える文章がいくつも並んでいます。
+            出すと減ると思っていないからです。
+          </span>
+        </li>
+        <li>
+          <span class="traits__t mj">よく笑います</span>
+          <span class="note">
+            「長い話が好きな人だけどうぞ」と前置きをつけて、そこから延々と書きます。
+            神様の話をしていても、深刻になりません。
+          </span>
+        </li>
+        <li>
+          <span class="traits__t mj">人のことを、すぐ紹介します</span>
+          <span class="note">
+            いいと思った人がいると、自分の場所で勝手に紹介してしまいます。
+            自分だけで抱える発想がないようです。
+          </span>
+        </li>
+        <li>
+          <span class="traits__t mj">「ツイてる」と言います</span>
+          <span class="note">
+            起きたことを、まず良いほうに受け取る。
+            参加された方から「毎日『ツいてる』って言うようになった」という声が届きます。
+          </span>
+        </li>
+        <li>
+          <span class="traits__t mj">神様の話を、特別扱いしません</span>
+          <span class="note">
+            脳のしくみや、庭で見てきたことと並べて説明します。
+            分からないものを、分からないままありがたがることをしません。
+          </span>
+        </li>
+      </ul>
 
-      <div class="vision-card stack">
-        <h3 class="mj">心を整え、自分自身が『神性』として生きる世界をひらく。</h3>
-
-        <div class="prose">
-          <p>
-            「マインドフリー神道学アカデミア」が伝える「マインドフリー（Mind Free）」とは、心の恐れや執着、過去の縛りから解き放たれ、自分自身の本来の力で自由に生きていく状態のことです。
-          </p>
-          <p>
-            神社は、何かを願い請う場所ではありません。<br />
-            自分の心を澄ませ、内側にある本来の光（神性）を思い出し、整える場所です。
-          </p>
-          <p>
-            世の中には「これを持てば開運する」「ここに頼れば救われる」といった、誰かに依存させるようなスピリチュアルが溢れています。<br />
-            しかし、本当の開運とは、誰かに与えてもらうものではありません。
-          </p>
-          <p>
-            岡慶行がこのアカデミアを通して実現したいのは、<strong>他者や特別な力に依存せず、一人ひとりが自分の内側にある神性に目覚め、日常の中で自らの心を整えて運命をひらいていける「自立した仲間」を増やすこと</strong>です。
-          </p>
-        </div>
-      </div>
+      <p class="note">
+        <a href={withBase('/blog/')}>書いてきたものを読む →</a>
+      </p>
     </section>
 
-    <hr class="rule-accent" />
-
     {/* ── ③ 4つの柱（提供サービス） ── */}
-    <section class="stack approach-sec" data-reveal>
-      <p class="kicker">Our Approaches</p>
-      <h2>心を整えるための4つのアプローチ</h2>
+    <section class="stack approach-sec sec-rule" data-reveal>
+      <p class="kicker">やっていること</p>
+      <h2>やっていることは、4つです</h2>
 
       <div class="approach-grid">
         {approaches.map((app) => (
           <div class="approach-box stack">
             <div class="approach-box__head">
-              <span class="approach-box__icon">{app.icon}</span>
               <h3 class="approach-box__title mj">{app.title}</h3>
             </div>
             <p class="approach-box__desc">{app.desc}</p>
@@ -157,11 +198,42 @@ const overview = [
       </div>
     </section>
 
-    <hr class="rule-accent" />
+    {/* ── ③ 理念（2026-07-31：位置を移しました）
+        ★ここは**アカデミアの話**なので、直後の「運営者情報」とひと続きにしています。
+          以前は人物パートの真ん中に挟まっていて、話が行ったり来たりしていました。
+        🔴 文体を前後に合わせています。会社案内の言い回し
+          （「〜を実現したいのは、一人ひとりが〜」）に戻さないこと。 */}
+    <section class="stack academy-sec sec-rule" data-reveal>
+      <p class="kicker">目指していること</p>
+      <h2>「マインドフリー」とは</h2>
+
+      <div class="vision-card stack">
+        <h3 class="mj">誰かに頼らなくても、<br />自分で整えられるようになってほしい。</h3>
+
+        <div class="prose">
+          <p>
+            マインドフリーとは、恐れや執着、過去の縛りから離れて、
+            自分の力で自由に生きている状態のことです。
+          </p>
+          <p>
+            神社は、何かを願い請う場所ではありません。<br />
+            心を澄ませて、もともと自分の中にあるものを思い出す場所です。
+          </p>
+          <p>
+            世の中には「これを持てば運が良くなる」「ここに頼れば救われる」という話が溢れています。<br />
+            でも、<strong>運は誰かにもらうものではありません</strong>。
+          </p>
+          <p>
+            岡慶行がやりたいのは、<strong>誰にも頼らずに自分で整えられる人を増やすこと</strong>です。
+            それだけです。
+          </p>
+        </div>
+      </div>
+    </section>
 
     {/* ── ④ マインドフリー神道学アカデミア概要（組織・事業情報） ── */}
-    <section class="stack overview-sec" data-reveal>
-      <p class="kicker">Organization</p>
+    <section class="stack overview-sec sec-rule" data-reveal>
+      <p class="kicker">運営者情報</p>
       <h2>マインドフリー神道学アカデミア概要</h2>
 
       <div class="tablewrap">
@@ -190,6 +262,15 @@ const overview = [
 </Base>
 
 <style>
+  /* こういう人です */
+  .traits { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+  .traits li {
+    display: flex; flex-direction: column; gap: .25rem;
+    padding-left: 1rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .traits__t { font-size: 1.0625rem; color: var(--accent); }
+
   /* ヒーロー */
   .about-hero h1 {
     font-size: clamp(1.8rem, 4.2vw, 2.6rem);
@@ -279,9 +360,6 @@ const overview = [
     display: flex;
     align-items: center;
     gap: 0.75rem;
-  }
-  .approach-box__icon {
-    font-size: 1.6rem;
   }
   .approach-box__title {
     font-size: 1.15rem;

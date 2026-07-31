@@ -1,7 +1,20 @@
 ---
 import { withBase } from '../utils/base';
 
-/** LINE登録セクション。サイトの最重要CV（顧客の67%がLINE希望） */
+/** LINE登録セクション。サイトの最重要CV（顧客の67%がLINE希望）。
+ *
+ *  🔴 文言の決めごと（2026-07-31 整理）
+ *   ① **配信は「不定期」**。「週に一度」と書かない。
+ *      毎週出せる体制がまだないので、書いた時点で守れない約束になります。
+ *   ② 特典は **「岡の声でご案内する瞑想の動画」**。
+ *      「石を使った瞑想」と書かない ── 石がなくても瞑想はできます。
+ *      石が要るように読ませると、無料で始めたい人を取りこぼします。
+ *   ③ **「神遊び」を見出し・CTAで使わない。**「神社参拝」に統一。
+ *      神遊びは岡さん本人の呼び方で、本文で一度だけ紹介する言葉です
+ *      → SITE_SPEC 第4章。「ツアー」は全面禁止。
+ *   ④ **「新しい石」と書かない。** 松ぼっくりも扱うので「新しく入ったもの」。
+ *
+ *  ⚠️ ここを直したら /line/ も揃えること。2か所で違うことを言っていました。 */
 interface Props {
   /** 'section' = 大きなブロック / 'inline' = 記事末などに置く小さい版 */
   variant?: 'section' | 'inline';
@@ -16,11 +29,11 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
       <div class="stack">
         <p class="kicker">LINE Official</p>
         <h2>
-          神社と、心の整え方の話を<br />週に一度お届けします
+          神社と、心の整え方の話を<br />不定期でお届けします
         </h2>
         <p class="lede">
-          ご登録で「石を使った瞑想の動画」と「14日間ステップ講座」をプレゼント中。<br />
-          新しい石のご案内や神遊びの募集も、ここがいちばん早いです。
+          ご登録で「岡の声でご案内する瞑想の動画」と「14日間ステップ講座」をお送りしています。<br />
+          神社参拝の日程や、新しく入ったもののご案内も、ここがいちばん早いです。
         </p>
         <div class="line-btns">
           <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
@@ -30,12 +43,12 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
       </div>
 
       <div class="line-qr">
-        <div class="line-qr__frame">
+        <div class="qr">
           <img
             src={withBase('/assets/line-qr-green.png')}
             alt="LINE公式 QRコード"
-            width="150"
-            height="150"
+            width="360"
+            height="360"
           />
         </div>
         <span class="note">スマホで読取</span>
@@ -44,7 +57,7 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
   </section>
 ) : (
   <aside class="line-inline">
-    <p class="note">こういう話を、週に一度LINEでお送りしています。</p>
+    <p class="note">こういう話を、LINEでもお送りしています。</p>
     <div class="line-btns">
       <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
       <a href={withBase('/line/')} class="btn btn--ghost">詳細</a>
@@ -95,16 +108,6 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
     padding: 1.25rem;
     border-radius: 8px;
     border: 1px solid var(--rule);
-  }
-  .line-qr__frame {
-    background: #ffffff;
-    padding: 0.5rem;
-    border-radius: 4px;
-  }
-  .line-qr__frame img {
-    width: 140px;
-    height: 140px;
-    display: block;
   }
 
   .line-inline {

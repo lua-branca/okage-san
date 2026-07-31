@@ -157,3 +157,45 @@ th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); fo
   .js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }
   .kenburns img { animation: none; }
 }
+
+
+/* ============================================================
+   LINEのQRコード（共通）
+   🔴 2026-07-31：2か所（LineCta と /line/）で別々に書いていて、
+      LineCta 側は width:140px / height:140px の固定でした。
+      枠の中身は124pxしかないため、
+      グローバルの `img { max-width:100% }` で**幅だけ縮み、高さは140pxのまま**。
+      その結果、正方形（360×360）のQRが縦に伸びて細く見えていました。
+      ★高さを固定しないこと。幅だけ決めて、比率は aspect-ratio で守ります。
+   ============================================================ */
+.qr {
+  background: #fff;
+  padding: .6rem;
+  border-radius: 6px;
+  /* 枠の外側の大きさはここだけで決める。使う側は --qr-size を変える */
+  width: var(--qr-size, 150px);
+}
+.qr img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;   /* QRは必ず正方形。潰さない */
+  display: block;
+}
+
+
+/* ============================================================
+   セクションの区切り線
+   🔴 2026-07-31：<hr class="rule-accent"> をセクションの外に置くのをやめました。
+
+   外に置くと、セクションのブロックだけを動かしたときに
+   区切り線が元の位置に取り残されます（実際に /about/ で起きました）。
+   ページによって線が「あったりなかったり」していたのも同じ理由です。
+
+   ★これからは、線を引きたいセクション自身に .sec-rule を付けてください。
+     線がブロックに付いてくるので、順番を入れ替えても崩れません。
+
+   ⚠️ ページの**最初のセクション**には付けないこと（上に何もないのに線が出ます）。
+   ============================================================ */
+.sec-rule {
+  border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+}
