@@ -1,0 +1,19 @@
+# 申込フォーム用 保護設定（2026-08-03）
+# ログ本体は公開ディレクトリの外（../../mfs_logs/）に出しているが、
+# 万一ここに .log や設定ファイルが置かれても外から読めないようにする保険。
+
+<FilesMatch "\.(log|ini|json|md|sample\.php)$">
+    Require all denied
+</FilesMatch>
+
+# config.php を直接叩かれても中身を出さない
+<Files "config.php">
+    Require all denied
+</Files>
+
+<Files "config.sample.php">
+    Require all denied
+</Files>
+
+# ディレクトリ一覧を出さない
+Options -Indexes

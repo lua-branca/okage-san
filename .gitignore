@@ -4,3 +4,8 @@ dist/
 .DS_Store
 *.log
 .playwright-mcp/
+
+# 🔴 本番の接続情報。このリポジトリは PUBLIC なので絶対にコミットしないこと。
+#    GAS_SECRET_TOKEN が漏れると、第三者が申込スプレッドシートに書き込めます。
+#    項目の見本は public/form/config.sample.php にあります（そちらはコミット対象）。
+public/form/config.php

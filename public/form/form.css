@@ -1,0 +1,330 @@
+/* ============================================================
+   マインドフリー フォーム専用スタイル
+   Astroサイト（okage-san.com）のデザインシステムと完全同期
+   ============================================================ */
+
+/* ── トークン ── */
+:root {
+  --p900: #241C2E;
+  --p700: #3A2F4A;
+  --p500: #5A4A6E;
+  --p300: #9A8CAA;
+  --p200: #BCAECC;
+  --p100: #E4DEEA;
+  --p050: #F2EFF4;
+
+  --gold:  #D0A040;
+  --asagi: #90D0D0;
+  --gold-dark: #8A6620;
+
+  --cream: #F7F5F0;
+  --ink:   #2B2926;
+  --white: #FFFFFF;
+
+  --moss:       #4A5A44;
+  --moss-light: #8FA085;
+  --verm:       #9E3B24;
+  --verm-light: #D9705A;
+
+  --mincho: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", YuMincho, serif;
+  --gothic: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fs-body: 1rem;
+  --fs-note: 0.875rem;
+  --fs-label: 0.8125rem;
+
+  --col: 44rem; /* フォームの幅 */
+  --radius: 3px;
+}
+
+/* リセット & 基本 */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--gothic);
+  font-size: var(--fs-body);
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--p900);
+  color: #EDEAE4;
+}
+
+/* ヘッダー・ロゴ */
+.site-header {
+  border-bottom: 1px solid rgba(208, 160, 64, 0.25);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background-color: rgba(36, 28, 46, 0.95);
+}
+.site-header a {
+  color: var(--gold);
+  font-family: var(--mincho);
+  font-size: 1.25rem;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+}
+.site-header-sub {
+  font-size: 0.75rem;
+  color: var(--p200);
+  letter-spacing: 0.15em;
+  margin-top: 0.2rem;
+}
+
+/* コンテナ */
+.form-container {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* タイトルエリア */
+.form-title-area {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.kicker {
+  font-size: var(--fs-label);
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.form-title {
+  font-family: var(--mincho);
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.85rem);
+  color: var(--white);
+  font-weight: 400;
+  margin: 0 0 1rem;
+  letter-spacing: 0.05em;
+}
+.form-lede {
+  font-size: 0.9rem;
+  color: var(--p200);
+  line-height: 1.8;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+/* ステップインジケーター */
+.step-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #3E3550;
+}
+.step-item {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--p300);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.step-item.is-active {
+  color: var(--gold);
+  font-weight: bold;
+}
+.step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+.step-item.is-active .step-num {
+  background-color: var(--gold);
+  color: var(--p900);
+  border-color: var(--gold);
+}
+
+/* フォームセクション */
+.form-box {
+  background-color: #2E2539;
+  border: 1px solid #3E3550;
+  border-radius: var(--radius);
+  padding: 2rem 2rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 600px) {
+  .form-box { padding: 1.5rem 1.25rem; }
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
+}
+.badge-req {
+  background-color: var(--verm-light);
+  color: var(--white);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  letter-spacing: 0.05em;
+}
+.badge-opt {
+  background-color: var(--p500);
+  color: var(--p200);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.form-help {
+  font-size: 0.8125rem;
+  color: var(--p200);
+  margin-top: 0.35rem;
+  line-height: 1.6;
+}
+
+/* 入力コントロール */
+.form-control, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  background-color: #1F1728;
+  border: 1px solid #4A3E5C;
+  border-radius: var(--radius);
+  color: var(--white);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-control:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(208, 160, 64, 0.15);
+}
+.form-control::placeholder, .form-textarea::placeholder {
+  color: var(--p500);
+}
+.form-select option {
+  background-color: var(--p900);
+  color: var(--white);
+}
+
+/* エラーメッセージ */
+.form-error {
+  color: var(--verm-light);
+  font-size: 0.8125rem;
+  margin-top: 0.4rem;
+}
+.input-error {
+  border-color: var(--verm-light) !important;
+}
+
+/* ボタンエリア */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.8rem 2.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  letter-spacing: 0.08em;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--p900);
+  border-color: var(--gold);
+  font-weight: 600;
+}
+.btn-gold:hover {
+  background: #E0B45A;
+  border-color: #E0B45A;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--asagi);
+  border-color: var(--asagi);
+}
+.btn-ghost:hover {
+  background: rgba(144, 208, 208, 0.12);
+}
+
+/* 確認テーブル */
+.confirm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.confirm-table th, .confirm-table td {
+  padding: 1rem 0.8rem;
+  border-bottom: 1px solid #3E3550;
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+.confirm-table th {
+  width: 32%;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+.confirm-table td {
+  color: var(--white);
+}
+
+/* 完了画面カード */
+.complete-card {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+}
+.complete-icon {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.bank-info-box {
+  background-color: #1F1728;
+  border: 1px dashed var(--gold);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  text-align: left;
+  margin: 2rem 0;
+}
+.bank-info-title {
+  font-size: 0.875rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid #3E3550;
+  padding-bottom: 0.4rem;
+}
+
+/* フッター */
+.site-footer {
+  border-top: 1px solid #3E3550;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--p300);
+}
