@@ -20,6 +20,7 @@ import PlaceGrid from '../../components/PlaceGrid.astro';
 import LineCta from '../../components/LineCta.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
+import { themes } from '../../data/tourThemes';
 
 const all = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
   .sort((a, b) => +a.data.date - +b.data.date);
@@ -27,31 +28,12 @@ const all = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !
 const upcoming = all.filter((t) => t.data.state !== '終了');
 const past = all.filter((t) => t.data.state === '終了').reverse();
 
-/** 🔴 テーマ（願い）× 行き先の対応。
- *  過去回を日付順に並べても、読み手は「自分の願いに合うのはどれ？」が分かりません。
- *  だから日付ではなく**ニーズ別**に見せます（福田判断 2026-07-30）。
+/** ★ここが過去の記録の入口です（福田判断 2026-07-31）。
+ *  以前はページ末尾に「その日のこと」という日付順の一覧を置いていましたが、やめました。
+ *  読み手は日付ではなく**願い**で探すためです。
  *
- *  ★ここが過去の記録の入口です（福田判断 2026-07-31）。
- *    以前はページ末尾に「その日のこと」という日付順の一覧を置いていましたが、
- *    やめました。読み手は日付ではなく**願い**で探すので、
- *    「仕事・決断なら香取・鹿島 → その回の記録へ」という流れのほうが自然です。
- *
- *  ⚠️ 3件は福田さん確認済み。それ以外は岡さんに確認してから足すこと。
- *  🔴 record には tours のファイル名（拡張子なし）を書きます。
- *     存在しないIDを書いてもリンクは出ません（下の pastIds で弾いています）。 */
-const themes = [
-  { need: '恋愛・ご縁', area: '日光', note: '男体山・女峰山と、二社一寺。結びの神さまが並ぶ土地です' },
-  {
-    need: '仕事・決断', area: '香取・鹿島',
-    note: '始まりの神と、道を開く神。区切りをつけたいときに',
-    record: '2026-02-11-kenkoku',
-    recordLabel: '建国記念の日の回を見る',
-  },
-  { need: '金運', area: '山梨・富士吉田', note: '富士の北麓。土地そのものが持つ豊かさに触れます' },
-  // 🔴 以下は要確認（岡さんに聞いてから公開）
-  // { need: '心を整える', area: '寒川・箱根', note: '' },
-  // { need: '原点に還る', area: '伊勢・三輪山', note: '' },
-];
+ *  🔴 データは src/data/tourThemes.ts が正本です（2026-08-04 に切り出し）。
+ *     トップページでも同じものを使うので、**このファイルでは書き換えないこと**。 */
 
 /** 🔴 リンク切れよけ。記録ページが無い（または draft の）回には
  *     リンクを出しません。themes に書いたIDを消し忘れても壊れません。 */
@@ -603,7 +585,7 @@ const places = [
   .hero__txt h1 { text-shadow: 0 2px 18px rgba(0, 0, 0, .55); }
 
   /* スマホは横幅が狭いので、高さを詰めて横位置の写真の左右を残します */
-  @media (max-width: 700px) {
+  @media (max-width: 860px) {
     .hero__f img { height: clamp(260px, 40vh, 380px); }
   }
 
@@ -611,7 +593,7 @@ const places = [
   .diff { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
   .diff li { display: flex; flex-direction: column; gap: .25rem; }
   .diff__t {
-    font-size: 1.0625rem;
+    font-size: var(--fs-lg);
     color: var(--accent);
     padding-bottom: .1rem;
   }
@@ -623,7 +605,7 @@ const places = [
     padding-left: 1rem;
     border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
   }
-  .chg__t { font-size: 1.0625rem; color: var(--fg); }
+  .chg__t { font-size: var(--fs-lg); color: var(--fg); }
 
   /* 願い × 行き先 */
   .th { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.1rem; }
@@ -639,16 +621,16 @@ const places = [
   .th__n {
     grid-area: need;
     align-self: start;
-    font-size: 1.0625rem;
+    font-size: var(--fs-lg);
     color: var(--accent);
     line-height: 1.6;
   }
-  .th__a { grid-area: area; color: var(--fg); font-size: 1.0625rem; }
+  .th__a { grid-area: area; color: var(--fg); font-size: var(--fs-lg); }
   .th__i .note { grid-area: note; }
   /* 記録へのリンク。行を変えて少し離す（説明文と地続きに見えないように） */
   .th__r { display: inline-block; margin-top: .35rem; }
 
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .th__i { grid-template-columns: 1fr; grid-template-areas: 'need' 'area' 'note'; }
   }
 

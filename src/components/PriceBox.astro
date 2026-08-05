@@ -55,7 +55,7 @@ const { price, unit, includes = [], excludes = [], payment, note } = Astro.props
 
   .price__v {
     font-family: var(--mincho);
-    font-size: 1.7rem;
+    font-size: var(--fs-price);
     color: var(--fg);
     line-height: 1.3;
   }
@@ -74,7 +74,7 @@ const { price, unit, includes = [], excludes = [], payment, note } = Astro.props
 
   .price__pay { padding-top: .9rem; border-top: 1px solid var(--rule); }
 
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .price__g { grid-template-columns: 1fr; }
   }
 </style>

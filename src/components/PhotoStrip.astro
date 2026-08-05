@@ -55,7 +55,21 @@ const { places, note } = Astro.props;
 </div>
 
 <style>
-  .ps { display: flex; flex-direction: column; gap: .9rem; }
+  /* 🔴 2026-08-04：写真の帯だけ地の色を変えました（福田要望）。
+        ★前後は「読むセクション」で、ここだけ「見るセクション」です。
+          地の色が同じだと、本文の途中に写真が挟まっているようにしか見えず、
+          横に送れることにも気づかれませんでした。
+        ⚠️ フッター（#1B1523）と同じ**暗くする**方向でそろえています。
+           明るくすると、写真より地のほうが目立ちます。
+        ⚠️ 上下の線は入れていません。地の色が変わるだけで区切りは足ります。
+           線も足すと、区切りの主張が二重になります。 */
+  .ps {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    background: #1F1829;
+    padding-block: 2.5rem;
+  }
   .ps__note { margin: 0 auto; }
 
   .ps__l {
@@ -95,7 +109,7 @@ const { places, note } = Astro.props;
 
   .ps__n {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: .45rem;
-    font-size: 1rem; color: var(--accent); line-height: 1.5;
+    font-size: var(--fs-body); color: var(--accent); line-height: 1.5;
   }
   .ps__a {
     font-family: var(--gothic);

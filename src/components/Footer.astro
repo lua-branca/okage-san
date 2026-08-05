@@ -16,7 +16,7 @@ import { withBase } from '../utils/base';
  *     住所・メールアドレス・コピーライトは残します。
  *
  *  ★階層の考え方
- *     読み物と著書は「岡さんが書いたもの」なので、岡慶行についての下。
+ *     神道のはなしと著書は「岡さんが書いたもの」なので、岡慶行についての下。
  *     プライベートプランと参加した方の声は神社参拝の下。 */
 const year = new Date().getFullYear();
 
@@ -36,7 +36,7 @@ const groups = [
     href: withBase('/about/'),
     children: [
       { href: withBase('/book/'), label: '著書' },
-      { href: withBase('/blog/'), label: '読み物' },
+      { href: withBase('/blog/'), label: '神道のはなし' },
     ],
   },
 ];
@@ -105,13 +105,54 @@ const sub = [
   </div>
 </footer>
 
-<style>
+{/* 🔴 地紋のURLは define:vars で渡します。
+       CSSに "/okage-san/..." と直書きすると、base（astro.config.mjs）を
+       変えたときにフッターだけ柄が消えます。**必ず withBase を通すこと**。 */}
+<style define:vars={{ asanohaUrl: `url("${withBase('/assets/asanoha.svg')}")` }}>
   /* 佐助稲荷（sasukeinari.jp）の組み方を参考にしています（2026-07-31）。
      取ったもの：**左右2カラム**と**明朝で通すこと**。
      取らなかったもの：**文字の小ささ**（あちらは12〜13px）。
        このサイトの読者は50代以上・スマホ中心で、
        SITE_SPEC にも「日本語の最小は14px」があります。読みやすさを優先しました。 */
-  .ft { padding-block: 3rem 2.5rem; margin-top: var(--gap-section); }
+  /* 🔴 2026-08-04：フッターだけ地の色を一段落とします（福田判断）。
+        本文と同じ深紫（--p900）だと、どこからがフッターか分からず
+        ページがだらっと終わっていました。★暗くすることで「帯」になり、
+        ページの終わりがはっきりします。
+        ⚠️ 明るくする（--bg-2）方向は採りませんでした。フッターが浮いて、
+           いちばん目立たせたくない場所がいちばん明るくなるためです。
+        ⚠️ 上の細い金線は「ここで切り替わる」という合図。太くしないこと。 */
+  /* 🔴 margin-top を外しました（福田指摘 2026-08-04）。
+        以前は「直前のブロックの下余白（5.5rem）＋ ここの margin（5.5rem）
+        ＋ ここの padding（3rem）」で **14rem** も空いていました。
+        ★フッター自身が padding-top を持っているので、margin は要りません。 */
+  .ft {
+    padding-block: 3rem 2.5rem;
+    background: #1B1523;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* 🔴 麻の葉の地紋（2026-08-04）。**フッターの帯だけ**に敷いています。
+        ★全面に敷くのは見送りました（福田さんと相談のうえ）。理由：
+          このサイトは神社の写真が主役で、規則的な柄が全面にあると写真の周りが
+          常にザワつきます。読者の多くは50代以上なので、長文の背面に柄が入ると
+          目も滑ります。**面ではなく点で使う**、が結論です。
+        🔴 濃さを変えたいときは opacity だけ触ってください（.03〜.08 の範囲）。
+           .08 を超えると柄が主張して、屋号より目立ちます。
+        ⚠️ 柄は public/assets/asanoha.svg。線の色は浅葱（--asagi と同値）で
+           焼き込んであります。色を変えるならSVGを差し替えてください。
+        ⚠️ pointer-events: none は必須。これが無いとフッターのリンクが押せません。 */
+  .ft::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--asanohaUrl);
+    background-repeat: repeat;
+    opacity: .07;
+  }
   .ft__in { max-width: 64rem; display: flex; flex-direction: column; gap: 2.25rem; }
 
   /* ── 左右2カラム ── */
@@ -126,7 +167,7 @@ const sub = [
         「マインドフリー神道学アカデミア」が2行に折り返します（2026-07-31）。 */
   .ft__brand { display: flex; flex-direction: column; align-items: flex-start; gap: .8rem; }
   .ft__name {
-    font-size: 1.0625rem; letter-spacing: .04em; color: var(--fg); line-height: 1.5;
+    font-size: var(--fs-lg); letter-spacing: .04em; color: var(--fg); line-height: 1.5;
     /* 折り返させない。左カラムの幅はこの一行が入る前提で決めています */
     white-space: nowrap;
   }
@@ -151,7 +192,7 @@ const sub = [
   .ft__g { display: flex; flex-direction: column; gap: .5rem; }
   .ft__g-t {
     font-family: var(--mincho);
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--fg);
     border-bottom: 0;
     line-height: 1.5;
@@ -221,7 +262,7 @@ const sub = [
   }
   @media (max-width: 640px) {
     .ft__nav { column-count: 2; column-gap: 1.75rem; }
-    .ft__name { font-size: 1rem; }
+    .ft__name { font-size: var(--fs-body); }
     .ft__sub { gap: .5rem 1.1rem; }
   }
 </style>

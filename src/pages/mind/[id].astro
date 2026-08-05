@@ -212,7 +212,7 @@ const faq = [
 </Base>
 
 <style>
-  .crumb { font-size: .85rem; color: var(--fg-2); }
+  .crumb { font-size: var(--fs-note); color: var(--fg-2); }
   .crumb-list {
     display: flex; flex-wrap: wrap; align-items: center; gap: .4rem;
     list-style: none; padding: 0; margin: 0;
@@ -225,7 +225,7 @@ const faq = [
 
   .price {
     font-family: var(--mincho);
-    font-size: 1.5rem;
+    font-size: var(--fs-price);
     color: var(--fg);
     margin-top: .4rem;
   }
@@ -277,7 +277,7 @@ const faq = [
   .pager a { color: var(--accent); border-bottom: 0; }
   .back { font-size: var(--fs-note); }
 
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .subs { grid-template-columns: 1fr; }
   }
 </style>

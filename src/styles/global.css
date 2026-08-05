@@ -42,12 +42,84 @@ a:hover { border-bottom-color: currentColor; }
 a:focus-visible { outline: 2px solid var(--link, var(--p700)); outline-offset: 3px; }
 
 /* ── 部品 ── */
+/* 🔴 2026-08-04：ヘッダーを固定（sticky）にしたので、
+      #line のようなページ内リンクで飛んだとき、飛び先がヘッダーの下に隠れます。
+      ★scroll-margin-top で「ヘッダーのぶんだけ手前で止める」ようにします。
+      ⚠️ 6rem はヘッダーの高さ（約85px）＋少しの余白。
+         ヘッダーのpaddingやロゴの大きさを変えたら、ここも合わせること。 */
+:where([id]) { scroll-margin-top: 6rem; }
+
+/* 🔴 幅は3段階。使い分けは tokens.css の「レイアウト」を読んでください。
+      .wrap を変えると全ページに効きます。広げたいのは**そのセクションだけ**のはずなので、
+      .wrap に --wide / --mid を足す形にしています（既存の .wrap は挙動が変わりません）。 */
 .wrap { max-width: var(--col); margin-inline: auto; padding-inline: 1.5rem; }
-.stack { display: flex; flex-direction: column; gap: 1.1rem; }
+.wrap--mid  { max-width: var(--col-mid); }
+.wrap--wide { max-width: var(--col-wide); }
+
+/* 広い枠の中で、文章だけ読む幅に戻したいとき
+   （例：写真グリッドの上に置く見出し＋リード文） */
+.wrap--wide > .lead-col,
+.wrap--mid  > .lead-col { max-width: var(--col); }
+.stack { display: flex; flex-direction: column; gap: var(--sp-para); }
+
+/* ============================================================
+   見出しまわりの間（2026-08-04 統一）
+   考え方と数字の意味は tokens.css の「見出しまわりの間」を読んでください。
+
+   🔴 ここは**全ページに自動で効きます**。ページ側で書き足す必要はありません。
+      それまでは .stack を付けたブロックと付けていないブロックで
+      隙間が「1.1rem」と「0」に割れていました（福田指摘 2026-08-04）。
+
+   ⚠️ .stack は flex + gap なので、**gap のぶんを差し引いた値**をmarginに入れます。
+      （flexでは gap と margin の両方が足し算されるため）
+      素の値を書くと .stack の中だけ隙間が二重になります。
+   ============================================================ */
+
+/* ── まとまりの中：ラベル → 見出し ── */
+.kicker + :is(h1, h2, h3) { margin-top: var(--sp-kicker); }
+.stack > .kicker + :is(h1, h2, h3) { margin-top: calc(var(--sp-kicker) - var(--sp-para)); }
+
+/* ── まとまりの中：見出し → リード文・注記 ── */
+:is(h1, h2, h3) + :is(.lede, .note, p) { margin-top: var(--sp-head); }
+.stack > :is(h1, h2, h3) + :is(.lede, .note, p) { margin-top: calc(var(--sp-head) - var(--sp-para)); }
+
+/* ── 見出しのまとまり → 中身 ──
+   🔴 .sec-head で「ここまでが見出しのまとまり」と明示してください。
+      中身（カード・写真・表）との間だけ、広く空きます。
+   ⚠️ 中に入れるのは **ラベル・見出し・リード文まで**。
+      本文の段落を入れると、そこまで見出し扱いになって間が壊れます。 */
+.sec-head { margin-bottom: var(--sp-block); }
+.stack > .sec-head { margin-bottom: calc(var(--sp-block) - var(--sp-para)); }
+
+/* ── セクションどうしの間 ──
+   🔴 2026-08-04 追加。トップ以外のほとんどのページが
+
+       <div class="wrap section stack">
+         <section>…</section>
+         <section>…</section>   ← ここが .stack の gap（1.1rem）しか空いていなかった
+
+   という作りで、**セクションの切れ目が段落の切れ目と同じ間隔**でした。
+   そのため話が変わったことが目で分からず、詰まって見えていました（福田指摘）。
+   ★トップだけは <section class="section"> を並べていたので正しく空いていました。
+     この差が「トップ以外が詰まって見える」の正体です。
+
+   ⚠️ .stack の gap のぶんを引いています（flexでは gap と margin が足し算になるため）。
+   ⚠️ 最初のセクションには効きません（+ セレクタなので2つ目以降だけ）。正しい挙動です。 */
+.stack > section + section,
+.stack > header + section { margin-top: calc(var(--gap-section) - var(--sp-para)); }
 .section { padding-block: var(--gap-section); }
 .section--tight { padding-block: 2rem; }
 
-.lede { color: var(--fg-2, var(--ink-2)); font-size: .9375rem; }
+/* 🔴 セクションが隣り合うと余白が**二重**になっていました（福田指摘 2026-08-04）。
+      前のセクションの下padding（6.5rem）＋ 次のセクションの上padding（6.5rem）＝ 13rem。
+      トップだけ <section class="section"> を並べる作りなので、ここだけ倍でした。
+      ★セカンドページ（.stack > section）は 1回ぶんだったので、**ページ間で不揃い**でもありました。
+      → 隣り合うときは上を消して、どこも「1回ぶん」に揃えます。
+   ⚠️ 単独で使う <div class="wrap section stack">（セカンドページの外枠）には効きません。
+      隣に .section が無いためです。あちらはページの上下余白なので、そのままで正しい。 */
+.section + .section { padding-top: 0; }
+
+.lede { color: var(--fg-2, var(--ink-2)); font-size: var(--fs-sm); }
 .note { color: var(--fg-2, var(--ink-2)); font-size: var(--fs-note); line-height: 1.85; }
 
 /* ラベル・小見出し（金） */
@@ -57,6 +129,12 @@ a:focus-visible { outline: 2px solid var(--link, var(--p700)); outline-offset: 3
   color: var(--accent, var(--gold-dark));
   line-height: 1.7;
 }
+
+/* 🔴 .kicker--rule（ラベルの前に短い金線）は**廃止しました**（2026-08-04）。
+      同じ日にセクションの区切り線を全廃したので、線だけ残ると方針がちぐはぐになります。
+      またトップの一部にしか付けていなかったため、
+      「線があったりなかったり」を自分で作ってしまっていました。
+      ★ラベルは色（金）と字間だけで十分に目立ちます。線は足しません。 */
 
 /* 罫線 */
 .rule { border: 0; border-top: 1px solid var(--rule, var(--p100)); margin: 0; }
@@ -68,7 +146,7 @@ a:focus-visible { outline: 2px solid var(--link, var(--p700)); outline-offset: 3
   align-items: center;
   min-height: 48px;
   padding: .72rem 1.25rem;
-  font-size: .9375rem;
+  font-size: var(--fs-sm);
   border-radius: var(--radius);
   border: 1px solid transparent;
   cursor: pointer;
@@ -95,7 +173,7 @@ a:focus-visible { outline: 2px solid var(--link, var(--p700)); outline-offset: 3
 
 /* 表 */
 .tablewrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: .9375rem; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
 th, td { text-align: left; padding: .7rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
 th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); font-weight: 400; }
 .tabnum { font-variant-numeric: tabular-nums; }
@@ -129,10 +207,43 @@ th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); fo
   opacity: 1;
   transform: none;
 }
-/* 連続する要素を少しずつ遅らせる（0.06秒刻み・最大4段） */
+/* 連続する要素を少しずつ遅らせる（0.06秒刻み） */
 [data-reveal-delay="1"] { transition-delay: .06s; }
 [data-reveal-delay="2"] { transition-delay: .12s; }
 [data-reveal-delay="3"] { transition-delay: .18s; }
+[data-reveal-delay="4"] { transition-delay: .24s; }
+[data-reveal-delay="5"] { transition-delay: .30s; }
+
+/* ★カード類を「1枚ずつずれて」出す（2026-08-04）
+   親に data-reveal-stagger を付けると、直下の子が順に出ます。
+   🔴 1枚ずつ data-reveal-delay を書かなくて済むようにするためのものです。
+      手で番号を振ると、件数が変わったとき必ず振り直し漏れが出ます。
+   ⚠️ 8枚までにしています。これ以上は最後の1枚が出るまで待たされて遅く感じます。 */
+.js-reveal [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .7s cubic-bezier(.22,.61,.36,1),
+              transform .7s cubic-bezier(.22,.61,.36,1);
+}
+.js-reveal [data-reveal-stagger].is-in > * { opacity: 1; transform: none; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(1) { transition-delay: 0s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(2) { transition-delay: .07s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(3) { transition-delay: .14s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(4) { transition-delay: .21s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(5) { transition-delay: .28s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(6) { transition-delay: .35s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(7) { transition-delay: .42s; }
+.js-reveal [data-reveal-stagger].is-in > *:nth-child(n+8) { transition-delay: .49s; }
+
+/* ★写真が「下から開く」（2026-08-04）
+   参考：中村製箱・MOHEIM。写真そのものは動かさず、**覆いが上がる**だけです。
+   🔴 ケンバーンズ（寄る）とは併用しないこと。2つ重なるとうるさくなります。
+   ⚠️ 中の <img> ではなく、囲みの figure 等に付けてください。 */
+.js-reveal [data-reveal-mask] {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.1s cubic-bezier(.22,.61,.36,1);
+}
+.js-reveal [data-reveal-mask].is-in { clip-path: inset(0 0 0 0); }
 
 /* ② ヒーローの写真：ゆっくり寄る（8秒。気づかないくらい） */
 .kenburns {
@@ -155,6 +266,11 @@ th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); fo
 /* 🔴 動きを減らす設定の人には全部止める */
 @media (prefers-reduced-motion: reduce) {
   .js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .js-reveal [data-reveal-stagger] > *,
+  .js-reveal [data-reveal-stagger].is-in > * {
+    opacity: 1; transform: none; transition: none; transition-delay: 0s;
+  }
+  .js-reveal [data-reveal-mask] { clip-path: none; transition: none; }
   .kenburns img { animation: none; }
 }
 
@@ -185,6 +301,25 @@ th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); fo
 
 /* ============================================================
    セクションの区切り線
+   ★★ 2026-08-04：**原則、使いません**（福田判断）★★
+
+   全31か所から外しました。理由：
+
+   ・同じサイトの中で /session/ は全セクションに線、/private/ は1本も無い、
+     という真逆の状態でした。ルールが無かったため、見る人が意味を読み取れません。
+   ・同じ日にセクション間の余白を 1.1rem → 5rem に広げました。
+     線は「詰まっていて切れ目が分からない」のを補うものだったので、
+     余白で解決した今、**線と余白の二重の主張**になっていました。
+   ・参考にしている中村製箱も、罫線ではなく面の切り替えで区切っています。
+
+   🔴 使ってよいのは「区切り」ではなく**意味**があるときだけ。
+      今サイトに残っている線は3本だけです：
+        ・ヘッダー下の金線 → 固定バーと本文の境目（Header.astro）
+        ・フッター上の金線 → ページの終わり（Footer.astro）
+        ・/mind/ の .free の囲み → 「無料」を特別扱いする枠
+      増やすときは、この3つと同じ強さの理由があるか考えてください。
+
+   ── 以下、当時の記録（クラス自体は残してあります）──
    🔴 2026-07-31：<hr class="rule-accent"> をセクションの外に置くのをやめました。
 
    外に置くと、セクションのブロックだけを動かしたときに
@@ -198,4 +333,15 @@ th { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); fo
    ============================================================ */
 .sec-rule {
   border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+
+  /* 🔴 2026-08-04：線と中身のあいだの間（福田指摘）。
+        ★これが無いと **線がラベルにくっつきます**（/about/ /session/ で発生）。
+          原因は「margin は線の外側に付く」こと。セクション間を margin で空けても、
+          線の**内側**は0のままでした。内側は padding でしか空きません。
+        ⚠️ .section（padding-block: --gap-section）と同じ値なので、
+           両方付いていても二重にはなりません（同じ値で上書きされるだけ）。
+           ★そのため、この定義は必ず .section より**後ろ**に置いてください。
+        ⚠️ .section--tight（2rem）と併用すると 5rem に上書きされます。
+           今は併用箇所がありませんが、使うときは注意。 */
+  padding-top: var(--gap-section);
 }

@@ -27,7 +27,7 @@ const { title, tone = 'info' } = Astro.props;
     border-left: 2px solid var(--rule);
     background: color-mix(in srgb, var(--white) 4%, transparent);
   }
-  .nb__t { font-size: 1rem; color: var(--fg); }
+  .nb__t { font-size: var(--fs-body); color: var(--fg); }
   .nb__b :global(p + p) { margin-top: .6rem; }
   .nb__b :global(ul) { margin-top: .5rem; line-height: 1.9; }
 

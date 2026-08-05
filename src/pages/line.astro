@@ -85,7 +85,7 @@ const contents = [
     </header>
 
     {/* ── 登録特典 ── */}
-    <section class="stack benefits-sec sec-rule" data-reveal>
+    <section class="stack benefits-sec" data-reveal>
       <p class="kicker">ご登録の特典</p>
       <h2>ご登録いただいた方への2大特典</h2>
 
@@ -104,7 +104,7 @@ const contents = [
     </section>
 
     {/* ── LINEで届くこと ── */}
-    <section class="stack contents-sec sec-rule" data-reveal>
+    <section class="stack contents-sec" data-reveal>
       <p class="kicker">お届けしていること</p>
       <h2>LINEでお届けしていること</h2>
 
@@ -122,7 +122,7 @@ const contents = [
     </section>
 
     {/* ── 登録CTA ── */}
-    <section class="stack text-center cta-sec sec-rule" data-reveal>
+    <section class="stack text-center cta-sec" data-reveal>
       <h2 class="mj">あなたとLINEでお会いできることを<br />楽しみにしています。</h2>
       <p class="lede">登録後、すぐに特典動画と14日間講座の第1回目が届きます。</p>
       <div class="cta-box">
@@ -143,7 +143,7 @@ const contents = [
     align-items: center;
     margin-block: 1rem 2rem;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     .line-hero {
       grid-template-columns: 1fr;
       justify-items: center;
@@ -174,7 +174,7 @@ const contents = [
 
   .btn--lg {
     padding: 1rem 2.25rem;
-    font-size: 1.05rem;
+    font-size: var(--fs-lg);
   }
 
   .line-hero__qr-box {
@@ -222,14 +222,14 @@ const contents = [
   }
 
   .benefit-card__title {
-    font-size: 1.25rem;
+    font-size: var(--fs-h2);
     color: var(--fg);
     margin: 0;
     line-height: 1.4;
   }
 
   .benefit-card__desc {
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     color: var(--fg-2);
     line-height: 1.75;
     margin: 0;
@@ -262,13 +262,13 @@ const contents = [
   }
 
   .content-card__title {
-    font-size: 1.1rem;
+    font-size: var(--fs-xl);
     color: var(--fg);
     margin: 0;
   }
 
   .content-card__desc {
-    font-size: 0.925rem;
+    font-size: var(--fs-sm);
     color: var(--fg-2);
     line-height: 1.7;
     margin: 0;

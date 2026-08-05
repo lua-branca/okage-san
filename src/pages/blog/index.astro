@@ -13,15 +13,15 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
 ---
 
 <Base
-  title="読み物"
-  description="心とエネルギー、お金と仕事、神社と参拝。岡慶行が書いてきた気づきのメッセージを読み物にまとめています。"
+  title="神道のはなし"
+  description="心とエネルギー、お金と仕事、神社と参拝。岡慶行が書いてきた気づきのメッセージを記事にまとめています。"
   surface="dark"
 >
   <div class="wrap section stack">
     {/* ── ヘッダー ── */}
     <header class="blog-header stack" data-reveal>
-      <p class="kicker">読み物</p>
-      <h1>読み物</h1>
+      <p class="kicker">神道のはなし</p>
+      <h1>神道のはなし</h1>
       <p class="lede">
         Facebookに投稿してきたメッセージを、<br />
         読みやすいテーマ別記事にまとめています。
@@ -45,7 +45,7 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
     </header>
 
     {/* ── 記事一覧 ── */}
-    <section class="stack sec-rule" data-reveal>
+    <section class="stack" data-reveal>
       {posts.length === 0 ? (
         <p class="note">まだ記事がありません。</p>
       ) : (
@@ -195,7 +195,7 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
     color: var(--fg-2);
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: var(--fs-note);
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;

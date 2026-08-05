@@ -193,7 +193,7 @@ const sections = [
       </div>
 
       <div>
-        <p class="sg-tag">PostCard — 読み物</p>
+        <p class="sg-tag">PostCard — 神道のはなし</p>
         <PostCard
           slug="what-is-luck"
           title="「運がいい」の正体"
@@ -456,7 +456,7 @@ const sections = [
   /* 部品の名札 */
   .sg-tag {
     font-family: var(--mono);
-    font-size: .75rem;
+    font-size: var(--fs-label);
     letter-spacing: .04em;
     color: var(--accent);
     margin-bottom: .75rem;
@@ -470,7 +470,7 @@ const sections = [
 
   code {
     font-family: var(--mono);
-    font-size: .8125rem;
+    font-size: var(--fs-label);
     color: var(--fg-2);
   }
 
@@ -499,7 +499,7 @@ const sections = [
     padding-top: 1.4rem; border-top: 1px solid var(--rule); line-height: 1.6;
   }
   .body :global(h3) {
-    font-family: var(--mincho); font-weight: 500; font-size: 1.0625rem;
+    font-family: var(--mincho); font-weight: 500; font-size: var(--fs-lg);
     color: var(--fg); margin-block: 2.5rem 1rem;
   }
   .body :global(ul) { margin-block: 1.6rem; }
@@ -516,7 +516,7 @@ const sections = [
     border-left: 2px solid var(--accent);
     background: color-mix(in srgb, var(--white) 4%, transparent);
   }
-  .body :global(.terms dt) { font-family: var(--mincho); color: var(--accent); font-size: 1.0625rem; line-height: 1.9; }
+  .body :global(.terms dt) { font-family: var(--mincho); color: var(--accent); font-size: var(--fs-lg); line-height: 1.9; }
   .body :global(.terms dd) { margin: 0; line-height: 1.9; }
   .body :global(figure) { margin-block: 2.25rem; }
   .body :global(figcaption) { margin-top: .6rem; font-size: var(--fs-note); color: var(--fg-2); }

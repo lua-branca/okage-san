@@ -16,7 +16,7 @@ const mainPages = [
   { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、本物のパワーストーン' },
   { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
   { href: withBase('/session/'), label: '深く整える', desc: '内側から整える（催眠・タントラ）' },
-  { href: withBase('/blog/'), label: '読み物（ブログ）', desc: '言葉で整える思想・解説記事' },
+  { href: withBase('/blog/'), label: '神道のはなし', desc: '言葉で整える思想・解説記事' },
   { href: withBase('/about/'), label: '岡慶行について', desc: '植木屋40年・神道40余年の思想' },
 ];
 
@@ -47,7 +47,7 @@ const legalPages = [
     </header>
 
     {/* ① メインメニュー */}
-    <section class="sm-sec stack sec-rule">
+    <section class="sm-sec stack">
       <h2>主要ページ</h2>
       <ul class="sm-list">
         {mainPages.map((p) => (
@@ -85,9 +85,9 @@ const legalPages = [
       </ul>
     </section>
 
-    {/* ④ 読み物（記事） */}
+    {/* ④ 神道のはなし（記事） */}
     <section class="sm-sec stack">
-      <h2>読み物（記事一覧）</h2>
+      <h2>神道のはなし（記事一覧）</h2>
       <ul class="sm-list">
         {posts.map((p) => (
           <li>
@@ -128,6 +128,6 @@ const legalPages = [
 <style>
   .sm-sec { padding-block: 1rem; border-bottom: 1px solid var(--rule); }
   .sm-list { display: flex; flex-direction: column; gap: .6rem; padding-left: 1rem; }
-  .sm-link { font-size: 1.05rem; font-weight: 500; color: var(--fg); border-bottom: 1px solid var(--accent); }
+  .sm-link { font-size: var(--fs-lg); font-weight: 500; color: var(--fg); border-bottom: 1px solid var(--accent); }
   .sm-link:hover { color: var(--accent); }
 </style>

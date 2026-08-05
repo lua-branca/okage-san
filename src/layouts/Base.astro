@@ -72,7 +72,14 @@ const fullTitle = title === site || title.endsWith(`｜${site}`) ? title : `${ti
     <script>
       // ① スクロール登場：一度だけ発火して監視を外す
       const setupReveal = () => {
-        const els = document.querySelectorAll('[data-reveal]:not(.is-in)');
+        // 🔴 3種類とも同じ仕組み（.is-in が付いたら動く）で動かしています。
+        //    data-reveal        ブロックが下から出る
+        //    data-reveal-stagger 子要素が1枚ずつずれて出る
+        //    data-reveal-mask   写真の覆いが下から上がる
+        //    見た目の違いは global.css 側だけで作っているので、ここは足すだけで済みます。
+        const els = document.querySelectorAll(
+          '[data-reveal]:not(.is-in), [data-reveal-stagger]:not(.is-in), [data-reveal-mask]:not(.is-in)'
+        );
         if (!els.length) return;
 
         if (!('IntersectionObserver' in window)) {

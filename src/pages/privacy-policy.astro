@@ -60,7 +60,7 @@ const policySections = [
       </p>
     </header>
 
-    <section class="stack privacy-sec sec-rule" data-reveal>
+    <section class="stack privacy-sec" data-reveal>
       <div class="privacy-list stack">
         {policySections.map((sec) => (
           <div class="privacy-card stack">
@@ -96,13 +96,13 @@ const policySections = [
   }
 
   .privacy-card h2 {
-    font-size: 1.15rem;
+    font-size: var(--fs-xl);
     color: var(--accent);
     margin: 0;
   }
 
   .privacy-card p {
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     color: var(--fg);
     line-height: 1.8;
     margin: 0;

@@ -7,8 +7,16 @@ import { withBase } from '../utils/base';
  *     スマホ 〜640px ／ タブレット 641〜1079px ／ PC 1080px〜
  *     **1080px でメニューの形が変わります**（PCは横並び／それ未満はハンバーガー）。
  *     ⚠️ 1024pxで切っていたら、その幅では横並びが収まらず折り返していました。
- *     ⚠️ サイト全体では 560/640/700/720/768/860/861px が混在していました。
- *        新しく書くところは 640px と 1080px（フッターだけ860px）を使ってください。
+ *
+ *  🔴 2026-08-04：混在していた 560/700/720/768px を整理し、**3組だけ**にしました。
+ *     使うのは必ずこの中から選んでください（正本はこのコメント）：
+ *
+ *       スマホ      (max-width: 640px)  /  (min-width: 641px)
+ *       タブレット   (max-width: 860px)  /  (min-width: 861px)
+ *       PC         (max-width: 1079px) /  (min-width: 1080px)
+ *
+ *     ★max と min は必ず1pxずらした対で使います（640/641・860/861・1079/1080）。
+ *       同じ値を両方に使うと、その1pxで両方のルールが効いて表示が壊れます。
  *
  *  🔴 ハンバーガーは <details> で作っています。**JSを使いません。**
  *     JSが止まってもメニューは開きます（読者の多くは50代以上・スマホ）。
@@ -31,7 +39,7 @@ const nav = [
   { href: withBase('/kamiasobi/'), label: '神社参拝' },
   { href: withBase('/mind/'), label: '心を整える' },
   { href: withBase('/session/'), label: '個人セッション' },
-  { href: withBase('/blog/'), label: '読み物' },
+  { href: withBase('/blog/'), label: '神道のはなし' },
   { href: withBase('/about/'), label: '岡慶行について' },
 ];
 ---
@@ -67,7 +75,42 @@ const nav = [
 </header>
 
 <style>
-  .hd { border-bottom: 1px solid var(--rule); padding-block: 1rem; position: relative; }
+  /* 🔴 2026-08-04：スクロールしても上に残るようにしました（福田要望）。
+        ★固定にできるのは、直前にヘッダーへ地の色（#1B1523）を入れたからです。
+          背景が透明のままだと、下を流れる写真や文字がメニューに透けて読めません。
+        ⚠️ sticky なので、position: relative は捨てられません（ハンバーガーの
+           パネルが .hd を基準に絶対配置されているため）。sticky は relative の
+           はたらきも兼ねるので、これで両方成立します。
+        ⚠️ z-index: 30 は、ハンバーガーのパネル（20）より上。
+           パネルは .hd の**中**にあるので、一緒に持ち上がります。 */
+  .hd {
+    border-bottom: 1px solid var(--rule);
+    padding-block: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+
+  /* 🔴 2026-08-04：ヘッダーをフッターと同じ地の色（#1B1523）の帯にしました（福田判断）。
+        ★上下が同じ濃さの帯で挟まれ、あいだの本文が浮き上がります。
+          トップではヘッダーのすぐ下がFVの写真なので、暗い帯 → 写真の順になり、
+          写真が額に入ったように見えます。
+        ⚠️ 麻の葉の地紋は**入れていません**。ヘッダーは高さ85pxしかなく、
+           柄のタイル（156px）が半分しか入らないため、六角形が閉じないまま切れて
+           「斜めの線がザワザワした帯」になります。柄はフッターだけ。
+        ⚠️ 明るい面（.surface-light）には効かせません。今は未使用ですが、
+           将来ホワイトペーパー等で復活したときに黒帯が出ると事故になるためです。 */
+  :global(.surface-dark) .hd {
+    background: #1B1523;
+    /* 🔴 金の細線。フッター（22%）より濃い45%にしています（2026-08-04 福田判断）。
+          ★固定ヘッダーなので、下を写真や本文が流れていきます。
+            その境目を作るのがこの線の役目です。
+          ⚠️ 固定にする前は「暗い帯 → 暗い写真」で明るさが変わらず、
+             22%では線が沈んで見えませんでした。固定にして初めて意味が出た線です。
+          ⚠️ フッターの線とは濃さが違います。あちらは色が地続きなので薄くて足ります。
+             揃える必要はありません（役目が違うため）。 */
+    border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
   .hd__in {
     display: flex; align-items: center; justify-content: space-between;
     gap: 1.5rem;
@@ -80,7 +123,7 @@ const nav = [
   /* 🔴 15px → 18px。52pxのロゴに対して文字が負けていました（2026-07-31） */
   .brand__n {
     font-family: var(--mincho);
-    font-size: 1.125rem;
+    font-size: var(--fs-xl);
     letter-spacing: .04em;
     color: var(--fg);
     line-height: 1.35;
@@ -90,7 +133,7 @@ const nav = [
   .nav { display: flex; align-items: center; gap: 1.25rem; }
   /* 🔴 nowrap 必須。これがないと「神社参 / 拝」のように語の途中で折り返します
         （2026-07-31：PCで実際に起きていました） */
-  .nav a, .hb__panel a { font-size: .9375rem; border-bottom: 0; color: var(--fg); white-space: nowrap; }
+  .nav a, .hb__panel a { font-size: var(--fs-sm); border-bottom: 0; color: var(--fg); white-space: nowrap; }
   .nav a:hover, .hb__panel a:hover { color: var(--link); }
   .nav__cta {
     color: var(--accent) !important;
@@ -148,7 +191,7 @@ const nav = [
   /* ── スマホ（〜640px）：ロゴまわりを詰める ── */
   @media (max-width: 640px) {
     .brand img { width: 42px; height: 42px; }
-    .brand__n { font-size: 1rem; }
+    .brand__n { font-size: var(--fs-body); }
     .hb__tx { display: none; }
   }
 </style>

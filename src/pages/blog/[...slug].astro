@@ -36,7 +36,7 @@ const minutes = Math.max(1, Math.round(chars / 400));
 const toc = headings.filter((h) => h.depth === 2);
 ---
 
-<Base title={`${d.title}｜読み物`} description={d.description} surface="dark" reading>
+<Base title={`${d.title}｜神道のはなし`} description={d.description} surface="dark" reading>
   <article class="post">
     {/* ── 記事ヘッダー：パンくず・タイトル・メタ ── */}
     <header class="post__hd section">
@@ -45,7 +45,7 @@ const toc = headings.filter((h) => h.depth === 2);
           <ol class="crumb-list">
             <li><a href={withBase('/')}>トップ</a></li>
             <li aria-hidden="true">／</li>
-            <li><a href={withBase('/blog/')}>読み物</a></li>
+            <li><a href={withBase('/blog/')}>神道のはなし</a></li>
             <li aria-hidden="true">／</li>
             <li><a href={withBase(`/blog/?category=${encodeURIComponent(d.category)}`)}>{d.category}</a></li>
             <li aria-hidden="true">／</li>
@@ -129,7 +129,7 @@ const toc = headings.filter((h) => h.depth === 2);
     {related.length > 0 && (
       <section class="section">
         <div class="wrap stack" data-reveal>
-          <p class="kicker">同じ分類の読み物</p>
+          <p class="kicker">同じ分類のはなし</p>
           <ul class="list-accent">
             {related.map((p) => (
               <li><a href={withBase(`/blog/${p.id}/`)}>{p.data.title}</a></li>
@@ -146,7 +146,7 @@ const toc = headings.filter((h) => h.depth === 2);
 
   /* パンくずリストスタイル */
   .crumb {
-    font-size: 0.85rem;
+    font-size: var(--fs-note);
     color: var(--fg-2);
     margin-bottom: 1rem;
   }
@@ -218,7 +218,7 @@ const toc = headings.filter((h) => h.depth === 2);
   .body :global(h3) {
     font-family: var(--mincho);
     font-weight: 500;
-    font-size: 1.0625rem;
+    font-size: var(--fs-lg);
     color: var(--fg);
     margin-block: 2.5rem 1rem;
     scroll-margin-top: 2rem;
@@ -244,7 +244,7 @@ const toc = headings.filter((h) => h.depth === 2);
   }
   .sign img { width: 84px; height: 84px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
   .sign__tx { display: flex; flex-direction: column; gap: .35rem; }
-  .sign__n { font-size: 1rem; color: var(--fg); }
+  .sign__n { font-size: var(--fs-body); color: var(--fg); }
 
   /* 前後の記事 */
   .pager {
@@ -265,7 +265,7 @@ const toc = headings.filter((h) => h.depth === 2);
   .pager__i:hover { border-color: var(--accent); }
   .pager__i--r { text-align: right; }
   .pager__l { font-size: var(--fs-label); letter-spacing: .12em; color: var(--accent); }
-  .pager__t { font-size: .9375rem; color: var(--fg); line-height: 1.6; }
+  .pager__t { font-size: var(--fs-sm); color: var(--fg); line-height: 1.6; }
 
   @media (max-width: 640px) {
     .pager { grid-template-columns: 1fr; }

@@ -78,14 +78,14 @@ const openish = state === '受付中' || state === '募集中';
   .tour__wd { font-size: var(--fs-label); color: var(--fg-2); }
 
   .tour__b { display: flex; flex-direction: column; gap: .5rem; }
-  .tour__t { font-size: 1.0625rem; color: var(--fg); }
+  .tour__t { font-size: var(--fs-lg); color: var(--fg); }
   .tour__m { color: var(--fg-2); }
   .tour__cta { margin-top: .35rem; }
 
   /* 終了した回：情報としては残すが、目立たせない */
   .tour--past { opacity: .6; }
 
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .tour { grid-template-columns: 1fr; gap: .75rem; }
     .tour__d time { flex-direction: row; align-items: baseline; gap: .4rem; }
     .tour__dd { font-size: 1.5rem; }

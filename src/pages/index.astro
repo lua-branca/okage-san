@@ -1,10 +1,22 @@
 ---
 /** トップページ。
  *
- *  ★構成（2026-07-31 再編。原稿 CONTENT_DRAFT/01_トップ.md v3 から変更）
+ *  ★構成（2026-08-04 更新。原稿 CONTENT_DRAFT/01_トップ.md v3 から変更）
  *
- *    ① FV（神社の写真）② 案内する人 ③ 神社参拝とは ★主役
- *    ─ 写真の帯 ─ ④ 声 ⑤ これからの参拝 ⑥ LINE ★ ⑦ 読み物 ⑧ ほかにもできること
+ *    ① FV（神社の写真）🔔 お知らせの帯 ② 案内する人 ③ 神社参拝とは ★主役
+ *    ─ 写真の帯 ─ ④ 声 ⑤ これまでの参拝（願い別）⑥ 神道のはなし
+ *    ⑦ ほかにもできること ⑧ LINE ★
+ *
+ *  🔴 2026-08-04 の変更（福田判断）
+ *    ・⑤を「これからの参拝（日程一覧）」→「これまでの参拝（願い別）」に差し替え。
+ *      オフィシャルな募集中の回が無い期間のほうが長く、毎回「調整しています」が
+ *      出ていました。★募集していないときこそ**どんな一日なのか**を見せるほうが効きます。
+ *    ・🔔お知らせの帯をFV直下に新設（src/data/news.ts）。セクションにはしません。
+ *    ・「読み物」→「神道のはなし」。中身は全部 岡さん本人の語りなので、
+ *      誰の何かが一発で伝わる名前にしました。**URLは /blog/ のまま**です
+ *      （変えるとリダイレクト対応が要るため。表示文言だけの変更）。
+ *    ・幅を3段階に（tokens.css）。それまで全セクションが656px1本で、
+ *      PCで「細い1本の柱」に見えていました。ここは --mid と --wide を使っています。
  *
  *  🔴 いちばん大事な原則（触る前に読んでください）
  *     **主役は神社参拝。前半で厚く書き、ほかのサービスは⑧で薄く拾う。**
@@ -17,7 +29,7 @@
  *      岡さんは②で小さく紹介します。
  *    ・声は9件あるのに「（原稿から3件）」のままでした → 実装。
  *      ★③の直後に置くことで「神社参拝の声」だと文脈で分かります。
- *    ・読み物にサムネイルが出ていませんでした（heroImage の渡し忘れ）。
+ *    ・記事にサムネイルが出ていませんでした（heroImage の渡し忘れ）。
  *    ・「整える会」は日程未定でボタンがLINEへ飛ぶだけ → 単独ブロックをやめました。
  *    ・締めの文章をやめました。岡さんへの導線は②にあり、二度言う必要がないためです。
  */
@@ -25,22 +37,32 @@ import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
 import PhotoStrip from '../components/PhotoStrip.astro';
 import PostCard from '../components/PostCard.astro';
-import TourCard from '../components/TourCard.astro';
 import VoiceCard from '../components/VoiceCard.astro';
 import { getCollection } from 'astro:content';
 import { topVoices } from '../data/voices';
+import { news } from '../data/news';
+import { themes } from '../data/tourThemes';
 import { withBase } from '../utils/base';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
   .slice(0, 4);
 
-/** 🔴 これからの回。**最大2件**まで。3件以上並べると選べなくなります。
- *  draft はローカルでだけ出ます（公開ビルドには出ません）。 */
-const upcoming = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
-  .filter((t) => t.data.state !== '終了')
-  .sort((a, b) => +a.data.date - +b.data.date)
-  .slice(0, 2);
+/** ★お知らせは上から3件まで（src/data/news.ts が正本） */
+const topNews = news.slice(0, 3);
+
+/** ★終了した回。**願い別ブロックのリンク切れよけ**にだけ使います。
+ *
+ *  🔴 2026-08-04：ここは以前「これからの参拝（upcoming）」でした。やめた理由：
+ *     募集は常にしているわけではなく、オフィシャルな募集中の回が無い期間のほうが長い。
+ *     空欄や「調整しています」を毎回見せるより、
+ *     **どんなツアーなのかを先に伝える**ほうがイメージが湧く（福田判断）。
+ *     → 過去に行った回への導線に差し替えました。 */
+const pastIds = new Set(
+  (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+    .filter((t) => t.data.state === '終了')
+    .map((t) => t.id)
+);
 
 /** ★トップの横スクロール写真帯。
  *  🔴 日帰りで行ける社を先に並べています。
@@ -144,6 +166,32 @@ const others = [
     </div>
   </section>
 
+  {/* 🔔 お知らせ（細い帯）─ 2026-08-04 新設
+      🔴 セクションにしないこと。厚く作ると主役の神社参拝が下に押し下げられます。
+         更新が止まったときにいちばん目立つのもお知らせ欄なので、**薄く**置いています。
+      🔴 中身は src/data/news.ts。0件のときは帯ごと消えます（空欄を出さない）。
+      🔴 幅は .wrap（＝--col）。**FVの見出しと同じ幅・同じ左端**に揃えます（福田指摘 2026-08-04）。
+         一度 --wide にしていましたが、見出しより外側から始まってしまい、
+         ページの左の縦線が2本あるように見えていました。ここは広げないこと。 */}
+  {topNews.length > 0 && (
+    <aside class="news" aria-label="お知らせ">
+      <div class="wrap">
+        <ul class="news__l">
+          {topNews.map((n) => (
+            <li class="news__i">
+              <time class="news__d">{n.date}</time>
+              {n.href ? (
+                <a href={n.href.startsWith('http') ? n.href : withBase(n.href)}>{n.text}</a>
+              ) : (
+                <span>{n.text}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
+  )}
+
   {/* ② 何をする人か ＋ 岡さんの紹介（小さく）
       ★写真は横に小さく置きます。主役は言葉のほうです。 */}
   <section class="section">
@@ -178,7 +226,7 @@ const others = [
   {/* ③ 神社参拝とは ─ ★メイン商品。ここだけ厚く書きます（2026-07-31）
       🔴 トップの主役は神社参拝です。ほかのサービスは⑧で薄く拾います。
          ここに石やセッションの話を混ぜないでください。主役がぼやけます。 */}
-  <section class="section sec-rule">
+  <section class="section">
     <div class="wrap stack" data-reveal>
       <p class="kicker">神社参拝プログラム</p>
       <h2>神社は、誰でも行けます</h2>
@@ -216,70 +264,73 @@ const others = [
         （2026-07-31 福田指摘：サービス一覧の直後だと、どれの声か分からなくなっていた）。
       🔴 文面は src/data/voices.ts が正本。ここで書き換えないこと */}
   <section class="section">
-    <div class="wrap stack">
-      <div data-reveal>
+    <div class="wrap wrap--mid stack">
+      <div class="lead-col sec-head" data-reveal>
         <p class="kicker">参加した方の声</p>
         <h2>何が変わったのか</h2>
         <p class="note">アンケートに書いてくださったものを、そのまま載せています。</p>
       </div>
-      <div class="voices" data-reveal>
+      <div class="voices" data-reveal-stagger>
         {topVoices.map((v) => <VoiceCard text={v.after} who={v.author} />)}
       </div>
       <p data-reveal><a href={withBase('/voice/')}>ほかの声を読む →</a></p>
     </div>
   </section>
 
-  {/* ⑤ 直近の日程 ─ 最大2件
-      🔴 空のときに空欄を見せないこと。「調整しています」と言うほうが正直で、
-         LINEへの動機にもなります */}
-  <section class="section sec-rule">
-    <div class="wrap stack">
-      <div data-reveal>
-        <p class="kicker">開催予定</p>
-        <h2>これからの参拝</h2>
+  {/* ⑤ これまでの参拝 ─ 願い別に、過去の回の記録へ
+      🔴 2026-08-04：ここは「これからの参拝（日程一覧）」でした。差し替えた理由：
+         募集中の回が無い期間のほうが長いので、毎回「調整しています」が出ていました。
+         ★募集していないときこそ、**どんな一日なのか**を見せるほうが効きます（福田判断）。
+      🔴 データは src/data/tourThemes.ts が正本。/kamiasobi/ と共有しています。
+         ここで書き換えないこと。
+      ⚠️ 日程は出しません。日程を知りたい人は /kamiasobi/ と LINE に行きます。 */}
+  <section class="section">
+    <div class="wrap wrap--mid stack">
+      <div class="lead-col sec-head" data-reveal>
+        <p class="kicker">これまでの参拝</p>
+        <h2>願いによって、<br />行き先が変わります</h2>
+        <p class="lede">
+          その時期と、その方の状態に合う神社を選んでご案内しています。<br />
+          これまでにめぐった土地を、願いごとに分けるとこうなります。
+        </p>
       </div>
-      {upcoming.length > 0 ? (
-        <div data-reveal>
-          {upcoming.map((t) => (
-            <TourCard
-              date={t.data.date}
-              title={t.data.title}
-              place={t.data.area}
-              price={t.data.prices?.[0]?.amount}
-              state={t.data.state === '準備中' ? undefined : t.data.state}
-              note={t.data.lead}
-              href={`/kamiasobi/${t.id}/`}
-            />
-          ))}
-          <p class="tour-more"><a href={withBase('/kamiasobi/')}>日程をすべて見る →</a></p>
-        </div>
-      ) : (
-        <div class="stack" data-reveal>
-          <p class="note">
-            次の日程を調整しています。<br />
-            決まりしだい、LINEでいちばん早くお知らせします。
-          </p>
-          <p><a href={withBase('/kamiasobi/')}>神社参拝について見る →</a></p>
-        </div>
-      )}
+
+      <ul class="th" data-reveal-stagger>
+        {themes.map((t) => (
+          <li class="th__i">
+            <span class="th__n mj">{t.need}</span>
+            <span class="th__a">{t.area}</span>
+            <span class="note">{t.note}</span>
+            {t.record && pastIds.has(t.record) && (
+              <a href={withBase(`/kamiasobi/${t.record}/`)} class="th__r">
+                {t.recordLabel ?? 'この回の記録を見る'} →
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <p data-reveal><a href={withBase('/kamiasobi/')} class="btn">神社参拝について見る</a></p>
     </div>
   </section>
 
   {/* 🔴 2026-07-31：LINEブロックはページのいちばん最後へ移しました（福田判断）。
-         ここ（日程の直後）にあると、読み物とサービス紹介がLINEの後ろに埋もれます。
+         ここ（日程の直後）にあると、記事とサービス紹介がLINEの後ろに埋もれます。
          ★LINEは「今日は申し込まない人」の受け皿なので、最後で正しい。
          FVの「LINEで受け取る」ボタンは #line へのアンカーなので、押せば最後まで飛びます。 */}
 
-  {/* ⑥ 読み物
+  {/* ⑥ 神道のはなし
       🔴 heroImage を渡すこと。渡さないとサムネイルが出ません
          （2026-07-31 まで渡し忘れていて、文字だけのリストになっていました）。
       ⚠️ PostCard は「200pxのサムネ＋本文」の横並びです。
          グリッドにすると潰れるので、1列のリストのまま使ってください。 */}
   <section class="section">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">読み物</p>
-      <h2>書いてきたこと</h2>
-      <div class="posts">
+    <div class="wrap wrap--mid stack">
+      <div class="lead-col sec-head" data-reveal>
+        <p class="kicker">神道のはなし</p>
+        <h2>書いてきたこと</h2>
+      </div>
+      <div class="posts" data-reveal-stagger>
         {posts.map((p) => (
           <PostCard
             slug={p.id}
@@ -292,22 +343,24 @@ const others = [
           />
         ))}
       </div>
-      <p><a href={withBase('/blog/')}>すべての読み物 →</a></p>
+      <p data-reveal><a href={withBase('/blog/')}>すべての記事を読む →</a></p>
     </div>
   </section>
 
   {/* ⑦ ほかにもできること ─ **神社を除いた3つ**（2026-07-31）
       🔴 ここに神社を足さないこと。③と重複します。
       ★締めの文章は置きません（岡さんへの導線は②にあり、二度言う必要がないため）。 */}
-  <section class="section sec-rule">
-    <div class="wrap stack" data-reveal>
-      <p class="kicker">ほかにも</p>
-      <h2>神社へ行くほかにも、<br />整え方があります</h2>
-      <p class="lede">
-        参拝の日に予定が合わなくても、できることはあります。
-      </p>
+  <section class="section">
+    <div class="wrap wrap--mid stack">
+      <div class="lead-col sec-head" data-reveal>
+        <p class="kicker">ほかにも</p>
+        <h2>神社へ行くほかにも、<br />整え方があります</h2>
+        <p class="lede">
+          参拝の日に予定が合わなくても、できることはあります。
+        </p>
+      </div>
 
-      <ul class="others">
+      <ul class="others" data-reveal-stagger>
         {others.map((o) => (
           <li class="others__i">
             <a href={withBase(o.href)} class="others__a">
@@ -386,7 +439,7 @@ const others = [
   .fv__txt h1 { line-height: 1.45; text-shadow: 0 2px 18px rgba(0, 0, 0, .55); }
   .fv__btns { display: flex; flex-wrap: wrap; gap: .7rem; }
 
-  @media (max-width: 700px) {
+  @media (max-width: 860px) {
     .fv__f img { height: clamp(280px, 42vh, 400px); }
   }
 
@@ -394,7 +447,7 @@ const others = [
   .who { display: flex; flex-direction: column; gap: 1.5rem; }
   .who__img { margin: 0; overflow: hidden; border-radius: var(--radius); background: #0d0b10; }
   .who__img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-  @media (min-width: 720px) {
+  @media (min-width: 861px) {
     .who { flex-direction: row; align-items: center; gap: 2rem; }
     /* 写真は小さく。主役は言葉のほう */
     .who__img { flex: 0 0 34%; }
@@ -404,7 +457,7 @@ const others = [
   /* ── ③ 神社参拝とは（要点3つ）── */
   .pts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
   .pts__i { display: flex; flex-direction: column; gap: .25rem; }
-  .pts__t { font-size: 1.0625rem; color: var(--accent); }
+  .pts__t { font-size: var(--fs-lg); color: var(--accent); }
 
   /* ── ⑧ ほかにもできること ──
      カード3枚。全部リンクなので、押せることが分かる見た目にしています */
@@ -424,17 +477,72 @@ const others = [
     transition: border-color .25s ease, background-color .25s ease;
   }
   .others__a:hover { background: color-mix(in srgb, var(--bg-2) 80%, var(--accent) 8%); border-color: var(--accent); }
-  .others__t { font-size: 1.125rem; color: var(--fg); line-height: 1.5; }
+  .others__t { font-size: var(--fs-xl); color: var(--fg); line-height: 1.5; }
   .others__l { font-size: var(--fs-label); letter-spacing: .1em; color: var(--accent); }
   @media (max-width: 640px) {
     .others { grid-template-columns: 1fr; }
   }
 
-  /* ── ④ 声 ── */
-  .voices { display: flex; flex-direction: column; gap: 1rem; }
+  /* ── 🔔 お知らせの帯（2026-08-04 新設）──
+     🔴 上下に細い罫線を引くだけ。地の色は変えません。
+        背景色を付けると「箱」になり、主役の神社参拝と視線を奪い合います。
+     ⚠️ 日付は等幅ではなく本文と同じ書体のまま。数字だけ浮かせないためです。 */
+  .news {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: .9rem;
+  }
+  .news__l { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+  .news__i {
+    display: flex;
+    gap: .9rem;
+    align-items: baseline;
+    font-size: var(--fs-note);
+    line-height: 1.7;
+  }
+  /* 日付は幅を固定して、本文の頭を縦に揃える */
+  .news__d {
+    flex: none;
+    width: 5.5rem;
+    color: var(--accent);
+    font-size: var(--fs-label);
+    letter-spacing: .06em;
+  }
+  .news__i a { color: var(--fg-2); }
+  .news__i a:hover { color: var(--fg); }
 
-  /* ── ⑤ 日程 ── */
-  .tour-more { margin-top: 1.1rem; }
+  /* スマホは日付を上に逃がす。横並びのままだと本文が2文字幅になります */
+  @media (max-width: 640px) {
+    .news__i { flex-direction: column; gap: .1rem; }
+    .news__d { width: auto; }
+  }
+
+  /* ── ④ 声 ──
+     🔴 幅が --mid（832px）になったので、PCでは2列にします。
+        1列のままだと、広げた分だけ1枚が間延びします。 */
+  .voices { display: flex; flex-direction: column; gap: 1rem; }
+  @media (min-width: 861px) {
+    .voices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; align-items: start; }
+  }
+
+  /* ── ⑤ これまでの参拝（願い別）──
+     2026-08-04：日程一覧から差し替え。/kamiasobi/ の .th と同じ見た目にしています。
+     🔴 片方だけ直すとトップと下層で見た目がズレます。 */
+  .th { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+  @media (min-width: 861px) {
+    .th { grid-template-columns: repeat(3, 1fr); }
+  }
+  .th__i {
+    display: flex; flex-direction: column; gap: .35rem;
+    padding: 1.25rem 1.35rem;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius);
+  }
+  .th__n { font-size: var(--fs-xl); color: var(--fg); line-height: 1.5; }
+  .th__a { font-size: var(--fs-label); letter-spacing: .1em; color: var(--accent); }
+  .th__r { margin-top: .35rem; font-size: var(--fs-note); }
 
   .posts { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
 

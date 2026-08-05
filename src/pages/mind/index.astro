@@ -120,7 +120,7 @@ const faq = [
     {/* ── ③ 神棚（予告）。書籍『願わず叶う神社参拝入門』第十章の要約がベース ──
         🔴 商品化・詳細ページはまだ先。ここは予告のみ。まだ岡さんの言葉に置き換えていないので、
            公開前に本人確認を必ず通すこと。 */}
-    <section class="stack sec-rule" data-reveal>
+    <section class="stack" data-reveal>
       <p class="kicker">その先に</p>
       <h2>家に、神様と暮らす場所を</h2>
 
@@ -141,7 +141,7 @@ const faq = [
            「肩こりが楽になる」に抵触するため削除。かわりに「天と繋がりやすくなる」で明言する
            （本人確認・スピリチュアルに振り切る方針でOK）。
         経路は道具によって違う：石＝手に持つ／松ぼっくり＝額に当ててサードアイ */}
-    <section class="stack sec-rule" data-reveal>
+    <section class="stack" data-reveal>
       <p class="kicker">それから</p>
       <h2>天と繋がりやすくなる、<br />そのための道具です</h2>
 
@@ -212,7 +212,7 @@ const faq = [
     {/* ── ⑥ 松ぼっくり。石とは並列の、別の選択肢 ──
         🔴 石の「一点物・目利き」の物語はここでは繰り返さない（04b設計・2026-07-31方針）。
            松ぼっくりは気軽に迎えられる道具、という軽さで見せる。 */}
-    <section class="stack sec-rule" data-reveal>
+    <section class="stack" data-reveal>
       <p class="kicker">もうひとつ</p>
       <h2>松ぼっくりという道具</h2>
 
@@ -255,7 +255,7 @@ const faq = [
 </Base>
 
 <style>
-  h1 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); line-height: 1.45; }
+  h1 { font-size: var(--fs-hero); line-height: 1.45; }
   h2 { line-height: 1.5; }
 
   /* メインビジュアル（/about/ の hero-landscape と同じ作り。トリミングなし） */
@@ -276,6 +276,11 @@ const faq = [
   .prose strong { color: var(--white); }
 
   /* 無料でできること：金の細線で挟んで、ページの中でいちばん目立たせる */
+  /* 🔴 .free は、このページで**唯一の線**です（2026-08-04）。
+        サイト全体では横線をやめましたが、ここだけ残しています。
+        理由：「無料で始められる」を囲って**特別扱いする**のが役目で、
+        セクションの区切り線とは意味が違うためです。
+        ⚠️ このページに別の線を足さないこと。1本だから効いています。 */
   .free {
     padding: 1.75rem 0;
     border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
@@ -283,7 +288,7 @@ const faq = [
   }
   .free__l { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
   .free__l li { display: flex; flex-direction: column; gap: .2rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
-  .free__t { font-size: 1.0625rem; color: var(--fg); }
+  .free__t { font-size: var(--fs-lg); color: var(--fg); }
 
   .gal {
     display: grid;

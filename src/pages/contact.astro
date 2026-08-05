@@ -20,7 +20,7 @@ import { withBase } from '../utils/base';
     </header>
 
     {/* ── お問い合わせフォーム UI ── */}
-    <section class="stack form-section sec-rule" data-reveal>
+    <section class="stack form-section" data-reveal>
       <h2>お問い合わせフォーム</h2>
 
       <form
@@ -123,7 +123,7 @@ import { withBase } from '../utils/base';
     </section>
 
     {/* ── メールソフトから直接送信したい方向けの補助案内 ── */}
-    <section class="stack direct-email-section sec-rule" data-reveal>
+    <section class="stack direct-email-section" data-reveal>
       <div class="direct-email-box">
         <h3>メールアプリから直接送信される場合</h3>
         <p>
@@ -152,7 +152,7 @@ import { withBase } from '../utils/base';
   }
 
   .form-group label {
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     color: var(--fg);
     font-weight: 500;
     display: flex;
@@ -161,7 +161,7 @@ import { withBase } from '../utils/base';
   }
 
   .req {
-    font-size: 0.75rem;
+    font-size: var(--fs-label);
     background: color-mix(in srgb, var(--verm) 20%, transparent);
     color: #ff7b70;
     border: 1px solid color-mix(in srgb, var(--verm) 40%, transparent);
@@ -169,7 +169,7 @@ import { withBase } from '../utils/base';
     border-radius: 3px;
   }
   .opt {
-    font-size: 0.75rem;
+    font-size: var(--fs-label);
     background: var(--bg-2);
     color: var(--fg-2);
     border: 1px solid var(--rule);
@@ -184,7 +184,7 @@ import { withBase } from '../utils/base';
     border: 1px solid var(--rule);
     border-radius: 4px;
     color: var(--fg);
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-family: inherit;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
@@ -202,7 +202,7 @@ import { withBase } from '../utils/base';
     align-items: center;
     gap: 0.6rem;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
   }
   .checkbox-label input[type='checkbox'] {
     width: 1.2rem;
@@ -223,7 +223,7 @@ import { withBase } from '../utils/base';
 
   .btn--lg {
     padding: 0.9rem 2.25rem;
-    font-size: 1rem;
+    font-size: var(--fs-body);
   }
 
   /* フォーム直下の注意点ボックス */
@@ -236,13 +236,13 @@ import { withBase } from '../utils/base';
     margin-top: 1.5rem;
   }
   .form-notice-title {
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     color: var(--accent);
     font-weight: 600;
     margin: 0 0 0.35rem 0;
   }
   .form-notice-text {
-    font-size: 0.9rem;
+    font-size: var(--fs-note);
     color: var(--fg-2);
     line-height: 1.65;
     margin: 0;
@@ -257,17 +257,17 @@ import { withBase } from '../utils/base';
     max-width: 48rem;
   }
   .direct-email-box h3 {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--accent);
     margin: 0 0 0.5rem 0;
   }
   .direct-email-box p {
-    font-size: 0.9rem;
+    font-size: var(--fs-note);
     color: var(--fg-2);
     margin: 0 0 0.5rem 0;
   }
   .email-address-highlight {
-    font-size: 1.1rem !important;
+    font-size: var(--fs-xl) !important;
     font-weight: 600;
     color: var(--fg) !important;
     letter-spacing: 0.03em;

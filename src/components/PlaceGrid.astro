@@ -85,7 +85,7 @@ const { places } = Astro.props;
     flex-wrap: wrap;
     align-items: baseline;
     gap: .5rem;
-    font-size: 1.0625rem;
+    font-size: var(--fs-lg);
     color: var(--accent);
     line-height: 1.5;
   }
@@ -98,8 +98,8 @@ const { places } = Astro.props;
   }
   .pg__note { margin-top: .3rem; font-size: var(--fs-label); line-height: 1.75; }
 
-  @media (max-width: 700px) {
+  @media (max-width: 860px) {
     .pg__l { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
-    .pg__n { font-size: 1rem; }
+    .pg__n { font-size: var(--fs-body); }
   }
 </style>

@@ -38,7 +38,7 @@ const approaches = [
     href: '/session/',
   },
   {
-    title: '読み物と、公式LINE',
+    title: '神道のはなしと、公式LINE',
     desc: '著書『願わず叶う神社参拝入門』と、ブログ。公式LINEでは14日間のステップ講座と、日常で心を整える話を不定期でお送りしています。',
     href: '/blog/',
   },
@@ -130,7 +130,7 @@ const overview = [
            ご本人がそう言った記録がないためです。文体と姿勢だけ寄せています。
         ⚠️ 「情報でお金を取る奴はクソ」は本人の言葉ですが、
            サイトに載せるには強いので言い換えています。使いたければ引用に戻せます。 */}
-    <section class="stack person-sec sec-rule" data-reveal>
+    <section class="stack person-sec" data-reveal>
       <p class="kicker">人となり</p>
       <h2>こういう人です</h2>
 
@@ -179,7 +179,7 @@ const overview = [
     </section>
 
     {/* ── ③ 4つの柱（提供サービス） ── */}
-    <section class="stack approach-sec sec-rule" data-reveal>
+    <section class="stack approach-sec" data-reveal>
       <p class="kicker">やっていること</p>
       <h2>やっていることは、4つです</h2>
 
@@ -203,7 +203,7 @@ const overview = [
           以前は人物パートの真ん中に挟まっていて、話が行ったり来たりしていました。
         🔴 文体を前後に合わせています。会社案内の言い回し
           （「〜を実現したいのは、一人ひとりが〜」）に戻さないこと。 */}
-    <section class="stack academy-sec sec-rule" data-reveal>
+    <section class="stack academy-sec" data-reveal>
       <p class="kicker">目指していること</p>
       <h2>「マインドフリー」とは</h2>
 
@@ -232,7 +232,7 @@ const overview = [
     </section>
 
     {/* ── ④ マインドフリー神道学アカデミア概要（組織・事業情報） ── */}
-    <section class="stack overview-sec sec-rule" data-reveal>
+    <section class="stack overview-sec" data-reveal>
       <p class="kicker">運営者情報</p>
       <h2>マインドフリー神道学アカデミア概要</h2>
 
@@ -269,11 +269,11 @@ const overview = [
     padding-left: 1rem;
     border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
   }
-  .traits__t { font-size: 1.0625rem; color: var(--accent); }
+  .traits__t { font-size: var(--fs-lg); color: var(--accent); }
 
   /* ヒーロー */
   .about-hero h1 {
-    font-size: clamp(1.8rem, 4.2vw, 2.6rem);
+    font-size: var(--fs-hero);
     line-height: 1.35;
   }
 
@@ -300,13 +300,13 @@ const overview = [
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
   .prose-card h3 {
-    font-size: 1.3rem;
+    font-size: var(--fs-h2);
     color: var(--accent);
     margin: 0;
     line-height: 1.45;
   }
   .prose-card p {
-    font-size: 1.025rem;
+    font-size: var(--fs-body);
     line-height: 1.85;
     color: var(--fg);
     margin-block: 1rem 0;
@@ -324,13 +324,13 @@ const overview = [
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   }
   .vision-card h3 {
-    font-size: 1.3rem;
+    font-size: var(--fs-h2);
     color: var(--accent);
     margin: 0;
     line-height: 1.45;
   }
   .vision-card p {
-    font-size: 1.025rem;
+    font-size: var(--fs-body);
     line-height: 1.85;
     color: var(--fg);
     margin-block: 1rem 0;
@@ -362,19 +362,19 @@ const overview = [
     gap: 0.75rem;
   }
   .approach-box__title {
-    font-size: 1.15rem;
+    font-size: var(--fs-xl);
     color: var(--fg);
     margin: 0;
     line-height: 1.35;
   }
   .approach-box__desc {
-    font-size: 0.925rem;
+    font-size: var(--fs-sm);
     color: var(--fg-2);
     line-height: 1.75;
     margin: 0;
   }
   .approach-box__link {
-    font-size: 0.9rem;
+    font-size: var(--fs-note);
     color: var(--accent);
     font-weight: 500;
     text-decoration: none;
@@ -406,13 +406,13 @@ const overview = [
     font-weight: 500;
     text-align: left;
     vertical-align: top;
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     border-right: 1px solid var(--rule);
   }
   .overview-table td {
     padding: 1.1rem 1.5rem;
     color: var(--fg);
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     line-height: 1.7;
     vertical-align: top;
   }
