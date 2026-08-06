@@ -68,8 +68,8 @@ const faq = [
 ---
 
 <Base
-  title={`${d.name}｜心を整える`}
-  description={`${d.name}（一点もの・No.${d.id}）。${b?.jpName ? b.jpName + '。' : ''}岡慶行が選んだ、心を整えるための${d.kind}。`}
+  title={`${d.name}｜パワーストーン`}
+  description={`${d.name}（一点もの・No.${d.id}）。${b?.jpName ? b.jpName + '。' : ''}岡慶行が選んだ、心を整えるためのパワーストーン。`}
   surface="dark"
 >
   <article class="section">
@@ -96,31 +96,36 @@ const faq = [
         <p class="price tabnum">¥{d.price.toLocaleString('ja-JP')}<span class="note">（税込）</span></p>
       </div>
 
-      {/* ── ② 動く光。写真では出せないもの ── */}
-      {d.video && (
-        <figure class="vid">
-          {/* preload="none"：再生ボタンを押すまで通信ゼロ。ページを重くしない */}
-          <video
-            src={withBase(d.video)}
-            poster={d.videoPoster ? withBase(d.videoPoster) : undefined}
-            controls
-            muted
-            loop
-            playsinline
-            preload="none"
-            width="720"
-            height="1280"
-          ></video>
-          {d.videoNote && <figcaption class="note">{d.videoNote}</figcaption>}
-        </figure>
-      )}
-
-      {/* ── ③ 大きさを掴む ── */}
-      {d.photos.length > 1 && (
-        <div class="subs">
-          {d.photos.slice(1).map((p) => (
-            <figure><img src={withBase(p)} alt={`${d.name}を手に持ったところ`} loading="lazy" /></figure>
-          ))}
+      {/* ── ②③ 動く光と、大きさ。★2026-08-06 ひとつの帯にまとめました ──
+          🔴 素材の向きがバラバラなのが「ハマらない」原因でした。
+             メイン写真＝横（4:3）／手に持った写真＝縦（3:4）／動画＝縦（9:16）。
+             縦のものだけを**同じ高さの枠**に並べ、枠の側で比率を揃えています。
+          ⚠️ 元ファイルは切っていません。CSSの object-fit で見せ方だけ揃えています。
+             写真を差し替えても、この枠が吸収します。 */}
+      {(d.video || d.photos.length > 1) && (
+        <div class="stack" style="gap:.55rem">
+          <div class="media">
+            {d.video && (
+              <figure class="media__i media__i--vid">
+                {/* preload="none"：再生ボタンを押すまで通信ゼロ。ページを重くしない */}
+                <video
+                  src={withBase(d.video)}
+                  poster={d.videoPoster ? withBase(d.videoPoster) : undefined}
+                  controls
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+              </figure>
+            )}
+            {d.photos.slice(1).map((p) => (
+              <figure class="media__i">
+                <img src={withBase(p)} alt={`${d.name}を手に持ったところ`} loading="lazy" />
+              </figure>
+            ))}
+          </div>
+          {d.video && d.videoNote && <p class="note media__cap">{d.videoNote}</p>}
         </div>
       )}
 
@@ -130,27 +135,31 @@ const faq = [
       {/* ── ⑤ 事実：この石そのもの ── */}
       {specRows.length > 0 && (
         <section class="stack" style="gap:.75rem">
-          <h2 class="mj sec">この{d.kind}のかたち</h2>
+          <h2 class="mj sec">このパワーストーンのかたち</h2>
           <div class="tablewrap">
             <table><tbody>{specRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
           </div>
         </section>
       )}
 
-      {/* ── ⑥ 事実：石の種類そのもの ── */}
-      {basicRows.length > 0 && (
-        <section class="stack" style="gap:.75rem">
-          <h2 class="mj sec">{d.name}について</h2>
-          <div class="tablewrap">
-            <table><tbody>{basicRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
-          </div>
-          <p class="note">{d.kind === '石' ? '鉱物としての一般的な情報です。' : '一般的な情報です。'}効果・効能を示すものではありません。</p>
-        </section>
-      )}
+      {/* ── ⑥ 使い方と瞑想。★2026-08-06 新設 ──
+          🔴 買う直前に「買ったあとも一人にしない」と分かることが目的です。
+             動画の本体は /mind/ 側（src/data/mindVideos.ts）。ここは導線だけ置きます。 */}
+      <section class="stack" style="gap:.75rem">
+        <h2 class="mj sec">使い方と瞑想のしかた</h2>
+        <p>
+          持ち方、置き方、瞑想のはじめ方。<br />
+          お求めいただいた方には、岡の解説動画をあわせてお届けしています。
+        </p>
+        <p class="note">
+          瞑想は、うまくいく日といかない日があります。雑念が浮かぶ日もあります。それがふつうです。<br />
+          <a href={withBase('/mind/#use')}>くわしくはこちら</a>
+        </p>
+      </section>
 
       {/* ── ⑦ 買い方 ── */}
       <section class="stack" style="gap:.75rem">
-        <h2 class="mj sec">お迎えについて</h2>
+        <h2 class="mj sec">お届けについて</h2>
         <div class="tablewrap">
           <table>
             <tbody>
@@ -176,16 +185,18 @@ const faq = [
 
       {d.soldout ? (
         <div class="stack">
-          <p><span class="pill">SOLD</span></p>
-          <p>{d.kind === '石' ? 'この石は、お迎えいただきました。' : '売り切れました。'}</p>
+          <p><span class="pill">SOLD OUT</span></p>
+          <p>この石は売り切れました。</p>
           <p class="note">
             新しいものは、<a href={withBase('/line/')}>LINE公式</a>でいちばん先にお知らせしています。
           </p>
         </div>
       ) : (
         <div class="stack">
-          {/* 🔴 2026-07-31：石＝お迎えする（一点物・目利き）／松ぼっくり＝購入する（気軽な道具）で分ける */}
-          <p><a href={d.stripeLink ?? withBase('/contact/')} class="btn">{d.kind === '石' ? 'この石をお迎えする' : '購入する'}</a></p>
+          {/* 🔴 2026-08-06：ボタンは**押した先で何が起きるか分かる言葉**にします。
+                 Stripeの決済に飛ぶので「購入する」。「お迎えする」は、決済なのか問い合わせなのか読めません。
+                 静かなトーンは、ボタンの周り（SOLD表示・本文）の言葉で保ちます。 */}
+          <p><a href={d.stripeLink ?? withBase('/contact/')} class="btn">{d.kind === "石" ? "この石を購入する" : "購入する"}</a></p>
           <p class="note">
             {d.stripeLink
               ? 'カード決済に進みます。'
@@ -198,6 +209,28 @@ const faq = [
         <h2 class="mj sec">よくあるご質問</h2>
         <Faq items={faq} />
       </section>
+
+      {/* ── ⑨ 種類そのものの情報。★2026-08-06、中盤からここへ移してたたみました ──
+          🔴 上のほうに置くと「タイガーアイ＝○○運」という既成のイメージで判断されます。
+             それは岡さんの「石の名前や相場では選びません」と正面からぶつかります。
+             ただ消しもしません。硬度や組成は、色を付けた石・樹脂で固めた石と違うことの
+             **検証できる根拠**になるからです。だから「最後に、開きたい人だけ」の形にしています。
+          ⚠️ 上へ戻さないこと。順番そのものが主張です。 */}
+      {basicRows.length > 0 && (
+        <details class="basics">
+          <summary class="mj">{d.name}という{d.kind}について</summary>
+          <div class="basics__b stack" style="gap:.75rem">
+            <p class="note">
+              種類で選ぶためのものではありません。<br />
+              同じ{d.name}でも、一つひとつ違います。
+            </p>
+            <div class="tablewrap">
+              <table><tbody>{basicRows.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table>
+            </div>
+            <p class="note">{d.kind === '石' ? '鉱物としての一般的な情報です。' : '一般的な情報です。'}効果・効能を示すものではありません。</p>
+          </div>
+        </details>
+      )}
 
       <nav class="pager">
         {prev ? <a href={withBase(`/mind/${prev.data.id}/`)}>← {prev.data.name}</a> : <span></span>}
@@ -220,8 +253,33 @@ const faq = [
   .crumb-list a { color: var(--fg-2); text-decoration: none; }
   .crumb-list a:hover { color: var(--accent); }
 
-  .main { background: #0d0b10; overflow: hidden; }
-  .main img { width: 100%; }
+  /* メイン写真は正方形。石は中央に写っているので、左右が少し切れても成立します。
+     🔴 元ファイル（1600×1200）はそのままです。切っているのは表示だけ。
+     ⚠️ 石が切れて見えるようなら aspect-ratio を 4/3 に戻せば元どおりです。
+        object-position で寄せ位置も変えられます（例：center 40%）。 */
+  .main { background: #0d0b10; overflow: hidden; margin: 0; }
+  .main img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  /* 種類そのものの情報（たたみ）。読みたい人だけが開く場所なので、静かに置く。
+     ⚠️ 枠線や背景で目立たせないこと。目立てば「種類で選ぶ」ページに戻ります。 */
+  .basics > summary {
+    cursor: pointer;
+    font-size: var(--fs-body);
+    color: var(--fg-2);
+    list-style: none;
+    padding: .5rem 0;
+  }
+  .basics > summary::-webkit-details-marker { display: none; }
+  .basics > summary::before { content: '＋ '; color: var(--accent); }
+  .basics[open] > summary::before { content: '− '; }
+  .basics > summary:hover { color: var(--accent); }
+  .basics__b { margin-top: .5rem; }
 
   .price {
     font-family: var(--mincho);
@@ -232,18 +290,29 @@ const faq = [
   .price .note { font-family: var(--gothic); margin-left: .3rem; }
 
   /* 動画：縦なので幅を抑えて中央に。横いっぱいにすると間延びする */
-  .vid { display: flex; flex-direction: column; gap: .6rem; align-items: center; }
-  .vid video {
-    width: 100%;
-    max-width: 22rem;
-    height: auto;
-    background: #0d0b10;
-    display: block;
+  /* 動画とサブ写真を、同じ高さ・同じ比率（3:4）の枠に並べる帯。
+     列幅に上限（15rem）を付けているので、1点しかなくても間延びしません。
+     🔴 動画の元データは 360×640 と小さいので、大きく引き伸ばすとぼやけます。
+        枠を小さめに保つことが、そのまま画質の対策になっています。 */
+  .media {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 15rem));
+    justify-content: start;
+    gap: .75rem;
   }
-  .vid figcaption { text-align: center; }
-
-  .subs { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; }
-  .subs img { width: 100%; }
+  .media__i {
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    background: #0d0b10;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .media__i img,
+  .media__i video { width: 100%; height: 100%; display: block; }
+  /* 写真は枠いっぱいに（切る）。動画は縦長なので全体を見せる（切らない） */
+  .media__i img { object-fit: cover; }
+  .media__i--vid video { object-fit: contain; }
+  .media__cap { margin: 0; }
 
   .sec {
     font-size: var(--fs-h2);
@@ -277,7 +346,9 @@ const faq = [
   .pager a { color: var(--accent); border-bottom: 0; }
   .back { font-size: var(--fs-note); }
 
+  /* 🔴 スマホでも2列のままにします（.media の列上限が効くので、1列にすると逆に巨大になります）。
+        以前の `.subs { grid-template-columns: 1fr; }` は、この作りでは不要になりました（2026-08-06）。 */
   @media (max-width: 640px) {
-    .subs { grid-template-columns: 1fr; }
+    .media { grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); }
   }
 </style>

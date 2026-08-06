@@ -7,12 +7,13 @@ import { withBase } from '../utils/base';
  *   ① **配信は「不定期」**。「週に一度」と書かない。
  *      毎週出せる体制がまだないので、書いた時点で守れない約束になります。
  *   ② 特典は **「岡の声でご案内する瞑想の動画」**。
- *      「石を使った瞑想」と書かない ── 石がなくても瞑想はできます。
- *      石が要るように読ませると、無料で始めたい人を取りこぼします。
+ *      「パワーストーンを使った瞑想」と書かない ── なくても瞑想はできます。
+ *      要るように読ませると、無料で始めたい人を取りこぼします。
  *   ③ **「神遊び」を見出し・CTAで使わない。**「神社参拝」に統一。
  *      神遊びは岡さん本人の呼び方で、本文で一度だけ紹介する言葉です
  *      → SITE_SPEC 第4章。「ツアー」は全面禁止。
- *   ④ **「新しい石」と書かない。** 松ぼっくりも扱うので「新しく入ったもの」。
+ *   ④ 表記は「パワーストーン」に統一（2026-08-06・検索を取るため）。
+ *      入荷案内は扱いが増える可能性を残して「新しく入ったもの」のままにしています。
  *
  *  ⚠️ ここを直したら /line/ も揃えること。2か所で違うことを言っていました。 */
 interface Props {
@@ -27,19 +28,19 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
   <section class="line surface-dark">
     <div class="wrap line-grid">
       <div class="stack">
-        <p class="kicker">LINE Official</p>
+        <p class="kicker">LINE公式</p>
         <h2>
           神社と、心の整え方の話を<br />不定期でお届けします
         </h2>
         <p class="lede">
-          ご登録で「岡の声でご案内する瞑想の動画」と「14日間ステップ講座」をお送りしています。<br />
-          神社参拝の日程や、新しく入ったもののご案内も、ここがいちばん早いです。
+          ご登録で「岡の声でご案内する瞑想の導入動画」と「14日間のステップ講座」をお送りしています。<br />
+          神社参拝の日程も、新しいパワーストーンのご案内も、LINEがいちばん早くお伝えできます。
         </p>
         <div class="line-btns">
           <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
           <a href={withBase('/line/')} class="btn btn--ghost">LINEの特典・詳細</a>
         </div>
-        <p class="note">※ いつでも解除できます。費用は一切かかりません。</p>
+        <p class="note">※ 無料です。いつでも解除できます。</p>
       </div>
 
       <div class="line-qr">
@@ -51,7 +52,7 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
             height="360"
           />
         </div>
-        <span class="note">スマホで読取</span>
+        <span class="note">スマホで読み取れます</span>
       </div>
     </div>
   </section>

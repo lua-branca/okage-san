@@ -5,6 +5,15 @@ import Faq from '../components/Faq.astro';
 import LineCta from '../components/LineCta.astro';
 import { withBase } from '../utils/base';
 
+/** 個別セッションの申し込み先。本番の申込フォーム（Xserver）へ直接飛ばします。
+ *  🔴 ここは**本番フォーム**です。ローカルやプレビューから押すと、
+ *     本物の申し込みとしてスプレッドシートに記録されます。テスト送信しないこと。
+ *  tour_id / tour_name はフォームが hidden で受け取り、そのまま台帳に入ります。
+ *  🔴 tour_id `session-hypno` と金額は `02_商品・サービスマスタ` が正本です。
+ *     金額を変えるときは、スプシ・このURL・下の「44,000円」表示の3か所を必ず揃えること。 */
+const SESSION_FORM_URL =
+  'https://okage-san.com/form/?tour_id=session-hypno&tour_name=%E9%80%80%E8%A1%8C%E5%82%AC%E7%9C%A0%E3%82%BB%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%2044,000%E5%86%86';
+
 const faqs = [
   {
     q: '初めてでも催眠（トランス状態）に入れますか？',
@@ -113,11 +122,36 @@ const faqs = [
         </div>
 
         <div class="plan-btn-wrap">
-          <a href={withBase('/contact/')} class="btn btn--lg">
-            個別セッションを申し込む・相談する
+          <a href={SESSION_FORM_URL} class="btn btn--lg">
+            このセッションを申し込む
           </a>
         </div>
+
+        {/* ── 申し込みフォームの中身に合わせた案内。★2026-08-06 新設 ──
+            🔴 フォームは**ツアーと共通**です。日程も、対面かオンラインかも聞いていません。
+               だから「備考欄に書いてください」と、ここで先に伝える必要があります。
+               これが無いと、日程調整のメールが必ず1往復増えます。
+            🔴 フォームの項目を変えたら、この文面も直すこと（public/form/index.php）。 */}
+        <div class="plan-flow stack">
+          <p class="note">
+            入力は2〜3分です（お名前・フリガナ・メールアドレス・電話番号・お住まいの都道府県）。<br />
+            <strong>ご希望の日程と、対面かオンラインかは「備考」欄にご記入ください。</strong>
+          </p>
+          <p class="note">
+            送信後、お支払いのご案内メールが自動で届きます（クレジットカード／銀行振込）。<br />
+            日程は、そのメールのやりとりで確定します。
+          </p>
+          <p class="note">
+            領収書が必要な方は、フォームの「領収書」で<strong>希望する</strong>を選び、
+            宛名と但し書きを備考欄にご記入ください。
+          </p>
+        </div>
       </div>
+
+      <p class="note plan-ask">
+        いきなり申し込むのは、と迷われる方へ。
+        <a href={withBase('/contact/')}>お問い合わせ</a>から、ご相談だけでも承ります。
+      </p>
     </section>
 
     {/* ── 法務・注意事項 ── */}
@@ -269,6 +303,18 @@ const faqs = [
   .plan-btn-wrap {
     margin-top: 1rem;
   }
+
+  /* 申し込みフォームの案内。
+     🔴 カードの中は中央揃えですが、ここだけ**左揃え**にしています。
+        3行以上の説明を中央揃えにすると、行頭が揃わず読みにくくなるためです。 */
+  .plan-flow {
+    margin-top: 1.4rem;
+    text-align: left;
+    max-width: 30rem;
+    margin-inline: auto;
+    gap: .7rem;
+  }
+  .plan-ask { margin-top: 1.1rem; }
 
   .btn--lg {
     padding: 1rem 2.5rem;

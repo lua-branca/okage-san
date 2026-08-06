@@ -7,38 +7,64 @@
  *    書籍『願わず叶う神社参拝入門』・LINEステップ配信（40_Marketing/LINE_STEP_PLAN.md）の
  *    本編は神棚・祈りの型・言霊が中心で、瞑想の比重は小さい。ここもそれに揃える。
  *
- *  ★読み手の心の動き
- *    無料で始める（瞑想音声・LINE）
- *      → 続けたくなったら、家に祈る場所を（神棚・準備中）
- *      → 道具が欲しくなったら、石か松ぼっくり
+ *  ★2026-08-06 改訂（岡さんからの原稿を反映）
+ *    - **販売するのは石だけ**にしました。松ぼっくりは取り下げ
+ *      （記事は `.trash/2026-08-06/mind_pinecone/0013.md`。画像は public に残してあります）。
+ *    - 石の位置づけは「守ってもらうお守り」ではなく **共鳴装置**。
+ *      自分の神性を、石の神性と共鳴させて増幅する道具、という岡さんの考えが中心です。
+ *    - 石とセットで **使い方・瞑想の解説動画** を届ける（`src/data/mindVideos.ts`）。
  *
- *  🔴 石・松ぼっくりは「入門→上級」のラダーではない（2026-07-31 方針変更）。
- *     松ぼっくり（額に当てる・サードアイ）は価格は安いが行為としてはニッチなため、
- *     価格順の階段ではなく **並列の選択肢** として見せる。
+ *  ★読み手の心の動き（2026-08-06 福田さん指摘で並べ替え）
+ *    整えるとは何か → そのための道具がある → 今お渡しできるのは石
+ *      → 石とは何かを知る（岡の言葉。守ってもらうものではない → 共鳴装置）
+ *      → 石を迎える
+ *      → 使い方・瞑想を動画で学ぶ  ← ここが「買ったあと」の受け皿
+ *      → まだ迷う方へ、無料で始められます（LINE）
+ *
+ *  🔴 LINEの誘いは**末尾に1回だけ**です。冒頭に置いていたのを移しました。
+ *     「何のページか分からないうちにお願いごとをしない」ため。先頭に戻さないこと。
+ *  🔴 神棚は②の一行だけ。独立セクションは畳みました（唐突だったため）。
+ *
+ *  🔴🔴 表記は「パワーストーン」に統一します（2026-08-06 福田さん判断・検索を取るため）。
+ *     ── 使い分けのルール ──
+ *     ・見出し／案内文／title・description／FAQの質問文 → **パワーストーン**
+ *     ・岡さんの原稿をそのまま載せている箇所 → 原文どおり **石**（③④と⑥の見出し）。
+ *       本人の言葉なので置換しない。ここだけが例外です
+ *     ・鉱物としての事実・法務表記（天然石／原石） → **石**。
+ *       「天然パワーストーン」は不正確なので使わない
+ *     ⚠️ コレクション名 `ishi` と URL `/mind/0012/` は変更しません。
+ *        リネームすると既存URLと data-store が壊れます。
+ *
+ *  🔴 岡さんの言葉のセクション（②）は**本人の原稿**です。
+ *     一人称「私」のまま載せています。AI・福田が言い回しを足さないこと。
  *
  *  🔴 「天と繋がりやすくなる」は明言してよい（本人確認済み・スピリチュアルに振り切る方針）。
  *     ただし「肩こりが楽になる」等の身体的効能表現は04_石のページ.mdのNGリストに抵触するため書かない。 */
 import Base from '../../layouts/Base.astro';
-import LineCta from '../../components/LineCta.astro';
+/* 🔴 LineCta は使いません。このページのLINE誘導は末尾の .free 一箇所だけです（2026-08-06） */
 import IshiCard from '../../components/IshiCard.astro';
 import Faq from '../../components/Faq.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
+import { mindVideos } from '../../data/mindVideos';
 
 const LINE_URL = 'https://lin.ee/XAxux9k';
 
 // 新しい順。販売中もSOLDも混ぜて並べる（SOLDも作品歴として効く）
 const all = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
 
-// 石と松ぼっくりは並列の選択肢として別セクションで見せる（ラダーにしない）
+// 🔴 2026-08-06：扱うのは石だけ。フィルタは残してあります
+//    （スキーマの kind enum には松ぼっくりが残っているため。再開するときはここに戻す）
 const stones = all.filter((s) => s.data.kind === '石');
-const pinecones = all.filter((s) => s.data.kind === '松ぼっくり');
 const stoneOnSale = stones.filter((s) => !s.data.soldout).length;
 
-// 点数が少ないうちは大きく見せる。3列に1点だと寂しく見えるため
-const colsOf = (n: number) => (n >= 3 ? 3 : 2);
-const stoneCols = colsOf(stones.length);
-const pineconeCols = colsOf(pinecones.length);
+/* 点数が少ないうちは大きく見せる。
+   🔴 2026-08-06：1点のときも2列にしていたため、**左半分だけが埋まった状態**で出ていました。
+      1点なら1列。ただし本文幅いっぱいだと大きすぎるので、CSS側で幅に上限を付けています。 */
+const stoneCols = stones.length >= 3 ? 3 : stones.length === 2 ? 2 : 1;
+
+// 動画が1本も公開されていないうちは「準備中」の案内だけを出す
+const hasVideo = mindVideos.some((v) => v.youtubeId);
 
 const faq = [
   {
@@ -46,28 +72,32 @@ const faq = [
     a: '「これだ」と目が留まったもので大丈夫です。\n迷ったらお問い合わせください。今どういう状態か伺って、岡がお答えします。',
   },
   {
-    q: '石や松ぼっくりがないと、瞑想できませんか。',
-    a: 'いいえ。何も持たずにできます。\n石や松ぼっくりは、天との回路を開きやすくする道具です。なくても始められます。',
+    q: 'パワーストーンがないと、瞑想できませんか。',
+    a: 'いいえ。何も持たずにできます。\nパワーストーンは、あなたの中にあるものを増幅する道具です。なくても始められます。',
   },
   {
-    q: '手入れや浄化は必要ですか。',
-    a: '（ヒアリング待ち：岡さんの言葉で）',
+    q: '瞑想がうまくできません。雑念ばかり浮かびます。',
+    a: 'それがふつうです。うまくいく日といかない日があります。\n雑念が浮かんだときにどうするかも含めて、岡が動画でお伝えしています。',
   },
   {
-    q: '同じ種類でも、どれも同じですか。',
+    q: '同じ種類のパワーストーンでも、どれも同じですか。',
     a: '違います。同じ種類でも、表情はひとつずつ違います。\nすべて一点もので、同じものは二つとありません。',
   },
+  /* 🔴 「手入れや浄化は必要ですか」は岡さんへのヒアリング待ちのため、いったん外しています。
+        「石は邪気を吸うから浄化する」という考え方を岡さんは取らないので、
+        福田・AIが一般論で埋めないこと。本人の言葉が来たらここに戻す。 */
 ];
 ---
 
 <Base
-  title="心を整える ─ 神社参拝を、日常へ"
-  description="神社参拝で感じた「整う」感覚は、家でも続けられます。まずは無料の瞑想音声から。続けたくなったら神棚、道具が欲しくなったら石や松ぼっくり。岡慶行が選んだ、一点ものの道具たち。"
+  title="パワーストーン ─ 心を整える"
+  description="パワーストーンは、守ってもらうためのものではありません。あなた自身の神性を増幅する共鳴装置です。岡慶行が一つひとつ手に取って選んだ一点ものの石と、持ち方・瞑想のしかたの解説動画をあわせてお届けします。"
   surface="dark"
 >
   <div class="wrap section stack">
     {/* ── ① まず「売り込まない」ことを言う。ここで信頼を取る ──
-        🔴 主語は「瞑想」でなく「参拝で整った感覚」。瞑想は②で入口として紹介する */}
+        🔴 主語は「瞑想」でなく「参拝で整った感覚」。
+           ★2026-08-06：ここで商品にもLINEにも触れません。②で橋を架けてから石の話に入ります。 */}
     <header class="stack" data-reveal>
       <p class="kicker">心を整える</p>
       <h1 class="mj">
@@ -92,89 +122,147 @@ const faq = [
       />
     </figure>
 
-    {/* ── ② 無料で始める。★このページの第一CV ──
-        .free 自身が金の上下線を持つので、ここに <hr> は置かない（二重線になる） */}
-    <section class="stack free" data-reveal>
-      <p class="kicker">まず、無料で</p>
-      <h2>今日から、ひとりでできます</h2>
-
-      <ul class="free__l">
-        <li>
-          <span class="free__t mj">瞑想の導入動画</span>
-          <span class="note">座り方、呼吸、意識の置きどころ。岡が解説しています</span>
-        </li>
-        <li>
-          <span class="free__t mj">14日間のステップ講座</span>
-          <span class="note">1日1通。読みながら、少しずつ身につけていきます</span>
-        </li>
-        <li>
-          <span class="free__t mj">月に一度の「整える会」</span>
-          <span class="note">オンラインで、みんなで一緒に瞑想する会。前後に岡のお話つき</span>
-        </li>
-      </ul>
-
-      <p><a href={LINE_URL} class="btn" target="_blank" rel="noopener">LINEで受け取る</a></p>
-      <p class="note">すべて無料です。いつでも解除できます。</p>
-    </section>
-
-    {/* ── ③ 神棚（予告）。書籍『願わず叶う神社参拝入門』第十章の要約がベース ──
-        🔴 商品化・詳細ページはまだ先。ここは予告のみ。まだ岡さんの言葉に置き換えていないので、
-           公開前に本人確認を必ず通すこと。 */}
+    {/* ── ② 前段。★2026-08-06 新設（福田さん指摘）──
+        🔴 「整える」の直後にパワーストーンの話が始まると、話が飛びます。
+           ここで「整えるとは何か → そのための道具がある → 今お渡しできるのは石」まで
+           橋を架けてから、③の岡さんの原稿に入ります。**この順番を崩さないこと。**
+        🔴 神棚もここで一行だけ予告します。以前は石のあとに独立セクションを置いていましたが、
+           突発的だという指摘で畳みました（元の文面：「神棚は、自宅の中に設ける小さな神社の
+           空間です。朝夕、手を合わせるだけで、暮らしに祈りのリズムが生まれます」＝書籍
+           『願わず叶う神社参拝入門』第十章の要約。商品化のときに使えます）。 */}
     <section class="stack" data-reveal>
-      <p class="kicker">その先に</p>
-      <h2>家に、神様と暮らす場所を</h2>
+      <p class="kicker">整えるということ</p>
+      <h2>整えるのは、<br />あなた自身の神性です</h2>
 
       <div class="prose">
         <p>
-          神棚は、自宅の中に設ける小さな神社の空間です。<br />
-          朝夕、手を合わせるだけで、暮らしに祈りのリズムが生まれます。
+          何かを足すのではありません。<br />
+          もともとあるものに、意識を戻していく。<br />
+          このページは、そのための場所です。
         </p>
         <p>
-          ここは今、準備を進めています。<br />
-          近いうちに、お祀りの仕方から一緒にお伝えします。
-        </p>
-      </div>
-    </section>
-
-    {/* ── ④ 橋渡し。ここで初めて道具の話をする ──
-        🔴 2026-07-31：「少し楽になります」はNG表現リスト（04_石のページ.md 表現ルール）の
-           「肩こりが楽になる」に抵触するため削除。かわりに「天と繋がりやすくなる」で明言する
-           （本人確認・スピリチュアルに振り切る方針でOK）。
-        経路は道具によって違う：石＝手に持つ／松ぼっくり＝額に当ててサードアイ */}
-    <section class="stack" data-reveal>
-      <p class="kicker">それから</p>
-      <h2>天と繋がりやすくなる、<br />そのための道具です</h2>
-
-      <div class="prose">
-        <p>
-          手ぶらで座ると、思考がうろうろします。<br />
+          とはいえ、ひとりで座ってみると、思考はうろうろします。<br />
           今日のこと、明日のこと。
         </p>
         <p>
-          石は、手に持つと。<br />
-          松ぼっくりは、額に当てると、サードアイが目覚めて。<br />
-          <strong>どちらも、天と繋がりやすくなります。</strong>
+          だから、道具があります。<br />
+          <strong>自分の中にあるものに、意識を戻すための道具</strong>です。
         </p>
         <p>
-          道具そのものが特別なのではなく、<br />
-          天との回路を開きやすくしてくれる、そういう存在です。
+          その道具のひとつが、<strong>パワーストーン</strong>です。
+        </p>
+      </div>
+
+      <p class="note">
+        家に祈る場所をつくる神棚については、いずれ改めてお伝えします。
+      </p>
+    </section>
+
+    {/* ── ③ 岡さんの言葉。このページの背骨 ──
+        🔴 岡さん本人の原稿（2026-08-06 受領）です。一人称「私」のまま載せています。
+           言い回しを足したり、まとめ直したりしないこと。
+           削るときも、「守ってもらうものではない → 増幅する共鳴装置」の順番は崩さない。
+        ⚠️ 囲み枠や区切り線を付けたくなりますが、付けません。
+           このページで線を持てるのは .free だけです（引き継ぎ書 B項）。 */}
+    <section class="stack" data-reveal>
+      <p class="kicker">石のこと</p>
+      <h2>パワーストーンは、本当に<br />あなたを守ってくれるのでしょうか</h2>
+
+      <div class="prose">
+        <p>パワーストーンには、さまざまな考え方があります。</p>
+      </div>
+
+      <ul class="views">
+        <li>
+          <span class="views__t mj">お守りとして身につける</span>
+          <span class="note">邪気から守ってくれる、厄除けになる、と考える方。</span>
+        </li>
+        <li>
+          <span class="views__t mj">願いを叶える道具として使う</span>
+          <span class="note">金運、恋愛運。石ごとに役割があると考える方。</span>
+        </li>
+        <li>
+          <span class="views__t mj">浄化が必要だと考える</span>
+          <span class="note">石は邪気を吸うから、月光浴や水晶で定期的に浄化するという考え方。</span>
+        </li>
+        <li>
+          <span class="views__t mj">波動や共鳴を大切にする</span>
+          <span class="note">石のエネルギーと人の意識が共鳴し、瞑想やチャクラワークを深めると考える方。</span>
+        </li>
+      </ul>
+
+      <div class="prose">
+        <p>どれが正しい、間違っているという話ではありません。</p>
+        <p>
+          ただ、私は長年パワーストーンと向き合ってきて、<br />
+          一つ感じていることがあります。
+        </p>
+        <p>
+          それは、<br />
+          <strong>パワーストーンは「守ってもらうため」のものではない</strong>、ということです。
+        </p>
+        <p>
+          「守ってください」<br />
+          「悪いものを吸ってください」<br />
+          「運気を上げてください」
+        </p>
+        <p>
+          その気持ちが強くなればなるほど、<br />
+          自分の光を石に預けてしまうことにもなりかねません。
         </p>
       </div>
     </section>
 
-    {/* ── ⑤ 石。岡が選ぶということ ＝ ここが商品価値 ── */}
+    {/* ── ④ 反転。ここで「共鳴装置」を出す。ページ全体でいちばん強い場所 ── */}
     <section class="stack" data-reveal>
-      <p class="kicker">選び方</p>
-      <h2>名前で選んでいません</h2>
+      <p class="kicker">本来の役割</p>
+      <h2>パワーストーンは、あなた自身の<br />エネルギーを増幅する存在です</h2>
 
       <div class="prose">
         <p>
-          世に出ている石には、<br />
-          色を付けたものや、樹脂で固めたものもあります。
+          愛を持てば、眠った愛が開き。<br />
+          感謝を持てば、全身が輝き。<br />
+          瞑想をすれば、上と繋がりやすくなる。
         </p>
         <p>
-          岡が手渡すのは、<br />
-          <strong>自分で手に取って、流れを感じたものだけ</strong>です。<br />
+          そしてハートチャクラを開き、<br />
+          宇宙とのつながりを深める力を、優しく後押ししてくれる。<br />
+          そんな<strong>「共鳴装置」</strong>のような存在です。
+        </p>
+        <p>
+          だから、「石に守ってもらう」ではなく、<br />
+          <strong>「石と共に、自分の魂を輝かせる」</strong><br />
+          という気持ちで身につけてほしいと思っています。
+        </p>
+        <p>
+          石が人生を変えるのではありません。<br />
+          あなたの意識に眠る神性が、石に眠る神性と共鳴し、<br />
+          何倍にも増幅してくれる。
+        </p>
+        <p>これが、私の考える本来のパワーストーンです。</p>
+      </div>
+
+      <p class="sign mj">── 岡 慶行</p>
+    </section>
+
+    {/* ── ⑤ 選び方。④の「共鳴」から自然に「だから数がそろわない」へ落とす ── */}
+    <section class="stack" data-reveal>
+      <p class="kicker">選び方</p>
+      <h2>魂が本当に喜ぶ<br />パワーストーンだけを</h2>
+
+      <div class="prose">
+        <p>
+          そのようなパワーストーンは、実はとても希少です。<br />
+          見た目が美しいだけではなく、
+          持ち主の神性と深く共鳴できる石には、なかなか出会えません。
+        </p>
+        <p>
+          だから私は、「珍しい石」を探しているのではありません。<br />
+          <strong>魂が本当に喜ぶ石</strong>を、一つひとつ探し続けています。
+        </p>
+        <p>
+          世に出ている石には、色を付けたものや、樹脂で固めたものもあります。<br />
+          お渡しするのは、<strong>自分で手に取って、流れを感じたものだけ</strong>です。<br />
           石の名前や相場では選びません。
         </p>
         <p>
@@ -185,14 +273,16 @@ const faq = [
     </section>
 
     <section class="stack" data-reveal>
-      <p class="kicker">今ある石</p>
-      <h2>見ていただくだけでも、<br />うれしいです</h2>
+      <p class="kicker">今あるパワーストーン</p>
+      {/* 🔴 この見出しは岡さんの原稿の結びです。「石」のまま残しています（表記統一の例外） */}
+      <h2>石を選ぶのではなく、<br />石と共鳴する</h2>
       <p class="note">
-        {stones.length}点あります{stoneOnSale < stones.length && `（うちお迎えいただけるのは${stoneOnSale}点）`}。<br />
+        見ていただくだけでも、うれしいです。<br />
+        {stones.length}点あります{stoneOnSale < stones.length && `（うちお求めいただけるのは${stoneOnSale}点）`}。
         気になるものがあれば、写真でじっくりご覧ください。
       </p>
 
-      <div class="gal" style={`--cols:${stoneCols}`}>
+      <div class={`gal${stones.length === 1 ? ' gal--one' : ''}`} style={`--cols:${stoneCols}`}>
         {stones.map((s) => (
           <IshiCard
             id={s.data.id}
@@ -209,48 +299,114 @@ const faq = [
       </p>
     </section>
 
-    {/* ── ⑥ 松ぼっくり。石とは並列の、別の選択肢 ──
-        🔴 石の「一点物・目利き」の物語はここでは繰り返さない（04b設計・2026-07-31方針）。
-           松ぼっくりは気軽に迎えられる道具、という軽さで見せる。 */}
-    <section class="stack" data-reveal>
-      <p class="kicker">もうひとつ</p>
-      <h2>松ぼっくりという道具</h2>
+    {/* ── ⑦ 使い方と瞑想。★2026-08-06 新設 ──
+        🔴 ここは「買ったあと」の受け皿です。石だけ渡して終わりにしない、が趣旨。
+           瞑想はうまくいく日といかない日があること、雑念が入って当たり前であることを
+           先に言っておく。これが言えていないと、続かなかった人が自分を責めます。
+        動画の追加は `src/data/mindVideos.ts` に youtubeId を貼るだけ。ここは触らなくて済みます。 */}
+    {/* 🔴 id="use" は商品詳細ページ（/mind/0012/ など）からのリンク先です。外さないこと */}
+    <section id="use" class="stack" data-reveal>
+      <p class="kicker">使い方</p>
+      <h2>持ち方から、瞑想のしかたまで<br />岡がお伝えします</h2>
 
       <div class="prose">
         <p>
-          石が、手に持つ道具だとしたら、<br />
-          松ぼっくりは、額に当てる道具です。
+          パワーストーンは、持っているだけでも働きます。<br />
+          ただ、使い方を知っていると、感じ方がまったく変わります。
         </p>
         <p>
-          大王松の松ぼっくりを、そのまま。<br />
-          気軽に迎えられるように、価格も抑えています。
+          瞑想も同じです。<br />
+          うまくいく日と、いかない日があります。雑念が浮かぶ日もあります。<br />
+          <strong>それがふつうです。</strong>
+        </p>
+        <p>
+          だから、この石を選ばれた方には、<br />
+          岡の解説動画をあわせてお届けしています。
         </p>
       </div>
 
-      <div class="gal" style={`--cols:${pineconeCols}`}>
-        {pinecones.map((s) => (
-          <IshiCard
-            id={s.data.id}
-            name={s.data.name}
-            price={s.data.price}
-            photo={s.data.cardPhoto ?? s.data.photos[0]}
-            soldout={s.data.soldout}
-          />
+      <ul class="vids">
+        {mindVideos.map((v) => (
+          <li class="vids__i">
+            <div class="vids__h">
+              <span class="vids__t mj">{v.title}</span>
+              <span class="vids__meta note">
+                {v.length}
+                {v.access === "buyer" && <> ・お求めいただいた方へ</>}
+                {!v.youtubeId && <> ・準備中</>}
+              </span>
+            </div>
+            <span class="note">{v.note}</span>
+
+            {v.youtubeId && v.access === 'public' && (
+              <div class="vids__f">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
+                  title={v.title}
+                  loading="lazy"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            )}
+          </li>
         ))}
-      </div>
+      </ul>
+
+      <p class="note">
+        {hasVideo
+          ? "お求めいただいた方向けの動画は、ご購入後のメールでお送りします。"
+          : '動画は現在、収録の準備を進めています。公開の際はLINEでお知らせします。'}
+      </p>
     </section>
 
-    {/* ── ⑦ 選ぶ前の不安に答える ── */}
+    {/* ── ⑧ 選ぶ前の不安に答える ── */}
     <section class="stack" data-reveal>
       <h2>よくあるご質問</h2>
       <Faq items={faq} />
     </section>
 
     <p class="note">
-      ※ 天然素材でつくられたものです。医療的・霊的な効果を保証するものではありません。
+      ※ 天然石です。医療的・霊的な効果を保証するものではありません。
     </p>
 
-    <LineCta variant="section" />
+    {/* ── ⑨ 無料で始める。★2026-08-06、ページの先頭から末尾へ移しました（福田さん判断）──
+        理由：先に読んで納得してもらってから誘う。冒頭でLINEに誘うと、
+        まだ何のページか分からないうちにお願いごとをすることになるため。
+        🔴 ここが最後のCTAです。この下に <LineCta> を足さないこと（LINEの誘いが二重になります）。
+        .free 自身が金の上下線を持つので、<hr> も置かない。 */}
+    <section class="stack free" data-reveal>
+      {/* 🔴 ここは「まず試してみる」の意味です。
+             「ひとりで始める」だと孤独な感じが出るので使わないこと（2026-08-06 福田さん指摘）。 */}
+      <p class="kicker">まず、試してみる</p>
+      <h2>パワーストーンがなくても、<br />心は整えられます</h2>
+
+      <p class="note">
+        パワーストーンは、意識を戻しやすくするための道具です。<br />
+        持たずに始めることもできます。
+      </p>
+
+      {/* 🔴 「無料」は下の注記で一度だけ言います。ここで繰り返さないこと（2026-08-06 福田さん指摘）。
+             「無料」を押すほど、売り込みの匂いが出ます。 */}
+      <ul class="free__l">
+        <li>
+          <span class="free__t mj">瞑想の導入動画</span>
+          <span class="note">座り方、呼吸、意識の置きどころ。岡が解説しています</span>
+        </li>
+        <li>
+          <span class="free__t mj">14日間のステップ講座</span>
+          <span class="note">1日1通。読みながら、少しずつ身につけていきます</span>
+        </li>
+        {/* 🔴 「月に一度の整える会」は**まだ未確定**のため外しました（2026-08-06）。
+               開催が決まったらここに戻します。決まるまで書かないこと。 */}
+      </ul>
+
+      <p><a href={LINE_URL} class="btn" target="_blank" rel="noopener">LINEで受け取る</a></p>
+      <p class="note">
+        無料です。いつでも解除できます。<br />
+        新しいパワーストーンが入ったときも、LINEでいちばん先にお知らせしています。
+      </p>
+    </section>
   </div>
 </Base>
 
@@ -290,13 +446,38 @@ const faq = [
   .free__l li { display: flex; flex-direction: column; gap: .2rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
   .free__t { font-size: var(--fs-lg); color: var(--fg); }
 
+  /* 世の中にあるパワーストーンの考え方を4つ並べる。
+     ⚠️ 線で囲まないこと（.free と役割がぶつかります）。ここは「並んでいる」だけで十分です。 */
+  .views { list-style: none; padding: 0; margin: .25rem 0 0; display: flex; flex-direction: column; gap: 1.1rem; }
+  .views li { display: flex; flex-direction: column; gap: .15rem; }
+  .views__t { font-size: var(--fs-body); color: var(--fg); }
+
+  /* 岡さんの原稿であることを示す署名。本文より小さく、右へ寄せる */
+  .sign { font-size: var(--fs-sm); color: var(--fg-2, var(--ink-2)); text-align: right; margin-top: .5rem; }
+
+  /* 解説動画の一覧。動画が入る前は題名と「準備中」だけが並びます */
+  .vids { list-style: none; padding: 0; margin: .25rem 0 0; display: flex; flex-direction: column; gap: 1.4rem; }
+  .vids__i { display: flex; flex-direction: column; gap: .2rem; }
+  .vids__h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .7rem; }
+  .vids__t { font-size: var(--fs-lg); color: var(--fg); }
+  .vids__meta { white-space: nowrap; }
+  /* 16:9。iframeは高さを持たないので比率を先に確保する */
+  .vids__f { margin-top: .6rem; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; border: 1px solid var(--rule); }
+  .vids__f iframe { width: 100%; height: 100%; border: 0; display: block; }
+
   .gal {
     display: grid;
     grid-template-columns: repeat(var(--cols, 3), 1fr);
     gap: 1.25rem;
     margin-top: .5rem;
   }
+  /* 1点だけのときは、本文幅いっぱいに引き伸ばさない。
+     🔴 大きすぎると「在庫が1点しかない」ことが目立ちます。落ち着く大きさに止めます。 */
+  .gal--one { max-width: 20rem; }
+
   @media (max-width: 640px) {
-    .gal { grid-template-columns: repeat(2, 1fr); }
+    /* 2点以上のときだけ2列。1点のときは1列のまま（--cols を上書きしない） */
+    .gal:not(.gal--one) { grid-template-columns: repeat(2, 1fr); }
+    .gal--one { max-width: none; }
   }
 </style>

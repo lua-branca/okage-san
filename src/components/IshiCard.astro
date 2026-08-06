@@ -20,7 +20,7 @@ const { id, name, price, photo, soldout = false } = Astro.props;
   <span class="card__n mj">{name}</span>
   <span class="card__m tabnum">No.{id} ／ 一点もの</span>
   {soldout ? (
-    <span class="card__p card__p--sold">お迎えいただきました</span>
+    <span class="card__p card__p--sold">SOLD OUT</span>
   ) : (
     <span class="card__p tabnum">¥{price?.toLocaleString('ja-JP')}</span>
   )}
@@ -40,7 +40,15 @@ const { id, name, price, photo, soldout = false } = Astro.props;
   }
   .card:hover { outline: 1px solid var(--accent); outline-offset: 0; }
   .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .card img { width: 100%; }
+  /* 🔴 正方形。詳細ページのメイン写真（1:1）と見え方を揃えるためです（2026-08-06）。
+        cardPhoto は4:3で中央を切り出したものなので、正方形にしても石は中央に残ります。
+     ⚠️ 元ファイルは切っていません。表示だけです。 */
+  .card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+  }
 
   .card__n { font-size: var(--fs-sm); color: var(--p700); line-height: 1.5; }
   .card__m { font-family: var(--mono); font-size: var(--fs-label); color: var(--ink-2); }
@@ -48,7 +56,7 @@ const { id, name, price, photo, soldout = false } = Astro.props;
   .card__p--sold { color: var(--ink-2); }
 
   .card--sold::after {
-    content: 'SOLD';
+    content: 'SOLD OUT';
     position: absolute;
     top: 1.1rem;
     right: 1.1rem;

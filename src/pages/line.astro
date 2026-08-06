@@ -4,26 +4,31 @@ import { withBase } from '../utils/base';
 
 const LINE_URL = 'https://lin.ee/XAxux9k';
 
+/* 🔴 文言のルール（2026-08-06 見直し）
+ *   ① **「週1回」「毎週」と書かない。**「不定期」に統一します。
+ *      守れない約束になるためです（引き継ぎ書・LineCta.astro と同じルール）。
+ *      直前まで、見出しは「不定期」なのにカードは「毎週配信」で、**同じページの中で矛盾**していました。
+ *   ② **「無料」は1ページに1回だけ。** 押すほど売り込みの匂いが出ます。
+ *   ③ **絵文字は使わない。**明朝と深紫の静かなトーンから浮きます（/about/ で外したのと同じ理由）。
+ *   ④ **裏側の事情を読者に見せない。**「売るのはLINEです」「Facebookから厳選」等は書かない。 */
 const benefits = [
   {
     tag: '登録特典 ①',
     title: '岡の声でご案内する、瞑想の導入動画',
-    desc: '瞑想の際に手に持つ石の見立てや、心を深く静めるための基本的な意識の持ち方を解説した特別導入動画をお渡ししています。',
-    icon: '🧘',
+    desc: '座り方、呼吸、意識の置きどころ。何も持たずに、今日から始められます。',
   },
   {
     tag: '登録特典 ②',
-    title: '初心者向け 14日間のステップ学び配信',
-    desc: '「神社参拝の本当の意味」や「日常で心を整える技術」を、1日ひとつずつ無理なく学べる14日間の特別ステップ講座をお届けします。',
-    icon: '✨',
+    title: '14日間のステップ講座',
+    desc: '神社参拝の本当の意味と、日常で心を整えるしかたを、1日ひとつずつ。無理なく読める分量でお送りします。',
   },
 ];
 
 const contents = [
   {
-    title: '週1回の気づき配信',
-    desc: '岡慶行のFacebook発信から厳選した、今困っている人・迷っている人への「心を整えるメッセージ」を毎週お届けします。',
-    badge: '毎週配信',
+    title: '心を整えるメッセージ',
+    desc: '今まさに迷っている方、立ち止まっている方へ。岡が日々の中で書きとめた言葉を、そのままお届けします。',
+    badge: '不定期',
   },
   {
     title: '神社参拝の優先案内',
@@ -31,46 +36,46 @@ const contents = [
     badge: '優先告知',
   },
   {
-    title: '整える石（1点もの）のお披露目',
-    desc: 'ひとつひとつ表情が異なる1点ものの石。新しい石のご案内は、いつもLINE公式がいちばん早いです。',
+    title: 'パワーストーン（1点もの）のお披露目',
+    desc: 'ひとつひとつ表情が異なる1点もののパワーストーン。新しいもののご案内は、いつもLINE公式がいちばん早いです。',
     badge: '先行案内',
   },
-  {
-    title: '月1回「整える会」のご案内',
-    desc: '月に一度、オンラインで一緒にお話・瞑想し、マインドを持ち帰っていただく60分間の会のご案内。',
-    badge: '月1回開催',
-  },
+  /* 🔴 「月1回『整える会』」は**まだ未確定**のため外しました（2026-08-06 福田さん判断）。
+     /mind/ 側からも同時に外しています。開催が決まったら両方に戻すこと。 */
 ];
 ---
 
 <Base
   title="LINE公式のご案内"
-  description="神社参拝の本質と心の整え方を不定期でお届け。ご登録で「岡の声でご案内する瞑想の導入動画」と「14日間のステップ学び講座」をお送りしています。"
+  description="神社参拝の本質と心の整え方を不定期でお届け。ご登録で「岡の声でご案内する瞑想の導入動画」と「14日間のステップ講座」をお送りしています。"
   surface="dark"
 >
   <div class="wrap section stack">
     {/* ── ヒーロー ── */}
     <header class="line-hero" data-reveal>
       <div class="line-hero__info stack">
-        <p class="kicker">LINE Official</p>
+        <p class="kicker">LINE公式</p>
         <h1 class="mj">
           神社と、心の整え方の話を<br />
           不定期でお届けします。
         </h1>
+        {/* 🔴 ここには以前「売るのはLINEです。サイトは『信じてもらう場所』」と書いてありました。
+               これは**社内の設計メモ**です。読者に向けて「売る」と宣言していることになるので外しました。
+               設計の意図は 20_Site/SITE_CONCEPT.md に書いてあります。ページに戻さないこと。 */}
         <p class="lede">
-          売るのはLINEです。サイトは「信じてもらう場所」。<br />
-          最新の募集や一点ものの石、週1回のメッセージはすべてLINEでお届けしています。
+          神社参拝の日程も、新しいパワーストーンのご案内も、<br />
+          LINEがいちばん早くお伝えできます。
         </p>
 
         <div class="line-hero__action">
           <a href={LINE_URL} class="btn btn--line btn--lg" target="_blank" rel="noopener">
             LINEで友だち追加する
           </a>
-          <span class="note">※ いつでもワンタップで解除できます。費用は一切かかりません。</span>
+          <span class="note">※ 無料です。いつでもワンタップで解除できます。</span>
         </div>
       </div>
 
-      {/* QRコード（スマホでもPCでも確認しやすい） */}
+      {/* QRコード。★PCでだけ出ます（スマホでは上のCSSで消しています） */}
       <div class="line-hero__qr-box stack">
         <div class="qr" style="--qr-size:200px">
           <img
@@ -80,20 +85,20 @@ const contents = [
             height="360"
           />
         </div>
-        <p class="note text-center">PCでお手元のスマホから<br />QRコードを読み取れます</p>
+        <p class="note text-center">お手元のスマホで<br />読み取れます</p>
       </div>
     </header>
 
     {/* ── 登録特典 ── */}
     <section class="stack benefits-sec" data-reveal>
       <p class="kicker">ご登録の特典</p>
-      <h2>ご登録いただいた方への2大特典</h2>
+      <h2>ご登録の方にお送りしているもの</h2>
 
       <div class="benefits-grid">
         {benefits.map((b) => (
           <div class="benefit-card stack">
             <div class="benefit-card__head">
-              <span class="benefit-card__icon">{b.icon}</span>
+              {/* 🔴 絵文字アイコンは外しました（2026-08-06）。静かなトーンから浮くためです */}
               <span class="benefit-card__tag">{b.tag}</span>
             </div>
             <h3 class="benefit-card__title mj">{b.title}</h3>
@@ -124,10 +129,10 @@ const contents = [
     {/* ── 登録CTA ── */}
     <section class="stack text-center cta-sec" data-reveal>
       <h2 class="mj">あなたとLINEでお会いできることを<br />楽しみにしています。</h2>
-      <p class="lede">登録後、すぐに特典動画と14日間講座の第1回目が届きます。</p>
+      <p class="lede">ご登録のあと、すぐに導入動画と、14日間講座の1日目が届きます。</p>
       <div class="cta-box">
         <a href={LINE_URL} class="btn btn--line btn--lg" target="_blank" rel="noopener">
-          LINE公式に登録して特典を受け取る
+          LINEで友だち追加する
         </a>
       </div>
       <p class="note">※ 通知が多く感じる場合は、設定からいつでも通知オフ・ブロックが可能です。</p>
@@ -149,6 +154,10 @@ const contents = [
       justify-items: center;
       gap: 2.5rem;
     }
+    /* 🔴 スマホ・タブレットではQRを出しません（2026-08-06 福田さん判断）。
+          自分の画面は自分で読み取れないので、場所を取るだけです。
+          共通の LineCta.astro も同じ 860px で消しています。**片方だけ直さないこと。** */
+    .line-hero__qr-box { display: none; }
   }
 
   .line-hero__action {
@@ -205,10 +214,6 @@ const contents = [
     display: flex;
     align-items: center;
     gap: 0.75rem;
-  }
-
-  .benefit-card__icon {
-    font-size: 1.5rem;
   }
 
   .benefit-card__tag {
