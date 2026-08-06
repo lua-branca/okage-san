@@ -89,17 +89,24 @@ const toc = headings.filter((h) => h.depth === 2);
       </div>
     </div>
 
-    {/* ── 署名 ── */}
+    {/* ── 署名。★2026-08-06 見直し ──
+        🔴 名前は「**岡慶行**」（スペースなし）。about.astro の表記ルールに揃えました。
+           スペース入りの「岡 慶行（おか よしゆき）」は**運営者情報と特商法だけ**です。
+        🔴 肩書きを足しました。記事から流入した人は、そもそも書き手を知りません。
+           「40年」という数字だけでは、何の40年か伝わっていませんでした。
+        ⚠️ リンクは1本だけにします。読み終わりで行き先を並べると、どれも選ばれません。 */}
     <div class="wrap">
       <aside class="sign" data-reveal>
         <img src={withBase('/assets/oka-portrait.jpg')} alt="" width="120" height="120" loading="lazy" />
         <div class="sign__tx">
-          <p class="sign__n mj">岡 慶行</p>
+          <p class="sign__n mj">岡慶行</p>
+          <p class="sign__r note">神道家 ／ ヒプノセラピスト ／ 造園家</p>
           <p class="note">
-            植木屋歴40年、神道歴40年あまり。<br />
-            庭も神社も、やっていることは同じでした。
+            十代の頃から、神道と造園の両方に師事してきました。<br />
+            庭を見れば、その家の気の滞りが分かります。神社でやっていることも同じです。<br />
+            場の巡りを読んで、整える。40年、それだけをやってきました。
           </p>
-          <p class="note"><a href={withBase('/about/')}>岡慶行という人について →</a></p>
+          <p class="note"><a href={withBase('/about/')}>岡慶行について →</a></p>
         </div>
       </aside>
     </div>
@@ -245,6 +252,8 @@ const toc = headings.filter((h) => h.depth === 2);
   .sign img { width: 84px; height: 84px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
   .sign__tx { display: flex; flex-direction: column; gap: .35rem; }
   .sign__n { font-size: var(--fs-body); color: var(--fg); }
+  /* 肩書き。名前のすぐ下に置いて、本文より一段落とす */
+  .sign__r { color: var(--accent); letter-spacing: .04em; }
 
   /* 前後の記事 */
   .pager {

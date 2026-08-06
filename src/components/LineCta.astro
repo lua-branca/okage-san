@@ -15,6 +15,14 @@ import { withBase } from '../utils/base';
  *   ④ 表記は「パワーストーン」に統一（2026-08-06・検索を取るため）。
  *      入荷案内は扱いが増える可能性を残して「新しく入ったもの」のままにしています。
  *
+ *
+ *  🔴 inline版（記事末）の決めごと（2026-08-06 見直し）
+ *   ・**ボタンは1つだけ。**「LINEで受け取る」と「詳細」を並べていたので、
+ *     いちばん温度が高い場所で読者に二択をさせていました。詳細は文中のリンクへ落としています
+ *   ・**何が届くのかを書く。**「こういう話を、LINEでもお送りしています」だけでは、
+ *     登録して何が起きるのか分かりませんでした
+ *   ・**解除の一言を入れる**（section版と同じ）。無いと登録の手が止まります
+ *
  *  ⚠️ ここを直したら /line/ も揃えること。2か所で違うことを言っていました。 */
 interface Props {
   /** 'section' = 大きなブロック / 'inline' = 記事末などに置く小さい版 */
@@ -58,11 +66,17 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
   </section>
 ) : (
   <aside class="line-inline">
-    <p class="note">こういう話を、LINEでもお送りしています。</p>
+    <p class="note">
+      神社の話と、心の整え方を不定期でお送りしています。<br />
+      ご登録で「岡の声でご案内する瞑想の導入動画」と「14日間のステップ講座」が届きます。
+    </p>
     <div class="line-btns">
       <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで受け取る</a>
-      <a href={withBase('/line/')} class="btn btn--ghost">詳細</a>
     </div>
+    <p class="note">
+      ※ 無料です。いつでも解除できます。
+      <a href={withBase('/line/')}>くわしくはこちら</a>
+    </p>
   </aside>
 )}
 
@@ -111,13 +125,16 @@ const LINE_URL = 'https://lin.ee/XAxux9k';
     border: 1px solid var(--rule);
   }
 
+  /* 🔴 2026-08-06：金の上線を外しました。
+        ブログ記事では、すぐ上の署名（.sign）にも境目の線があり、**線が2本続いて**いました。
+        地色（--bg-2）だけで十分に区別が付きます。線を戻さないこと。 */
   .line-inline {
     margin-top: 3rem;
     padding: 1.75rem;
     background: var(--bg-2);
-    border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: .9rem;
   }
 </style>
