@@ -3,7 +3,8 @@ title: 神社で石を積んではいけない理由
 description: 神社やパワースポットで見かける石積み。あれをやると場の気が止まります。龍を祀る場所では特に。
 category: 神社と参拝
 tags: [神社, 参拝作法, 龍]
-pubDate: 2026-09-05
+pubDate: 2026-08-07
+originalDate: 2024-01-14
 heroImage: /assets/blog-stone-stacking.jpg
 draft: false
 ---

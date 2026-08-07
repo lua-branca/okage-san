@@ -1,7 +1,17 @@
 ---
-/** 神遊び 1回分のページ。
+/** 神遊び 1回分のページ ＝ **終了した回の記録ページ**。
  *  中身は src/content/tours/*.md（1回＝1ファイル）。
- *  新しい回を出すときは _TEMPLATE.md をコピーするだけ。ここは触りません。
+ *
+ *  🔴 2026-08-07：**これからの回のページは作らなくなりました**（福田判断）。
+ *     申し込みは全部LINEに寄せる方針です。生成するのは `state: 終了` の回だけ。
+ *     ・これからの回の入口 → /kamiasobi/ の「これからの参拝」カード → LINE
+ *     ・過去の記録の入口 → /kamiasobi/ の「願いによって、行き先が変わります」
+ *       （src/data/tourThemes.ts の record にIDを書くとリンクが出ます）
+ *
+ *  ⚠️ 下の「終了した回では出しません」（!isOver）のブロックは**残してあります**。
+ *     参加費表・法務・キャンセル・申込フォームの一式です。捨てるには惜しいのと、
+ *     個別ページを復活させるときは getStaticPaths のフィルタを1行戻すだけで済むため。
+ *     現在の設定では**画面には出ません**。ここを直しても表示は変わらないので注意。
  *
  *  🔴 セクションの順番には理由があります → 20_Site/CONTENT_DRAFT/03b_ツアーページ_テンプレ.md
  *     「何をするか → 行程 → 参加費 → 法務 → 流れ → Q&A → 申込」
@@ -19,9 +29,12 @@ import LineCta from '../../components/LineCta.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
+  // 🔴 終了した回だけページにします（2026-08-07〜）。これからの回はLINEへ送るのでページ不要。
   // 🔴 draft はローカル（npm run dev）でだけ表示。公開ビルドには出ません
-  const tours = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
-    .sort((a, b) => +b.data.date - +a.data.date);
+  const tours = (await getCollection(
+    'tours',
+    ({ data }) => data.state === '終了' && (import.meta.env.DEV || !data.draft),
+  )).sort((a, b) => +b.data.date - +a.data.date);
   return tours.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
@@ -225,10 +238,11 @@ const steps = [
                 </tbody>
               </table>
             </div>
-            <p class="note">
-              二度目からは、ぐっとお安くなります。<br />
-              同じ場所でも、そのときの自分によって受け取るものが変わるからです。
-            </p>
+            {/* 🔴 2026-08-07：「二度目からは、ぐっとお安くなります」を削除しました（福田指示）。
+                   **リピーター割引・ご紹介割引はありません。**
+                   tours の prices に入っていた3段の価格を根拠に書いていましたが、
+                   その3段自体が実態のない情報でした（データ側からも消しています）。
+                   割引の話をここに戻さないこと。 */}
 
             <PriceBox
               price={base.amount}
@@ -362,7 +376,9 @@ const steps = [
           <h2>次の回で、お会いしましょう</h2>
           <p class="note">
             日程が決まりしだい、LINEでお知らせしています。<br />
-            <a href={withBase('/kamiasobi/')}>これからの回を見る →</a>
+            {/* 🔴 2026-08-07 修正：「これからの回を見る」でしたが、
+                   日程の一覧をサイトから外したので、行った先に回がありません。 */}
+            <a href={withBase('/kamiasobi/')}>神社参拝プログラムを見る →</a>
           </p>
         </div>
       </section>

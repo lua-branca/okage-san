@@ -16,6 +16,12 @@ const blog = defineCollection({
     category: z.enum(['心とエネルギー', 'お金と仕事', '神社と参拝']),
     tags: z.array(z.string()).default([]),
     pubDate: z.date(),
+    /** 初出＝Facebookに投稿した日。
+     *  🔴 記事は岡さんのFB投稿を再構成したものです。「いつ書かれた話か」が
+     *     読者に分かるよう、記事末に一文で出しています。
+     *  ⚠️ 任意項目。分からない記事は空のままで構いません（何も表示されないだけ）。
+     *  ⚠️ pubDate（サイトへの掲載日・並び順に使う）とは別物です。混ぜないこと。 */
+    originalDate: z.date().optional(),
     heroImage: z.string().optional(),
     draft: z.boolean().default(false),
   }),

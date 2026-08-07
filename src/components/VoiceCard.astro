@@ -3,14 +3,23 @@
  *  🔴 出していいのは「イニシャル・年代・性別・都道府県」まで。
  *     顔写真・フルネーム・具体的な事情は載せません（許諾の粒度が確認できていないため）
  *     → CUSTOMER_DATA_SPEC / 05_voice.md */
+import { withBase } from '../utils/base';
+import type { VoiceAvatar } from '../data/voices';
+
 interface Props {
   text: string;
   /** 例：K.さん／50代・女性・東京都 */
   who: string;
   /** どの回の声か。過去回ページでは不要 */
   tour?: string;
+  /** 似顔絵アイコン。★2026-08-07 追加
+   *  🔴 **本人の写真ではありません。**旧サイトの汎用イラストで、年代・性別だけ合わせています
+   *     → data/voices.ts
+   *  ⚠️ 任意です。過去回ページの記録（report.voices）には年代・性別の情報が無いので渡しません。
+   *     渡さなければ、これまでどおり文字だけの署名になります。 */
+  avatar?: VoiceAvatar;
 }
-const { text, who, tour } = Astro.props;
+const { text, who, tour, avatar } = Astro.props;
 ---
 
 <figure class="vc">
@@ -18,7 +27,10 @@ const { text, who, tour } = Astro.props;
     {text.split('\n').filter((l) => l.trim()).map((line) => <p>{line}</p>)}
   </blockquote>
   <figcaption class="vc__w note">
-    {who}{tour && <><br />{tour}</>}
+    {avatar && (
+      <img src={withBase(`/assets/voice/av-${avatar}.png`)} alt="" width="80" height="80" loading="lazy" />
+    )}
+    <span>{who}{tour && <><br />{tour}</>}</span>
   </figcaption>
 </figure>
 
@@ -38,5 +50,16 @@ const { text, who, tour } = Astro.props;
     color: var(--fg);
   }
   .vc__t p + p { margin-top: .8rem; }
-  .vc__w { color: var(--fg-2); }
+  /* 署名。アイコンがあるときは横並び、無いときは文字だけ（gap が効かないだけ）。
+     ⚠️ 36pxより大きくしないこと。イラストは3種類しかないので、
+        大きいと同じ顔が並んでいるのが目立ちます → /voice/ も同じ考えで40pxです。 */
+  .vc__w { display: flex; align-items: center; gap: .6rem; color: var(--fg-2); }
+  .vc__w img {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
 </style>

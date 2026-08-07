@@ -3,7 +3,8 @@ title: 皆さんは人ですか？──神社参拝で必ず聞く質問
 description: 神社で参拝する前に、岡慶行が必ず投げかける質問。「私は人である」と思い込んでいると、神様と調和する感覚から遠ざかってしまいます。
 category: 神社と参拝
 tags: [神社, 神性, 意識, 参拝]
-pubDate: 2026-09-22
+pubDate: 2026-08-07
+originalDate: 2026-06-20
 heroImage: /assets/blog-are-you-human.jpg
 draft: false
 ---

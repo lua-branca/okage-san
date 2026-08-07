@@ -3,7 +3,8 @@ title: 生き方は晩年に出る
 description: 40年以上の造園と神道の現場で多くの人の人生を見つめてきた実感。若い頃の誤魔化しが効かなくなったとき、その人の心の持ち様が顔と佇まいに出ます。
 category: 心とエネルギー
 tags: [人生, 歳月, 心の整え方, 佇まい]
-pubDate: 2026-09-25
+pubDate: 2026-08-07
+originalDate: 2025-12-21
 heroImage: /assets/blog-latter-years.jpg
 draft: false
 ---

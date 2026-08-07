@@ -1,5 +1,6 @@
 ---
 import { withBase } from '../utils/base';
+import { LINE_URL } from '../data/line';
 
 /** LINE登録セクション。サイトの最重要CV（顧客の67%がLINE希望）。
  *
@@ -29,7 +30,6 @@ interface Props {
   variant?: 'section' | 'inline';
 }
 const { variant = 'section' } = Astro.props;
-const LINE_URL = 'https://lin.ee/XAxux9k';
 ---
 
 {variant === 'section' ? (

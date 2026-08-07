@@ -3,7 +3,8 @@ title: 「運がいい」の正体
 description: 運は外からやってくるものなのだろうか。「う」と「ん」という音をほどくと、運とは内側にある宇宙エネルギーだと分かってきます。
 category: 心とエネルギー
 tags: [運, 言霊, エネルギー]
-pubDate: 2026-09-12
+pubDate: 2026-08-07
+originalDate: 2026-01-23
 heroImage: /assets/blog-what-is-luck.jpg
 draft: false
 ---

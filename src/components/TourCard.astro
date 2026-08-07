@@ -14,8 +14,13 @@ interface Props {
   price?: number;
   /** 申込先／詳細ページ。**素のパス**を渡してください（例 `/kamiasobi/xxx/`）。
    *  🔴 base の付与はこのコンポーネントの中で行います。
-   *     呼び出し側で withBase() すると二重になります（2026-07-30 の不具合） */
+   *     呼び出し側で withBase() すると二重になります（2026-07-30 の不具合）
+   *  ⚠️ `https://` で始まる外部URL（LINEなど）を渡した場合は base を付けず、
+   *     別タブで開きます。★2026-08-07 追加 */
   href?: string;
+  /** ボタンの文言。既定は「この回に申し込む」。
+   *  LINEへ送るときは「LINEで申し込む」のように渡してください */
+  ctaLabel?: string;
   /** 受付中 / 満席 / 終了。未指定なら出さない */
   state?: string;
   /** 一言（「昼食・移動は各自手配です」など） */
@@ -23,7 +28,10 @@ interface Props {
   /** 終了した回はトーンを落とす */
   past?: boolean;
 }
-const { date, title, place, price, href, state, note, past = false } = Astro.props;
+const { date, title, place, price, href, ctaLabel, state, note, past = false } = Astro.props;
+
+// 外部URL（LINE等）は base を付けない。付けると /okage-san/https://... になります
+const isExternal = !!href && /^https?:\/\//.test(href);
 
 const d = date instanceof Date ? date : new Date(date);
 const y = d.getFullYear();
@@ -58,7 +66,16 @@ const openish = state === '受付中' || state === '募集中';
     </p>
     {note && <p class="note">{note}</p>}
     {state && <p><span class={`pill${openish ? ' pill--open' : ''}`}>{state}</span></p>}
-    {href && <p class="tour__cta"><a href={withBase(href)} class="btn">この回に申し込む</a></p>}
+    {href && (
+      <p class="tour__cta">
+        <a
+          href={isExternal ? href : withBase(href)}
+          class={`btn${isExternal ? ' btn--line' : ''}`}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener' : undefined}
+        >{ctaLabel ?? 'この回に申し込む'}</a>
+      </p>
+    )}
   </div>
 </article>
 
@@ -81,6 +98,13 @@ const openish = state === '受付中' || state === '募集中';
   .tour__t { font-size: var(--fs-lg); color: var(--fg); }
   .tour__m { color: var(--fg-2); }
   .tour__cta { margin-top: .35rem; }
+
+  /* LINEボタン。★2026-08-07 追加
+     ⚠️ .btn--line は LineCta.astro / line.astro の中で**scoped**に定義されています。
+        Astroのscoped CSSは他のコンポーネントに届かないので、ここで同じ色を持っています。
+        色を変えるときは3か所とも直してください（LINE緑は先方指定色なので、まず変わりません）。 */
+  .btn--line { background: #06c755; color: #fff; font-weight: 600; border: none; }
+  .btn--line:hover { background: #05b34c; color: #fff; }
 
   /* 終了した回：情報としては残すが、目立たせない */
   .tour--past { opacity: .6; }

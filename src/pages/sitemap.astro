@@ -2,16 +2,22 @@
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../utils/base';
+import { getSortedPosts } from '../utils/posts';
 
 // コンテンツコレクションから動的にリンクを取得
 // 🔴 draft を除く（他のページと同じ条件にしないと、公開ビルドでリンク切れになる）
-const tours = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
-  .sort((a, b) => +b.data.date - +a.data.date);
+/** 🔴 2026-08-07：条件を [...slug].astro と**同じ**にしました。
+ *     これからの回はページを作らない方針になったので、ここに出すとリンク切れになります。
+ *     ⚠️ 片方だけ直さないこと。ページを作る条件は必ず2か所とも揃えてください。 */
+const tours = (await getCollection(
+  'tours',
+  ({ data }) => data.state === '終了' && (import.meta.env.DEV || !data.draft),
+)).sort((a, b) => +b.data.date - +a.data.date);
 const ishi = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const posts = await getSortedPosts();
 
 const mainPages = [
-  { href: withBase('/'), label: 'トップページ', desc: 'ファーストビュー・開催予定・案内' },
+  { href: withBase('/'), label: 'トップページ', desc: 'ファーストビュー・お知らせ・各ページへの案内' },
   { href: withBase('/kamiasobi/'), label: '神社参拝プログラム', desc: '場を借りて整える神社参拝' },
   { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、岡が選んだ一点もののパワーストーン' },
   { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
@@ -59,18 +65,23 @@ const legalPages = [
       </ul>
     </section>
 
-    {/* ② 神遊び（開催回） */}
-    <section class="sm-sec stack">
-      <h2>神社参拝（各開催ページ）</h2>
-      <ul class="sm-list">
-        {tours.map((t) => (
-          <li>
-            <a href={withBase(`/kamiasobi/${t.id}/`)} class="sm-link">{t.data.title}</a>
-            <span class="note"> （{t.data.date} ／ {t.data.place}）</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    {/* ② 神遊び（終了した回の記録） */}
+    {tours.length > 0 && (
+      <section class="sm-sec stack">
+        <h2>神社参拝（これまでの回の記録）</h2>
+        <ul class="sm-list">
+          {tours.map((t) => (
+            <li>
+              <a href={withBase(`/kamiasobi/${t.id}/`)} class="sm-link">{t.data.title}</a>
+              {/* 🔴 2026-08-07 修正：`{t.data.date}` は Date なので
+                     「Wed Feb 11 2026 09:00:00 GMT+0900…」と出ていました。
+                     `t.data.place` はスキーマに無いフィールドで、常に空でした（正しくは area）。 */}
+              <span class="note tabnum"> （{t.data.date.toLocaleDateString('ja-JP')} ／ {t.data.area}）</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     {/* ③ 石のギャラリー */}
     <section class="sm-sec stack">

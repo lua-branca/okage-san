@@ -15,30 +15,56 @@ const demographics = [
 
 <Base
   title="参加した方の声"
-  description="神社参拝プログラム（神遊び）に参加された方から届いた声を掲載しています。アンケートに書いてくださったものをそのまま掲載しています。"
+  description="神社参拝プログラム（神遊び）に参加された方の声です。参加のきっかけ、印象に残ったこと、そのあと何が変わったか。掲載のご承諾をいただいたアンケートから紹介しています。"
   surface="dark"
 >
-  <div class="wrap section stack">
-    {/* ① 冒頭 */}
+  {/* 🔴 wrap を3つに割っています（冒頭 ／ 写真の帯 ／ 声の一覧）。
+         PhotoBand は**全幅の帯**なので、.wrap の中に入れると全幅になりません。
+         2026-08-07、ここに帯を入れたまま置いてしまい、
+         「幅が中途半端」「下のフェードが浮いて四角い箱に見える」
+         「キャプションが二重の wrap で右に押し出される」という状態になっていました（福田指摘）。
+         ⚠️ 帯を足すときは、必ずいったん </div> で wrap を閉じてから置くこと。 */}
+  <div class="wrap stack voice-head">
+    {/* ① 冒頭
+        🔴 2026-08-07：リード文を書き換えました（福田指摘）。
+           前は「アンケートに書いてくださったものを、そのまま載せています。」でした。
+           これは**読者への情報ではなく、運営側の弁明**です。しかも「そのまま」と
+           言い切るほど、かえって疑われます。
+           かわりに**カードの中に何が書いてあるか**（参加前／印象／変化）を予告しています。
+        ⚠️ 「原文のまま」という事実自体は大事なので、data/voices.ts にルールとして残しています。 */}
     <header class="stack" data-reveal>
       <p class="kicker">参加した方の声</p>
       <h1>参加した方から<br />届いた声です。</h1>
-      <p class="lede">アンケートに書いてくださったものを、そのまま載せています。</p>
+      <p class="lede">
+        参加のきっかけ、印象に残ったこと、そのあと何が変わったか。<br />
+        後日お送りしているアンケートから、掲載のご承諾をいただいた声を紹介します。
+      </p>
     </header>
+  </div>
 
-    {/* 🖼 このページに置ける唯一の「人が写った写真」です。
-           後ろ姿なので顔が分かりません。それでも「参拝している」は伝わります。
-        🔴 集合写真は使いません。掲載同意が未取得であること、
-           ぼかし加工は「隠している」印象になること、そして
-           団体ツアーに見えて「定員6名でひとりずつ」というこの企画の
-           いちばんの価値と食い違うためです。 */}
-    <PhotoBand
-      src="/assets/shrine/plate-sanpai.jpg"
-      alt="拝殿の前にひとりで立ち、手を合わせている人の後ろ姿"
-      caption="愛宕神社（東京）"
-      plate
-    />
+  {/* 🖼 冒頭の1枚。★2026-08-07 差し替え
+        🔴 愛宕神社の縦写真（plate-sanpai.jpg・参拝する人の後ろ姿）から替えました（福田指摘）。
+           ・縦の額装がページに1枚だけ挟まる形は収まりが悪い
+             （/kamiasobi/ の穴八幡を外したのと同じ理由です）
+           ・「人」はこのあと各カードの似顔絵アイコンが受け持つので、写真で人を見せる必要がなくなりました
+        ⚠️ 瀧尾神社は夕方の光で暗いので使いません（福田判断）。明るい昼の写真を選ぶこと。
+        ⚠️ plate-sanpai.jpg は消していません。縦写真の置き方を設計できたら使えます。 */}
+  <PhotoBand
+    src="/assets/shrine/band-tsubaki.jpg"
+    alt="朱の鳥居の向こうに社殿が見える参道。まわりを杉が囲んでいる"
+    caption="椿大神社（三重）"
+    focus="center 50%"
+  />
 
+  {/* 🔴 2026-08-07：ここから下を .wrap--mid（832px）に上げました。
+         見出しとリードは読む幅（672px）のまま、**カードだけ中間幅**にします。
+         ・トークンの使い分けに「.wrap--mid ＝ 2カラム・**声**・カード2列」と
+           名指しで書いてあるのに、このページだけ全部いちばん狭い .wrap でした
+           （2026-08-04の3段階化から漏れていた）→ styles/tokens.css 85-90行
+         ・672pxだとカード1枚が約300px。長い回答が縦に伸びて読みにくく、
+           「どんな人が来ているか」の4枚も2列で収まりませんでした
+         ⚠️ 見出し・リードまで広げないこと。文章の1行は40字前後が上限です。 */}
+  <div class="wrap wrap--mid stack voice-list">
     {/* ② 声（8件・4カテゴリ） */}
     {voiceCategories.map((cat) => (
       <section class="stack v-cat" data-reveal>
@@ -56,18 +82,34 @@ const demographics = [
                 <span class="v-card__label">印象に残ったこと</span>
                 <p>{item.impression}</p>
               </div>
-              <div class="v-card__sec">
-                <span class="v-card__label">変化</span>
-                <p>{item.after}</p>
-              </div>
+              {/* 🔴 2026-08-07 修正：ここは `{item.after}` を無条件に出していたため、
+                     アンケートに「変化」の記入がないN.さんのカードで
+                     **見出しだけ出て中身が空**になっていました。
+                     🔴 空欄を埋めるために文章を作らないこと。無ければ見出しごと出しません。 */}
+              {item.after && (
+                <div class="v-card__sec">
+                  <span class="v-card__label">変化</span>
+                  <p>{item.after}</p>
+                </div>
+              )}
               {item.recommended && (
                 <div class="v-card__sec">
                   <span class="v-card__label">すすめたい人</span>
                   <p>{item.recommended}</p>
                 </div>
               )}
+              {/* 署名。★2026-08-07 似顔絵アイコンを追加
+                  🔴 本人の写真ではありません（旧サイトの汎用イラスト）→ data/voices.ts
+                  ⚠️ 40pxより大きくしないこと。3種類しかないので、大きいと同じ顔が並んで見えます。 */}
               <div class="v-card__author">
-                <span>── {item.author}</span>
+                <img
+                  src={withBase(`/assets/voice/av-${item.avatar}.png`)}
+                  alt=""
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <span>{item.author}</span>
               </div>
             </article>
           ))}
@@ -86,7 +128,9 @@ const demographics = [
     focus="center 45%"
   />
 
-  <div class="wrap stack voice-lower">
+  {/* ⚠️ 下半分も中間幅。「どんな人が来ているか」の4枚が1行に収まります。
+         締めの見出しとボタンは中央寄せなので、幅が広がっても崩れません。 */}
+  <div class="wrap wrap--mid stack voice-lower">
     {/* ③ どんな人が来ているか */}
     <section class="stack demo-sec" data-reveal>
       <p class="kicker">どんな方が来ているか</p>
@@ -105,8 +149,10 @@ const demographics = [
     {/* ④ 締め */}
     <section class="stack text-center closing-sec" data-reveal>
       <h2>次は、あなたの番かもしれません。</h2>
+      {/* 🔴 2026-08-07 修正：「神社参拝の日程を見る」でしたが、
+             日程はサイトに載せない方針にしたので、飛んだ先に日程がありませんでした。 */}
       <div class="closing-btns">
-        <a href={withBase('/kamiasobi/')} class="btn">神社参拝の日程を見る</a>
+        <a href={withBase('/kamiasobi/')} class="btn">神社参拝プログラムを見る</a>
         <a href="#line" class="btn btn--ghost">LINEで受け取る</a>
       </div>
     </section>
@@ -119,8 +165,10 @@ const demographics = [
 </Base>
 
 <style>
-  /* 帯を挟むために wrap を分けた下半分。
-     上の wrap が持っていた .section の余白をここで補っています */
+  /* 帯を挟むために wrap を分けています。
+     もともと1つの .wrap.section が持っていた余白を、分けた各段で補っています。 */
+  .voice-head { padding-block: var(--gap-section) 1.5rem; }
+  .voice-list { padding-block: 2rem 0; }
   .voice-lower { padding-block: 1rem var(--gap-section); }
 
   .v-cat { margin-block: 1.5rem; }
@@ -158,13 +206,27 @@ const demographics = [
   }
   .v-card__sec p { font-size: var(--fs-sm); line-height: 1.75; color: var(--fg); margin: 0; }
 
+  /* 署名。★2026-08-07 似顔絵アイコンを入れたので、右寄せ1行から横並びに変えました。
+     🔴 アイコンは40px。丸く抜いて、イラストの生成りの地色をそのまま円にします。
+        ⚠️ 大きくしないこと（3種類しかないため）。 */
   .v-card__author {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
     margin-top: 0.5rem;
-    padding-top: 0.75rem;
+    padding-top: 0.9rem;
     border-top: 1px dashed color-mix(in srgb, var(--accent) 25%, transparent);
     font-size: var(--fs-note);
     color: var(--fg-2);
-    text-align: right;
+  }
+  .v-card__author img {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    /* 生成りの地色が深紫の上で浮きすぎないよう、細い線で締めます */
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   }
 
   .demo-sec { margin-block: 2rem; }

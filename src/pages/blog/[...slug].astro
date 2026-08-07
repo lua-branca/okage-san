@@ -4,10 +4,10 @@ import LineCta from '../../components/LineCta.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection, render } from 'astro:content';
 import { withBase } from '../../utils/base';
+import { getSortedPosts } from '../../utils/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog', ({ data }) => !data.draft))
-    .sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+  const posts = await getSortedPosts();
   return posts.map((entry, i) => ({
     params: { slug: entry.id },
     props: {
@@ -27,6 +27,10 @@ const { Content, headings } = await render(entry);
 
 const dt = d.pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
 const iso = d.pubDate.toISOString();
+
+// 初出（FB投稿日）。未記入の記事では何も出しません
+const origDt = d.originalDate?.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+const origIso = d.originalDate?.toISOString();
 
 // 読了時間（日本語は400字/分の目安）
 const chars = entry.body?.length ?? 0;
@@ -88,6 +92,18 @@ const toc = headings.filter((h) => h.depth === 2);
         <Content />
       </div>
     </div>
+
+    {/* ── 初出（FB投稿日）。★2026-08-06 追加 ──
+        🔴 記事はFB投稿の再構成です。読者が「いつの話か」を判断できるように、
+           本文の直後・署名の手前に一文だけ置きます。
+        ⚠️ originalDate が空の記事では丸ごと出ません。既存記事はそのままで大丈夫です。 */}
+    {origDt && (
+      <div class="wrap">
+        <p class="origin note tabnum" data-reveal>
+          この記事は <time datetime={origIso}>{origDt}</time> にFacebookへ投稿した文章をもとに構成しています。
+        </p>
+      </div>
+    )}
 
     {/* ── 署名。★2026-08-06 見直し ──
         🔴 名前は「**岡慶行**」（スペースなし）。about.astro の表記ルールに揃えました。
@@ -241,6 +257,20 @@ const toc = headings.filter((h) => h.depth === 2);
     margin-block: 2.5rem;
   }
 
+  /* 初出（FB投稿日）。★2026-08-07 見直し
+     🔴 これは**本文に対する注記**です。本文の締めくくりとして、すぐ下に置きます。
+     🔴 線を引かないこと。一度 border-top を付けたところ、
+        下にある署名の罫線と挟み撃ちになり、注意書きなのに一番目立つ帯になっていました。
+        しかも文字が下の罫線にくっついて見えていました（福田指摘）。
+     ⚠️ 下の余白（3.5rem）は上の余白より広く取ります。
+        署名より本文に近い位置に見せて、「本文の注記」だと分かるようにするためです。 */
+  .origin {
+    margin-top: -0.75rem;
+    margin-bottom: 3.5rem;
+    font-size: var(--fs-label);
+    color: var(--fg-2);
+    line-height: 1.8;
+  }
   /* 署名 */
   .sign {
     display: flex;

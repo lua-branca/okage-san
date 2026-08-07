@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../utils/base';
+---
+
+<Base
+  title="お問い合わせを受け付けました"
+  description="お問い合わせありがとうございます。内容を確認のうえ、担当者よりご返信いたします。"
+  surface="dark"
+  noindex={true}
+>
+  <div class="wrap section stack">
+    <header class="thanks-header stack" data-reveal>
+      <p class="kicker">お問い合わせ</p>
+      <h1>送信が完了しました</h1>
+      <p class="lede">
+        このたびはお問い合わせいただき、ありがとうございます。<br />
+        内容を確認のうえ、担当者よりご返信いたします。
+      </p>
+    </header>
+
+    <section class="stack" data-reveal>
+      <div class="thanks-box">
+        <p class="thanks-box-title">✉️ 確認メールをお送りしました</p>
+        <p class="thanks-box-text">
+          ご入力いただいたメールアドレス宛に、受付内容の控えを自動送信しています。<br />
+          <strong>数分たっても届かない場合</strong>は、迷惑メールフォルダをご確認ください。
+          それでも見当たらないときは、アドレスの入力違いの可能性がありますので、
+          お手数ですが下記まで直接ご連絡ください。
+        </p>
+        <p class="thanks-email">contact@okage-san.com</p>
+      </div>
+
+      <p class="thanks-note">
+        お返事までの目安は <strong>2〜3営業日</strong> です。
+      </p>
+
+      <div class="thanks-actions">
+        <a href={withBase('/')} class="btn">トップページへ戻る</a>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .thanks-box {
+    max-width: 48rem;
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem 1.75rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .thanks-box-title {
+    font-size: var(--fs-sm);
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+  .thanks-box-text {
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    line-height: 1.75;
+    margin: 0;
+  }
+  .thanks-email {
+    font-size: var(--fs-xl) !important;
+    font-weight: 600;
+    color: var(--fg) !important;
+    letter-spacing: 0.03em;
+    margin: 0.75rem 0 0 0 !important;
+  }
+  .thanks-note {
+    font-size: var(--fs-note);
+    color: var(--fg-2);
+    max-width: 48rem;
+  }
+  .thanks-actions {
+    margin-top: 1rem;
+  }
+</style>

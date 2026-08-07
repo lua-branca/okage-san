@@ -43,10 +43,14 @@ import { topVoices } from '../data/voices';
 import { news } from '../data/news';
 import { themes } from '../data/tourThemes';
 import { withBase } from '../utils/base';
+import { getPickedThenLatest } from '../utils/posts';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
-  .slice(0, 4);
+/** ⑥「書いてきたこと」の4本。
+ *  🔴 ただの新着順ではありません。`src/data/popular.ts` のピックアップが先に入り、
+ *     足りない分だけ新しい記事で埋まります。並べ替えたいときは popular.ts を直すこと。
+ *  ⚠️ トップに人気枠をもう1つ足すのではなく、この枠の中身を差し替える設計にしています
+ *     （セクションを増やすとトップが長くなりすぎるため・2026-08-07）。 */
+const posts = await getPickedThenLatest(4);
 
 /** ★お知らせは上から3件まで（src/data/news.ts が正本） */
 const topNews = news.slice(0, 3);
@@ -101,7 +105,12 @@ const points = [
  *  🔴 著書はAmazonへ直リンクせず /book/ を経由します。
  *     サイトからの離脱を、いちばん最後に寄せるためです。 */
 const others = [
-  { t: '手元に置く',   d: '岡が選んだ一点もののパワーストーン。家でも整えるための道具です。', href: '/mind/',    label: '心を整える' },
+  /* 🔴 2026-08-07：「手元に置く」→「パワーストーンを持つ」（福田指摘）。
+     ・「手元に置く」だけでは**何を**置くのかが分からず、リンク先が想像できませんでした
+     ・パワーストーンは検索で拾いたい言葉なので、見出しの位置に出します
+       （表記は「パワーストーン」で統一。「石」と書かない → LineCta.astro の決めごと）
+     ⚠️ 3つとも「動詞」で揃えています。ここだけ名詞にしないこと。 */
+  { t: 'パワーストーンを持つ', d: '岡が選んだ一点もの。神社へ行かない日も、手元で整えるための道具です。', href: '/mind/', label: '心を整える' },
   { t: '内側から解く', d: '前世療法・ヒプノセラピー。深いところに残っているものを解いていきます。',   href: '/session/', label: '個人セッション' },
   { t: '読んでみる',   d: '『願わず叶う神社参拝入門』。40年ぶんを1冊にしました。',                     href: '/book/',    label: '著書' },
 ];
@@ -217,7 +226,11 @@ const others = [
             考えていることは、いつも全部書いてしまう人です。<br />
             神様の話をしていても、深刻になりません。
           </p>
-          <p><a href={withBase('/about/')}>岡慶行という人について →</a></p>
+          {/* 🔴 2026-08-07：テキストリンクからボタンに変更（福田指摘）。
+                 トップにテキストリンクとボタンが混在していて、押せる場所が分かりにくい状態でした。
+                 ⚠️ **btn--ghost（枠だけ）を使うこと。**塗りのボタンは
+                    「神社参拝について見る」（＝主役への導線）だけに取っておきます。 */}
+          <p><a href={withBase('/about/')} class="btn btn--ghost">岡慶行という人について</a></p>
         </div>
       </div>
     </div>
@@ -246,9 +259,20 @@ const others = [
       </ul>
 
       <p class="note">
-        <strong>日帰りです。</strong>朝に永田町を出て、その日のうちに永田町へ戻ります。
+        <strong>日帰りです。</strong>朝に永田町を出て、その日のうちに永田町へ戻ります。<br />
+        参加費は33,000円（税込・おひとり）。日程は公式LINEでお知らせしています。
       </p>
       <p><a href={withBase('/kamiasobi/')} class="btn">神社参拝について見る</a></p>
+
+      {/* 🔴 2026-08-07 追加：プライベートプランへの導線。
+             トップのどこからも行けない状態でした。**押したい商品なので拾います**（福田指示）。
+             🔴 ⑦「ほかにも」ではなく**ここ**に置きます。プライベートは神社参拝の一種で、
+                石やセッションと並べると別ジャンルに見えるためです。
+             ⚠️ 1行だけ。ここで厚く書くと主役（通常の回）がぼやけます。 */}
+      <p class="note">
+        行き先も日程もあなたに合わせて組む
+        <a href={withBase('/private/')}>プライベートプラン</a>もあります。
+      </p>
     </div>
   </section>
 
@@ -268,12 +292,24 @@ const others = [
       <div class="lead-col sec-head" data-reveal>
         <p class="kicker">参加した方の声</p>
         <h2>何が変わったのか</h2>
-        <p class="note">アンケートに書いてくださったものを、そのまま載せています。</p>
+        {/* 🔴 2026-08-07：「アンケートに書いてくださったものを、そのまま載せています。」から変更。
+               あれは読者への情報ではなく**運営側の弁明**で、しかも「そのまま」と言い切るほど
+               かえって疑われます（福田指摘）。/voice/ の冒頭も同じ理由で書き換えています。 */}
+        <p class="note">参加のあと、アンケートに届いた言葉です。</p>
       </div>
       <div class="voices" data-reveal-stagger>
-        {topVoices.map((v) => <VoiceCard text={v.after} who={v.author} />)}
+        {/* ⚠️ after は任意項目になりました（未記入のアンケートがあるため）。
+               ここに出す3件は全部 after があります。?? は保険です → data/voices.ts */}
+        {topVoices.map((v) => <VoiceCard text={v.after ?? v.impression} who={v.author} avatar={v.avatar} />)}
       </div>
-      <p data-reveal><a href={withBase('/voice/')}>ほかの声を読む →</a></p>
+      {/* 🔴 2026-08-07 追加：個人差の注記。**消さないこと。**
+             4件目（H.さん・50代男性）の「直感力が冴えてきます。」など、
+             効果を言い切ったように読める声があるためです。
+             /kamiasobi/ の「何が変わるのか」にも同じ注記を置いています。 */}
+      <p class="note" data-reveal>
+        ※ 感じ方には個人差があります。特定の効果や結果をお約束するものではありません。
+      </p>
+      <p data-reveal><a href={withBase('/voice/')} class="btn btn--ghost">ほかの声を読む</a></p>
     </div>
   </section>
 
@@ -343,7 +379,8 @@ const others = [
           />
         ))}
       </div>
-      <p data-reveal><a href={withBase('/blog/')}>すべての記事を読む →</a></p>
+      {/* ⚠️ ここも同じ理由でボタンに揃えています。3か所セットです */}
+      <p data-reveal><a href={withBase('/blog/')} class="btn btn--ghost">すべての記事を読む</a></p>
     </div>
   </section>
 
@@ -355,8 +392,13 @@ const others = [
       <div class="lead-col sec-head" data-reveal>
         <p class="kicker">ほかにも</p>
         <h2>神社へ行くほかにも、<br />整え方があります</h2>
+        {/* 🔴 2026-08-07：「参拝の日に予定が合わなくても、できることはあります。」から変更。
+               ①日程をサイトに載せなくなったので「参拝の日」が指すものが無くなった
+               ②「行けない人の代わり」という書き方は、そのサービス自体を格下げします
+                  （プライベートプランで同じ間違いを直したばかりです） */}
         <p class="lede">
-          参拝の日に予定が合わなくても、できることはあります。
+          日々のなかで続けられるもの、深いところに触れるもの。<br />
+          それぞれに合う入り口があります。
         </p>
       </div>
 

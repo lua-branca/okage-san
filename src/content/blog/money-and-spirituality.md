@@ -3,7 +3,8 @@ title: 高次元と繋がっているのに、なぜ稼げない人が多いの�
 description: グラウンディング（地に足をつけること）とお金の話。頭上の次元ばかり意識しても、現実の生活とお金が動かない理由を語ります。
 category: お金と仕事
 tags: [お金, グラウンディング, 経営, 現実化]
-pubDate: 2026-09-18
+pubDate: 2026-08-07
+originalDate: 2026-07-13
 heroImage: /assets/blog-money-spirituality.jpg
 draft: false
 ---

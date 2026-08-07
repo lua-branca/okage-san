@@ -3,7 +3,8 @@ title: 何十億越え経営者と億越え経営者の違い
 description: 数多くの経営者と対話し、神社参拝を共にしてきて見えた「器」と「覚悟」の違い。エネルギーを回すスケールの秘密。
 category: お金と仕事
 tags: [経営, 器, お金, 覚悟]
-pubDate: 2026-09-28
+pubDate: 2026-08-07
+originalDate: 2025-03-11
 heroImage: /assets/blog-billionaire-mindset.jpg
 draft: false
 ---

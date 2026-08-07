@@ -23,10 +23,28 @@ import { withBase } from '../utils/base';
     <section class="stack form-section" data-reveal>
       <h2>お問い合わせフォーム</h2>
 
+      {/*
+        送信先は PHP（/form/contact.php）。確認画面・完了メール送信はそちらで行います。
+
+        🔴 data-astro-reload は必須。
+           これが無いと Base.astro の <ClientRouter /> が送信を横取りし、
+           POSTがGETに化けて確認画面へ進めません（2026-08-07 修正）。
+           URLも /contact/ のまま中身だけ差し替わるため、PHP側のCSSも当たりません。
+
+        ⚠️ npm run dev（4321番）ではPHPが動かないため、送信の通し確認は
+           npm run build 後に php -S で dist/ を配信して行うこと。
+      */}
       <form
         class="contact-form stack"
-        onsubmit="event.preventDefault(); alert('お問い合わせフォームのフロントエンドUI確認です。バックエンド連携処理は今後接続します。');"
+        method="post"
+        action={withBase('/form/contact.php')}
+        data-astro-reload
       >
+        {/* スパムボット用の罠。人には見えないので、埋まっていたら弾く */}
+        <div class="honeypot" aria-hidden="true">
+          <label>Website<input type="text" name="hp_website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
         <div class="form-group">
           <label for="name">
             お名前（漢字） <span class="req">必須</span>
@@ -98,7 +116,7 @@ import { withBase } from '../utils/base';
 
         <div class="form-group form-group--checkbox">
           <label class="checkbox-label">
-            <input type="checkbox" id="privacy" required />
+            <input type="checkbox" id="privacy" name="privacy" value="1" required />
             <span>
               <a href={withBase('/privacy-policy/')} target="_blank">プライバシーポリシー</a> に同意する
             </span>
@@ -136,6 +154,15 @@ import { withBase } from '../utils/base';
 </Base>
 
 <style>
+  /* ハニーポット（画面にも読み上げにも出さない） */
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
   /* フォームスタイル */
   .contact-form {
     background: var(--bg-2);

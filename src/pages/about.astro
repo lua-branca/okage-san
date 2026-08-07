@@ -13,6 +13,7 @@
  */
 import Base from '../layouts/Base.astro';
 import LineCta from '../components/LineCta.astro';
+import { LINE_URL } from '../data/line';
 import { withBase } from '../utils/base';
 
 /** 4つの柱。
@@ -57,7 +58,7 @@ const overview = [
   ['所在地', '〒223-0058 神奈川県横浜市港北区新吉田東4-8-20'],
   ['メールアドレス', 'contact@okage-san.com'],
   ['公式ホームページ', 'https://okage-san.com/'],
-  ['公式LINEアカウント', 'https://lin.ee/XAxux9k'],
+  ['公式LINEアカウント', LINE_URL],
   /* 🔴 ここは上の「4つの柱」と**同じことを言う**場所です。食い違わせないこと（2026-08-06 見直し）。
    *   直したもの：
    *     ・「本物のパワーストーンのお見立て」→ 自称の「本物」と、サイトに無い「お見立て」を外した

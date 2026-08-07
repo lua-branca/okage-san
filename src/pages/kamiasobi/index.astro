@@ -10,10 +10,19 @@
  *  🔴 分刻みの行程・めぐる神社の羅列は書きません。
  *     ①企画旅行に見える（旅行業法）②そのまま真似される、の2つが理由。
  *     詳細はお申し込み後のしおりへ → 03b_ツアーページ_テンプレ
- *  🔴 価格は「募集中の回」にだけ出します。終了した回には出しません。
- *  🔴 これからの回を常に3本先まで埋めること。空だとリピートが起きない → STRATEGY 4-b */
+ *  🔴 **開催日程はサイトに載せません**（福田判断 2026-08-07）。
+ *     ・いつ何をやるかは全部LINEでお知らせします
+ *     ・理由は運用です。日程をサイトに置くと、決まるたび・終わるたびに
+ *       更新が発生します。更新されない日程が残っているサイトが、いちばん信用を落とします
+ *     ・そのかわりサイトには「**1日プランの中身と金額**」だけを置きます。
+ *       読む人が知りたいのは、日付より先に「何をする、いくら」だからです
+ *     🔴 「これからの参拝」のカード一覧は復活させないこと。運用を増やさない、が決めごとです
+ *
+ *  🔴 `/kamiasobi/<slug>/` が生成されるのは **state: 終了 の回だけ**（＝過去の記録）です
+ *     → pages/kamiasobi/[...slug].astro の getStaticPaths
+ *  🔴 参加費を出しているのは**このページだけ**になりました。
+ *     下の「1日プラン」の表を消さないこと（/commerce-law/ の「販売価格は各サービスページに表示」が成り立たなくなります） */
 import Base from '../../layouts/Base.astro';
-import TourCard from '../../components/TourCard.astro';
 import NoticeBox from '../../components/NoticeBox.astro';
 import PhotoBand from '../../components/PhotoBand.astro';
 import PlaceGrid from '../../components/PlaceGrid.astro';
@@ -21,12 +30,14 @@ import LineCta from '../../components/LineCta.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
 import { themes } from '../../data/tourThemes';
+import { LINE_URL } from '../../data/line';
 
-const all = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
-  .sort((a, b) => +a.data.date - +b.data.date);
-
-const upcoming = all.filter((t) => t.data.state !== '終了');
-const past = all.filter((t) => t.data.state === '終了').reverse();
+/** 🔴 使うのは**終了した回だけ**です（2026-08-07〜）。
+ *     これからの回は、下の「願いによって〜」の記録リンクにも日程にも出しません。
+ *     tours コレクションは「過去の記録の置き場」になりました。 */
+const past = (await getCollection('tours', ({ data }) => import.meta.env.DEV || !data.draft))
+  .filter((t) => t.data.state === '終了')
+  .sort((a, b) => +b.data.date - +a.data.date);
 
 /** ★ここが過去の記録の入口です（福田判断 2026-07-31）。
  *  以前はページ末尾に「その日のこと」という日付順の一覧を置いていましたが、やめました。
@@ -211,15 +222,12 @@ const places = [
     </div>
   </section>
 
-  {/* 🖼 「何が変わるのか」の直後に、光が差し込む1枚を額装で。
-         縦位置なので帯にはできません（幅いっぱいに広げると縦一本に切られる）。
-         変化の話のあとなので、明るくなる写真をここに置いています。 */}
-  <PhotoBand
-    src="/assets/shrine/plate-hikari.jpg"
-    alt="木立のあいだから光の筋が差し込む参道"
-    caption="穴八幡宮（東京）"
-    plate
-  />
+  {/* 🔴 2026-08-07：ここにあった穴八幡宮の縦写真（plate-hikari.jpg）を外しました（福田判断）。
+         このページの写真は全部**横位置の帯**で、額装の縦写真はここ1枚だけでした。
+         前後の帯とリズムが合わず、唐突に見えます。
+         ⚠️ 画像ファイルは public/assets/shrine/ に残してあります（styleguide でも使用中）。
+            縦写真を使いたい回が出てきたら、**置き方から設計し直してから**戻すこと。
+            1枚だけ違う形を混ぜない、が今の決めごとです。 */}
 
   {/* 🖼 一日の流れに入る直前に、その始まりの場所を見せます。
          「永田町集合」がただの待ち合わせではないことが、写真1枚で伝わります。 */}
@@ -270,19 +278,11 @@ const places = [
         めぐる神社とその日のテーマは、回ごとに変わります。<br />
         くわしい時刻と道のりは、お申し込みのあとにしおりでお送りします。
       </p>
-      {/* 🔴 実費は「定額」ではなく「当日の実額を割る」と書くこと。
-             定額にすると実費なのか対価なのか区別がつかなくなります → TRAVEL_LAW_MEMO 4d章
-         🔴 2026-07-31：ここから宿泊の記述を削除しました。
-            サイトで募集するのは**日帰りのみ**に決めたためです（福田判断）。
-            宿泊が絡むと企画旅行の外形が濃くなること、そして
-            はじめての方がいきなり泊まりで参加することはないため。
-            → 泊まりの扱いは TRAVEL_LAW_MEMO 第5章 */}
-      <p class="note">
-        <strong>すべて日帰りです。</strong>朝に永田町を出て、その日のうちに永田町へ戻ります。<br />
-        定員は<strong>6名</strong>。岡の車に同乗して回ります。<br />
-        ガソリン代・高速代・駐車場代を、その日の実費として人数で分け、当日精算しています。<br />
-        昼食代・初穂料なども各自でご負担いただきます。
-      </p>
+      {/* 🔴 2026-08-07：ここにあった「日帰り・定員6名・実費」の4行を、下の「1日プラン」の表に移しました。
+             同じことを2か所に書くと、片方を直したときにもう片方がずれます。
+             ⚠️ 実費は「定額」ではなく「当日の実額を割る」と書くこと。
+                定額にすると実費なのか対価なのか区別がつかなくなります → TRAVEL_LAW_MEMO 4d章
+             ⚠️ 宿泊のことはこのサイトに書きません（日帰りのみ募集）→ TRAVEL_LAW_MEMO 第5章 */}
     </div>
   </section>
 
@@ -379,48 +379,60 @@ const places = [
     </div>
   </section>
 
-  {/* ── ⑥ これからの回。★価格を出すのはここだけ ── */}
+  {/* ── ⑥ 1日プランと参加費。★価格を出すのはここだけ ──
+      🔴 2026-08-07：ここは「これからの参拝」の**日程カード一覧**でした。やめました（福田判断）。
+         ・日程はLINEでお知らせします。サイトに置くと更新の運用が増えるためです
+         ・かわりに「**何をする、いくら、何が要る**」だけを1枚の表にしました
+         🔴 日程・回ごとの情報をここに戻さないこと。 */}
   <section class="section">
     <div class="wrap stack">
       <div data-reveal>
-        <p class="kicker">日程</p>
-        <h2>これからの参拝</h2>
+        <p class="kicker">1日プラン</p>
+        <h2>神社参拝の1日プラン</h2>
       </div>
 
-      {upcoming.length > 0 ? (
-        <div>
-          {upcoming.map((t) => (
-            <TourCard
-              date={t.data.date}
-              title={t.data.title}
-              place={t.data.area}
-              price={t.data.prices?.[0]?.amount}
-              state={t.data.state === '準備中' ? undefined : t.data.state}
-              note={t.data.lead}
-              href={`/kamiasobi/${t.id}/`}
-            />
-          ))}
-        </div>
-      ) : (
-        <p class="note" data-reveal>
-          次の日程を調整しています。決まりしだいLINEでお知らせします。
-        </p>
-      )}
-
-      {/* 🔴 2026-07-30：参加費の注記はすべて削除（福田指示）。
-          金額は回・区分によって変えない方針のため。
-          ⚠️ 各回のデータ（prices）はまだ3段階のままです。一律にするなら
-             src/content/tours/*.md の prices を1件にしてください。 */}
-
-      {/* ★「日程が合わない」と思ったその位置にプライベートの導線を置く */}
       <div data-reveal>
-        <NoticeBox title="日程が合わないときは" tone="info">
-          <p>
-            ご希望の日と行き先で組み立てる<strong>プライベートプラン</strong>もあります。
-            おひとりでも、ご家族でも、会社のチームでも。
-          </p>
-          <p><a href={withBase('/private/')}>プライベートプランについて →</a></p>
-        </NoticeBox>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              <tr><th>形式</th><td>日帰り。朝に永田町を出て、その日のうちに永田町へ戻ります</td></tr>
+              <tr><th>行き先</th><td>その時期と、その日集まった方の状態に合わせて岡が選びます</td></tr>
+              <tr><th>定員</th><td>6名（岡の車に同乗して回ります）</td></tr>
+              {/* 🔴 33,000円の**一律**です。回ごとに変えません。
+                     🔴 2026-08-07：「二度目からはお安くなります」を削除しました（福田指示）。
+                        リピーター割引・ご紹介割引は**ありません**。
+                        tours の prices に3段の価格が残っていたのを根拠に書いてしまったもので、
+                        その3段自体が実態のない情報でした（データ側からも消しています）。
+                        割引の話をここに戻さないこと。 */}
+              <tr>
+                <th>参加費</th>
+                <td><strong class="tabnum">33,000円</strong>（税込・おひとり）</td>
+              </tr>
+              <tr>
+                <th>別途ご負担</th>
+                <td>
+                  移動の実費（ガソリン代・高速代・駐車場代を人数で分け、当日精算）<br />
+                  昼食代・初穂料・拝観料
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 日程の入口。★2026-08-07 追加
+          🔴 ここが唯一の「いつやるの？」への答えです。ボタンを外さないこと。
+          ⚠️ 表・この段落・ボタンが等間隔で並ぶと、全部が同じ重さに見えて詰まります（福田指摘）。
+             .sched で表から離し、ボタンをさらに落としています。 */}
+      <div class="sched" data-reveal>
+        <p class="note">
+          <strong>開催の日程は、LINEでお知らせしています。</strong><br />
+          次にどこへ行くかは、その回のテーマによって決まります。決まりしだいLINEでご案内します。
+          お申し込みもLINEからどうぞ。
+        </p>
+        <p class="sched__b">
+          <a href={LINE_URL} class="btn btn--line" target="_blank" rel="noopener">LINEで日程を受け取る</a>
+        </p>
       </div>
 
       {/* 🔴 2026-07-31：ここにあった「遠方の社をめぐる回について」は削除しました（福田判断）。
@@ -429,6 +441,47 @@ const places = [
              ⚠️ 遠方の社（伊勢・戸隠など）が下の一覧に並ぶことへの答えは、
                 「これまでに、めぐってきた社」の説明文が受け持っています。
                 あの2行を消すと、遠方の社が宙に浮きます → TRAVEL_LAW_MEMO 第4f章 */}
+    </div>
+  </section>
+
+  {/* ── ⑥-b プライベートプラン ──
+      🔴 2026-08-07：注意ボックス（NoticeBox）の中に入れていたのをやめ、**独立したセクション**にしました。
+         ・NoticeBox は「注意書き」の見た目です。押したいものを入れると、おまけに見えます（福田指摘）
+         ・「日程が合わないときは」という見出しもやめました。プライベートは日程調整の代替ではなく、
+           その方に合わせて岡が組み立て、当日アテンドする**別のプラン**です。
+           「合わないから仕方なく」と読ませると単価を上げられません
+         → private.astro 冒頭の設計メモも同じ考えで揃えています
+      🔴 位置はここ（1日プランの直後）から動かさないこと。
+         「通常の回はこう」を読んだ直後が、いちばん比べてもらえる場所です。 */}
+  <section class="section">
+    <div class="wrap" data-reveal>
+      <div class="pp">
+        <p class="kicker">もうひとつの入り方</p>
+        <h2>あなたのためだけの一日を、組みます</h2>
+        <p>
+          決まった日程の回に来ていただくほかに、<strong>その方おひとり（または一組）のために
+          一日を組み立てる</strong>プランがあります。
+        </p>
+
+        <ul class="pv">
+          <li>
+            <span class="pv__t mj">行き先を、あなたに合わせて選びます</span>
+            <span class="note">いま何を整えたいのかをうかがってから、岡がその日の社を決めます</span>
+          </li>
+          <li>
+            <span class="pv__t mj">一日を通して、ご一緒します</span>
+            <span class="note">道中の話も、参拝も。ほかの参加者に合わせる必要がありません</span>
+          </li>
+          <li>
+            <span class="pv__t mj">日程も人数も、ご都合に合わせます</span>
+            <span class="note">平日でも。おひとりでも、ご家族でも、会社のチームでも</span>
+          </li>
+        </ul>
+
+        {/* ⚠️ 金額は書きません。内容によって変わるためです → private.astro「費用」 */}
+        <p><a href={withBase('/private/')} class="btn">プライベートプランを見る</a></p>
+        <p class="note">費用は内容によって変わります。ご相談の段階では費用はかかりません。</p>
+      </div>
     </div>
   </section>
 
@@ -459,12 +512,10 @@ const places = [
           </li>
         ))}
       </ul>
+      {/* ⚠️ 2026-08-07：ここにあった「次にどこへ行くかは、その回のテーマによって決まります。」は
+             上の「1日プラン」に移しました。日程の話は1か所にまとめています。 */}
       <p class="note">
         記録のある回は、写真でその日をご覧いただけます。
-      </p>
-
-      <p class="note">
-        次にどこへ行くかは、その回のテーマによって決まります。
       </p>
     </div>
   </section>
@@ -529,8 +580,11 @@ const places = [
           その場を感じ、自分を整えることを学ぶ<strong>講習・ガイドプログラム</strong>です。
           祈祷や医療行為ではなく、特定の効果や結果を保証するものではありません。
         </p>
+        {/* 🔴 2026-08-07 修正：「各回のページをご覧ください」と書いていましたが、
+               各回のページを作らない方針になったので、行き先のないご案内になっていました。 */}
         <p>
-          参加費・お支払い・キャンセルについては、各回のページをご覧ください。
+          参加費は上の「1日プラン」に記載しています。
+          お支払い・キャンセルの規定は<a href={withBase('/commerce-law/')}>特定商取引法に基づく表記</a>をご覧ください。
         </p>
       </NoticeBox>
     </div>
@@ -543,6 +597,45 @@ const places = [
   h1 { line-height: 1.45; }
   h2 { line-height: 1.5; }
   th { white-space: nowrap; width: 6.5rem; }
+
+  /* 日程の案内。★2026-08-07 追加
+     表とボタンにそれぞれ距離を取ります。等間隔で並べると全部が同じ重さに見えて、
+     どれを読めばいいのか分からなくなっていました（福田指摘）。 */
+  .sched { margin-top: 1.25rem; }
+  .sched__b { margin-top: 1.5rem; }
+
+  /* プライベートプラン。★2026-08-07 追加
+     🔴 「おまけ」に見せないための箱です。地の色から一段持ち上げて、金の細枠で囲みます。
+        ⚠️ 枠を外すと、下の「これまでの参拝」と地続きになって埋もれます。 */
+  .pp {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2.25rem 2rem;
+    background: var(--bg-2);
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  }
+  .pp h2 { font-size: var(--fs-h2); }
+  .pp .btn { margin-top: .5rem; }
+
+  /* 中身の3点。上の「何が変わるのか」（.chg）と同じ形にして、ページの中で浮かせない */
+  .pv { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .pv li {
+    display: flex; flex-direction: column; gap: .2rem;
+    padding-left: 1rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .pv__t { font-size: var(--fs-lg); color: var(--fg); }
+
+  @media (max-width: 640px) {
+    .pp { padding: 1.75rem 1.25rem; }
+  }
+
+  /* LINEボタン。★2026-08-07 追加
+     ⚠️ .btn--line は LineCta.astro の中で scoped に定義されていて、ここには届きません。
+        色を変えるときは LineCta.astro / line.astro / TourCard.astro と揃えてください。 */
+  .btn--line { background: #06c755; color: #fff; font-weight: 600; border: none; }
+  .btn--line:hover { background: #05b34c; color: #fff; }
 
   /* ── ヒーロー ──
      写真の裾を地の色まで溶かし、その溶けきったところに見出しを重ねます。

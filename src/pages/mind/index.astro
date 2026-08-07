@@ -47,8 +47,7 @@ import Faq from '../../components/Faq.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
 import { mindVideos } from '../../data/mindVideos';
-
-const LINE_URL = 'https://lin.ee/XAxux9k';
+import { LINE_URL } from '../../data/line';
 
 // 新しい順。販売中もSOLDも混ぜて並べる（SOLDも作品歴として効く）
 const all = (await getCollection('ishi')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
@@ -94,7 +93,7 @@ const faq = [
   description="パワーストーンは、守ってもらうためのものではありません。あなた自身の神性を増幅する共鳴装置です。岡慶行が一つひとつ手に取って選んだ一点ものの石と、持ち方・瞑想のしかたの解説動画をあわせてお届けします。"
   surface="dark"
 >
-  <div class="wrap section stack">
+  <div class="wrap section stack mind-a">
     {/* ── ① まず「売り込まない」ことを言う。ここで信頼を取る ──
         🔴 主語は「瞑想」でなく「参拝で整った感覚」。
            ★2026-08-06：ここで商品にもLINEにも触れません。②で橋を架けてから石の話に入ります。 */}
@@ -272,7 +271,19 @@ const faq = [
       </div>
     </section>
 
-    <section class="stack" data-reveal>
+  </div>
+
+  {/* ── ⑥ 石の一覧。★2026-08-07 ここだけ中間幅（832px）に上げました ──
+      🔴 このページは全体が .wrap（672px）1本でした。文章のページなので基本は正しいのですが、
+         **石のカードが並ぶここだけ**、1枚あたり約300pxに潰れていました。
+         トークンの使い分けは「.wrap--mid ＝ 2カラム・カード2列」です → styles/tokens.css 85-90行
+      🔴 見出し・リード・末尾の注記は `.lead-col` を付けて**読む幅（672px）のまま**にしています。
+         `.wrap--mid > .lead-col` は**直下の子にしか効きません**。
+         入れ子の <div> でくるむと効かなくなるので、この並びを崩さないこと → styles/global.css 61-62行
+      ⚠️ wrap を割ったぶん、セクション間の 5rem が自動では付きません。
+         .ishi-sec の margin-block で補っています（上下の .mind-a / .mind-c とセットです）。 */}
+  <section class="wrap wrap--mid stack ishi-sec" data-reveal>
+    <div class="lead-col sec-head">
       <p class="kicker">今あるパワーストーン</p>
       {/* 🔴 この見出しは岡さんの原稿の結びです。「石」のまま残しています（表記統一の例外） */}
       <h2>石を選ぶのではなく、<br />石と共鳴する</h2>
@@ -281,23 +292,26 @@ const faq = [
         {stones.length}点あります{stoneOnSale < stones.length && `（うちお求めいただけるのは${stoneOnSale}点）`}。
         気になるものがあれば、写真でじっくりご覧ください。
       </p>
+    </div>
 
-      <div class={`gal${stones.length === 1 ? ' gal--one' : ''}`} style={`--cols:${stoneCols}`}>
-        {stones.map((s) => (
-          <IshiCard
-            id={s.data.id}
-            name={s.data.name}
-            price={s.data.price}
-            photo={s.data.cardPhoto ?? s.data.photos[0]}
-            soldout={s.data.soldout}
-          />
-        ))}
-      </div>
+    <div class={`gal${stones.length === 1 ? ' gal--one' : ''}`} style={`--cols:${stoneCols}`}>
+      {stones.map((s) => (
+        <IshiCard
+          id={s.data.id}
+          name={s.data.name}
+          price={s.data.price}
+          photo={s.data.cardPhoto ?? s.data.photos[0]}
+          soldout={s.data.soldout}
+        />
+      ))}
+    </div>
 
-      <p class="note">
-        新しい石が入ったときは、<a href={withBase('/line/')}>LINE</a>でいちばん先にお知らせしています。
-      </p>
-    </section>
+    <p class="note lead-col">
+      新しい石が入ったときは、<a href={withBase('/line/')}>LINE</a>でいちばん先にお知らせしています。
+    </p>
+  </section>
+
+  <div class="wrap stack mind-c">
 
     {/* ── ⑦ 使い方と瞑想。★2026-08-06 新設 ──
         🔴 ここは「買ったあと」の受け皿です。石だけ渡して終わりにしない、が趣旨。
@@ -464,6 +478,13 @@ const faq = [
   /* 16:9。iframeは高さを持たないので比率を先に確保する */
   .vids__f { margin-top: .6rem; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; border: 1px solid var(--rule); }
   .vids__f iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  /* 石の一覧だけ中間幅にするため wrap を3つに割っています。★2026-08-07
+     🔴 セクション間の 5rem（--gap-section）は `.stack > section + section` が付けていますが、
+        wrap をまたぐと効きません。この3つで手動で補っています。**セットで直すこと。** */
+  .mind-a { padding-bottom: 0; }
+  .ishi-sec { margin-block: var(--gap-section); }
+  .mind-c { padding-block: 0 var(--gap-section); }
 
   .gal {
     display: grid;

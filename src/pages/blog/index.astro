@@ -4,9 +4,15 @@ import LineCta from '../../components/LineCta.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '../../utils/base';
+import { getSortedPosts, getPopularPosts } from '../../utils/posts';
+import { popularHeading } from '../../data/popular';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const posts = await getSortedPosts();
+
+/** ピックアップ（src/data/popular.ts が正本）。
+ *  ⚠️ カテゴリの絞り込みは #postList の中だけに効きます。
+ *     このブロックは外に置いてあるので、絞り込んでも消えません（意図通り）。 */
+const picked = await getPopularPosts(3);
 
 const cats = ['心とエネルギー', 'お金と仕事', '神社と参拝'];
 const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data.category === c).length]));
@@ -44,8 +50,34 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
       </div>
     </header>
 
+    {/* ── ピックアップ ──
+        🔴 中身は `src/data/popular.ts` の配列を書き換えるだけで入れ替わります。
+           配列を空にすると、このブロックごと消えます。
+        ⚠️ GA4を入れて実測に切り替えたら、popular.ts の見出しも
+           「よく読まれているはなし」に変えてください。実測前に「ランキング」と
+           名乗らないこと（嘘になります）。 */}
+    {picked.length > 0 && (
+      <section class="picked stack" id="pickedBlock" data-reveal>
+        <p class="kicker">{popularHeading}</p>
+        <div class="picked__l">
+          {picked.map((p) => (
+            <PostCard
+              slug={p.id}
+              title={p.data.title}
+              description={p.data.description}
+              category={p.data.category}
+              pubDate={p.data.pubDate}
+              heroImage={p.data.heroImage}
+              chars={p.body?.length ?? 0}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
     {/* ── 記事一覧 ── */}
     <section class="stack" data-reveal>
+      <p class="kicker">すべてのはなし</p>
       {posts.length === 0 ? (
         <p class="note">まだ記事がありません。</p>
       ) : (
@@ -97,6 +129,13 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
       function updateListDisplay() {
         const activeTab = document.querySelector('.filter-tab.active');
         const targetCat = activeTab ? activeTab.getAttribute('data-cat') : 'all';
+
+        /* ピックアップは「すべて」のときだけ出します。
+           🔴 カテゴリで絞っているのに、そのカテゴリ以外の記事が上に居座ると
+              「絞り込んだのに違う記事が出ている」と読めてしまうためです。
+           ⚠️ ブロック自体はサーバー側で出力済み。ここでは表示/非表示だけ切り替えます。 */
+        const picked = document.getElementById('pickedBlock');
+        if (picked) picked.style.display = targetCat === 'all' ? '' : 'none';
 
         const matchingItems = [];
         items.forEach(function (item) {
@@ -213,6 +252,21 @@ const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data
     color: var(--accent);
     font-weight: 600;
   }
+
+  /* ピックアップ。一覧より一段だけ格上げして見せる。
+     金の細線で挟んで、下の「すべてのはなし」と地続きにならないようにしています */
+  .picked {
+    padding-block: 1.25rem 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  }
+  .picked__l {
+    display: flex;
+    flex-direction: column;
+  }
+  /* 枠の中では、いちばん下のカードの区切り線は不要。
+     ⚠️ PostCard は別コンポーネントなので :global() でないと届きません */
+  .picked__l :global(.pc:last-child) { border-bottom: 0; padding-bottom: 0; }
 
   .post-list {
     display: flex;
