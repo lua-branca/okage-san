@@ -19,7 +19,7 @@ const posts = await getSortedPosts();
 const mainPages = [
   { href: withBase('/'), label: 'トップページ', desc: 'ファーストビュー・お知らせ・各ページへの案内' },
   { href: withBase('/kamiasobi/'), label: '神社参拝プログラム', desc: '場を借りて整える神社参拝' },
-  { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、岡が選んだ一点もののパワーストーン' },
+  { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、岡が一つ選んでお届けするパワーストーン' },
   { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
   /* ⚠️ desc は「内側から整える（催眠・タントラ）」でした。2026-08-08、レムリアン・タントラを
         /session/ と /about/ から外したので、ここだけ残すと**サイトに無いものを案内**します。
@@ -86,18 +86,23 @@ const legalPages = [
       </section>
     )}
 
-    {/* ③ 石のギャラリー */}
-    <section class="sm-sec stack">
-      <h2>パワーストーン（個別ページ）</h2>
-      <ul class="sm-list">
-        {ishi.map((s) => (
-          <li>
-            <a href={withBase(`/mind/${s.data.id}/`)} class="sm-link">No.{s.data.id} {s.data.name}</a>
-            <span class="note"> （¥{s.data.price?.toLocaleString('ja-JP')}）</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    {/* ③ 石のギャラリー
+        🔴 2026-08-08：予約販売に変わり、石の個別ページは無くなりました（1件もありません）。
+           見出しだけが残って中身が空になるので、**1件もないときは節ごと出しません。**
+           一点もの販売に戻して個別ページが復活したら、自動でここに並びます。 */}
+    {ishi.length > 0 && (
+      <section class="sm-sec stack">
+        <h2>パワーストーン（個別ページ）</h2>
+        <ul class="sm-list">
+          {ishi.map((s) => (
+            <li>
+              <a href={withBase(`/mind/${s.data.id}/`)} class="sm-link">No.{s.data.id} {s.data.name}</a>
+              <span class="note"> （¥{s.data.price?.toLocaleString('ja-JP')}）</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     {/* ④ 神道のはなし（記事） */}
     <section class="sm-sec stack">
