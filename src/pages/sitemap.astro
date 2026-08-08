@@ -21,7 +21,10 @@ const mainPages = [
   { href: withBase('/kamiasobi/'), label: '神社参拝プログラム', desc: '場を借りて整える神社参拝' },
   { href: withBase('/mind/'), label: '心を整える', desc: '瞑想と、岡が選んだ一点もののパワーストーン' },
   { href: withBase('/private/'), label: 'プライベートプラン', desc: 'ご希望に合わせて組み立てるオーダーメイド' },
-  { href: withBase('/session/'), label: '深く整える', desc: '内側から整える（催眠・タントラ）' },
+  /* ⚠️ desc は「内側から整える（催眠・タントラ）」でした。2026-08-08、レムリアン・タントラを
+        /session/ と /about/ から外したので、ここだけ残すと**サイトに無いものを案内**します。
+        タントラを戻すときは、ここも一緒に戻すこと。 */
+  { href: withBase('/session/'), label: '深く整える', desc: '内側から整える（前世療法・ヒプノセラピー）' },
   { href: withBase('/blog/'), label: '神道のはなし', desc: '言葉で整える思想・解説記事' },
   { href: withBase('/about/'), label: '岡慶行について', desc: '植木屋40年・神道40余年の思想' },
 ];
